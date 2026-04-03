@@ -1,0 +1,10 @@
+/* TEAM */
+Developer: AI Assistant (Görme Engelliler Derneği için özel olarak tasarlandı)
+Contact: gormeengellilerdernegi@hotmail.com
+Location: Kırşehir, Türkiye
+
+/* SITE */
+Standards: HTML5, CSS3, ES6
+Technology: Vite, Vanilla JS
+Accessibility: WCAG 2.1/2.2 AAA standardlarına uygun tasarlandı
+Language: Turkish

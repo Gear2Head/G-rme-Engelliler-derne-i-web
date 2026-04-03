@@ -1,14 +1,33 @@
-/**
- * AMAÇ: Vite MPA (Multi-Page Application) yapılandırması
- * MANTIK: Her HTML dosyası bağımsız bir giriş noktasıdır; ortak CSS/JS varlıkları chunk olarak bölünür
- */
-import { resolve } from 'path'
-import { defineConfig } from 'vite'
+import { resolve } from 'path';
+import { defineConfig } from 'vite';
+import { renderPage } from './src/build/site-renderer.js';
+
+function resolvePageKey(context) {
+  const rawPath = context?.originalUrl || context?.url || context?.path || context?.filename || '/';
+  const normalized = String(rawPath).replace(/\\/g, '/').split('?')[0];
+
+  if (normalized.endsWith('/404.html') || normalized === '/404.html') return 'notfound';
+  if (normalized.includes('/hakkimizda')) return 'hakkimizda';
+  if (normalized.includes('/tuzuk')) return 'tuzuk';
+  if (normalized.includes('/iletisim')) return 'iletisim';
+
+  return 'index';
+}
+
+function siteContentPlugin() {
+  return {
+    name: 'site-content-build-renderer',
+    transformIndexHtml(_html, context) {
+      return renderPage(resolvePageKey(context));
+    },
+  };
+}
 
 export default defineConfig({
   root: '.',
   base: '/',
   publicDir: 'public',
+  plugins: [siteContentPlugin()],
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -26,4 +45,4 @@ export default defineConfig({
     port: 3000,
     open: true,
   },
-})
+});
