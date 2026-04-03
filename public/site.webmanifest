@@ -1,0 +1,19 @@
+{
+  "name": "Kırşehir Görme Engelliler Derneği",
+  "short_name": "KGED",
+  "description": "Görme engelli bireylerin topluma eşit katılımı için çalışan sivil toplum kuruluşu.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#4F46E5",
+  "lang": "tr",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "site": {
+    "name": "Kırşehir Görme Engelliler Derneği",
+    "shortName": "KGED",
+    "slogan": "Işığa Giden Yolda Birlikte",
+    "description": "Kırşehir Görme Engelliler Derneği olarak görme engelli bireylerin topluma eşit katılımını destekliyor, yaşam kalitelerini artırmak için çalışıyor ve haklarını savunuyoruz.",
+    "url": "https://kirshehirgormeengelliler.org.tr",
+    "locale": "tr_TR",
+    "language": "tr",
+    "foundedYear": null,
+    "status": {
+      "hasLogo": false,
+      "hasAddress": true,
+      "hasGeoCoordinates": false,
+      "hasConstitution": false,
+      "hasWhatsApp": false,
+      "hasMapsEmbed": false
+    }
+  },
+  "contact": {
+    "phone": "0541 648 45 70",
+    "phoneHref": "tel:+905416484570",
+    "whatsappHref": null,
+    "email": "gormeengellilerdernegi@hotmail.com",
+    "emailHref": "mailto:gormeengellilerdernegi@hotmail.com",
+    "address": {
+      "full": "Kuşdilli, Terme Cd. No:39 Kat 1, 40100 Kırşehir Merkez/Kırşehir, Türkiye",
+      "short": "Terme Cd. No:39 Kat 1, Kırşehir",
+      "status": null,
+      "postalCode": "40100",
+      "city": "Kırşehir"
+    },
+    "geo": {
+      "lat": null,
+      "lng": null
+    },
+    "googleMapsUrl": "https://maps.google.com/?q=Terme+Cd.+No:39+Kat+1+Kırşehir+Merkez+Kırşehir+Türkiye",
+    "social": {
+      "facebook": null,
+      "instagram": null,
+      "twitter": null,
+      "youtube": null
+    }
+  },
+  "nav": [
+    { "label": "Ana Sayfa", "href": "/", "id": "nav-home" },
+    { "label": "Hakkımızda", "href": "/hakkimizda", "id": "nav-about" },
+    { "label": "Tüzük", "href": "/tuzuk", "id": "nav-constitution" },
+    { "label": "İletişim", "href": "/iletisim", "id": "nav-contact" }
+  ],
+  "hero": {
+    "title": "Kırşehir Görme Engelliler Derneği",
+    "subtitle": "Işığa Giden Yolda Birlikte",
+    "lead": "Görme engelli bireylerin topluma eşit, onurlu ve bağımsız katılımı için çalışıyor; haklarını savunuyor, fırsatlar yaratıyor ve umut taşıyoruz.",
+    "cta": {
+      "primary": { "label": "Bize Ulaşın", "href": "/iletisim" },
+      "secondary": { "label": "Hakkımızda", "href": "/hakkimizda" }
+    }
+  },
+  "mission": {
+    "title": "Amacımız",
+    "lead": "Görme engelli bireylerin her alanda eşit fırsatlara sahip olduğu bir toplum için çalışıyoruz.",
+    "cards": [
+      {
+        "icon": "heart",
+        "title": "Destek ve Dayanışma",
+        "text": "Görme engelli bireylere ve ailelerine sosyal, psikolojik ve pratik destek sunuyor; birlikte güçleniyoruz."
+      },
+      {
+        "icon": "book",
+        "title": "Eğitim ve Farkındalık",
+        "text": "Toplumda görme engeline yönelik farkındalığı artırıyor, eğitim imkânlarını genişletiyor ve bilgiye erişimi kolaylaştırıyoruz."
+      },
+      {
+        "icon": "scale",
+        "title": "Hak Savunuculuğu",
+        "text": "Görme engelli bireylerin yasal haklarını koruyuyor, kamu kurumları ve sivil toplumla işbirliği yaparak politika değişikliği için çalışıyoruz."
+      }
+    ]
+  },
+  "about": {
+    "title": "Hakkımızda",
+    "intro": "Kırşehir Görme Engelliler Derneği, görme engelli bireylerin topluma tam ve eşit katılımını sağlamak amacıyla kurulmuş, insani değerleri merkeze alan bir sivil toplum kuruluşudur.",
+    "description": "Derneğimiz, Kırşehir ilinde yaşayan görme engelli bireylerin karşılaştığı zorluklara çözüm üretmek, haklarını savunmak ve yaşam kalitelerini artırmak için faaliyetlerini sürdürmektedir. Üyelerimiz, gönüllülerimiz ve destekçilerimizle birlikte daha erişilebilir ve kapsayıcı bir Kırşehir için çalışıyoruz.",
+    "foundingStatus": "Derneğimizin kuruluş tarihi ve tarihçe bilgisi yakında bu sayfada paylaşılacaktır.",
+    "goals": [
+      "Görme engelli bireylerin eğitime erişimini kolaylaştırmak",
+      "İstihdam olanaklarını artırmak ve mesleki rehabilitasyonu desteklemek",
+      "Toplumsal farkındalığı ve engelli dostu yaşam anlayışını yaygınlaştırmak",
+      "Görme engellilere yönelik hizmet ve teknolojileri tanıtmak",
+      "Yasal haklar konusunda bilgilendirme ve hukuki destek sağlamak",
+      "Sosyal ve kültürel etkinliklerle kapsayıcı bir toplum oluşturmak",
+      "Kamu kurumları ve diğer STK'larla işbirliği geliştirmek"
+    ],
+    "boardStatus": "Yönetim kurulu bilgileri yakında bu sayfada yayınlanacaktır."
+  },
+  "constitution": {
+    "title": "Dernek Tüzüğü",
+    "status": "Tüzük belgesi hazırlanma aşamasındadır. Tüzüğümüz tamamlandığında bu sayfadan indirebileceksiniz.",
+    "lastUpdated": null,
+    "pdfPath": null
+  },
+  "seo": {
+    "index": {
+      "title": "Kırşehir Görme Engelliler Derneği | Resmi Web Sitesi",
+      "description": "Kırşehir Görme Engelliler Derneği — görme engelli bireylerin topluma eşit katılımı için çalışan sivil toplum kuruluşu. Destek, eğitim ve hak savunuculuğu.",
+      "canonical": "/"
+    },
+    "hakkimizda": {
+      "title": "Hakkımızda | Kırşehir Görme Engelliler Derneği",
+      "description": "Kırşehir Görme Engelliler Derneği hakkında bilgi alın. Misyonumuz, vizyonumuz, amaçlarımız ve faaliyetlerimiz hakkında detaylı bilgi.",
+      "canonical": "/hakkimizda"
+    },
+    "tuzuk": {
+      "title": "Dernek Tüzüğü | Kırşehir Görme Engelliler Derneği",
+      "description": "Kırşehir Görme Engelliler Derneği tüzüğüne ulaşın. Derneğin resmi kuruluş belgesi ve yönetim esasları.",
+      "canonical": "/tuzuk"
+    },
+    "iletisim": {
+      "title": "İletişim | Kırşehir Görme Engelliler Derneği",
+      "description": "Kırşehir Görme Engelliler Derneği ile iletişime geçin. Telefon: 0541 648 45 70 | E-posta: gormeengellilerdernegi@hotmail.com",
+      "canonical": "/iletisim"
+    }
+  },
+  "footer": {
+    "description": "Görme engelli bireylerin topluma eşit katılımı için çalışan sivil toplum kuruluşu."
+  },
+  "toolbar": {
+    "fontSizes": [100, 125, 150, 175, 200]
+  }
+}
