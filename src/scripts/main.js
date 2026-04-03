@@ -8,9 +8,13 @@ import { initTheme } from './theme.js';
 import { initToolbar } from './toolbar.js';
 import { initLoader } from './loader.js';
 import { initNav } from './nav.js';
+import { injectSpeedInsights } from '@vercel/speed-insights';
 
 initTheme();
 initToolbar();
+
+// Initialize Vercel Speed Insights
+injectSpeedInsights();
 
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
