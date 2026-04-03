@@ -870,23 +870,15 @@ function renderHead(pageKey, content) {
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="/src/styles/main.css" />
   ${renderThemeBootstrap()}
   ${schemas}`;
 }
 
-export function renderPage(pageKey) {
-  const content = readSiteContent();
+function renderBody(pageKey, content) {
   const currentPath = getPagePath(pageKey);
   const includeGlobalChrome = pageKey !== 'notfound';
 
-  return `<!DOCTYPE html>
-<html lang="${escapeAttr(content.site.language)}" data-theme="light">
-<head>
-  ${renderHead(pageKey, content)}
-</head>
-<body>
-  ${pageKey === 'index' ? renderLoader(content) : ''}
+  return `${pageKey === 'index' ? renderLoader(content) : ''}
   ${renderSkipLink()}
   ${renderHeader(content, currentPath, { showCta: pageKey !== 'notfound' })}
   ${renderMobileNav(content, currentPath, { showCta: pageKey !== 'notfound' })}
@@ -896,8 +888,14 @@ export function renderPage(pageKey) {
   ${renderFooter(content, { minimal: pageKey === 'notfound' })}
   ${includeGlobalChrome ? renderBackToTop() : ''}
   ${includeGlobalChrome ? renderWhatsAppFloat(content) : ''}
-  ${includeGlobalChrome ? renderToolbar() : ''}
-  <script type="module" src="/src/scripts/main.js"></script>
-</body>
-</html>`;
+  ${includeGlobalChrome ? renderToolbar() : ''}`;
+}
+
+export function renderDocumentFragments(pageKey) {
+  const content = readSiteContent();
+
+  return {
+    head: renderHead(pageKey, content),
+    body: renderBody(pageKey, content),
+  };
 }

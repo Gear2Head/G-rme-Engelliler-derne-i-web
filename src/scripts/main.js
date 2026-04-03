@@ -3,6 +3,7 @@
  * MANTIK: Tema ve toolbar önce hydrate edilir (flash önleme); loader ve nav DOM hazır olunca çalışır
  */
 
+import '../styles/main.css';
 import { initTheme } from './theme.js';
 import { initToolbar } from './toolbar.js';
 import { initLoader } from './loader.js';

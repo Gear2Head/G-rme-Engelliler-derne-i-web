@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-import { renderPage } from './src/build/site-renderer.js';
+import { renderDocumentFragments } from './src/build/site-renderer.js';
 
 function resolvePageKey(context) {
   const rawPath = context?.originalUrl || context?.url || context?.path || context?.filename || '/';
@@ -17,8 +17,11 @@ function resolvePageKey(context) {
 function siteContentPlugin() {
   return {
     name: 'site-content-build-renderer',
-    transformIndexHtml(_html, context) {
-      return renderPage(resolvePageKey(context));
+    transformIndexHtml(html, context) {
+      const { head, body } = renderDocumentFragments(resolvePageKey(context));
+      return html
+        .replace('<!--app-head-->', head)
+        .replace('<!--app-body-->', body);
     },
   };
 }
