@@ -8,6 +8,7 @@ function resolvePageKey(context) {
 
   if (normalized.endsWith('/404.html') || normalized === '/404.html') return 'notfound';
   if (normalized.includes('/hakkimizda')) return 'hakkimizda';
+  if (normalized.includes('/galeri')) return 'galeri';
   if (normalized.includes('/tuzuk')) return 'tuzuk';
   if (normalized.includes('/iletisim')) return 'iletisim';
 
@@ -38,6 +39,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         hakkimizda: resolve(__dirname, 'hakkimizda/index.html'),
+        galeri: resolve(__dirname, 'galeri/index.html'),
         tuzuk: resolve(__dirname, 'tuzuk/index.html'),
         iletisim: resolve(__dirname, 'iletisim/index.html'),
         notfound: resolve(__dirname, '404.html'),

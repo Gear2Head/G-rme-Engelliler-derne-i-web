@@ -6,19 +6,21 @@
     "description": "Kırşehir Görme Engelliler Derneği olarak görme engelli bireylerin topluma eşit katılımını destekliyor, yaşam kalitelerini artırmak için çalışıyor ve haklarını savunuyoruz.",
     "url": "https://kirshehirgormeengelliler.org.tr",
     "logoPath": "/Logo.png",
-    "logoAlt": "Kırşehir Görme elliler Derneği Logosu",
+    "logoAlt": "Kırşehir Görme Engelliler Derneği Logosu",
     "ogImagePath": null,
     "appleTouchIconPath": null,
     "locale": "tr_TR",
     "language": "tr",
-    "foundedYear": null,
+    "foundedYear": 2026,
+    "foundedDate": "2026-02-05",
     "status": {
       "hasLogo": true,
       "hasAddress": true,
       "hasGeoCoordinates": false,
-      "hasConstitution": false,
+      "hasConstitution": true,
       "hasWhatsApp": false,
-      "hasMapsEmbed": true
+      "hasMapsEmbed": true,
+      "hasGallery": true
     }
   },
   "contact": {
@@ -62,6 +64,11 @@
       "label": "Hakkımızda",
       "href": "/hakkimizda",
       "id": "nav-about"
+    },
+    {
+      "label": "Galeri",
+      "href": "/galeri",
+      "id": "nav-gallery"
     },
     {
       "label": "Tüzük",
@@ -113,7 +120,7 @@
   },
   "about": {
     "title": "Hakkımızda",
-    "pageLead": "Görme engelli bireylerin yanında, her zaman.",
+    "pageLead": "5 Şubat 2026'dan bu yana görme engelli bireylerin yanında, her zaman.",
     "introHeading": "Biz Kimiz?",
     "goalsHeading": "Amaçlarımız",
     "goalsLead": "Görme engelli bireylere yönelik aşağıdaki hedefler doğrultusunda faaliyet göstermekteyiz:",
@@ -122,9 +129,11 @@
     "ctaLead": "Sorularınız, önerileriniz veya iş birliği teklifleriniz için bize ulaşın.",
     "ctaPrimaryLabel": "İletişim Sayfası",
     "ctaSecondaryLabel": null,
-    "intro": "Kırşehir Görme Engelliler Derneği, görme engelli bireylerin topluma tam ve eşit katılımını sağlamak amacıyla kurulmuş, insani değerleri merkeze alan bir sivil toplum kuruluşudur.",
+    "intro": "Kırşehir Görme Engelliler Derneği, 5 Şubat 2026 tarihinde Kırşehir ilinde kurulmuş; görme engelli bireylerin topluma tam ve eşit katılımını sağlamak amacıyla faaliyete geçmiş, hak temelli bir sivil toplum kuruluşudur.",
     "description": "Derneğimiz, Kırşehir ilinde yaşayan görme engelli bireylerin karşılaştığı zorluklara çözüm üretmek, haklarını savunmak ve yaşam kalitelerini artırmak için faaliyetlerini sürdürmektedir. Üyelerimiz, gönüllülerimiz ve destekçilerimizle birlikte daha erişilebilir ve kapsayıcı bir Kırşehir için çalışıyoruz.",
-    "foundingStatus": "Derneğimizin kuruluş tarihi ve tarihçe bilgisi yakında bu sayfada paylaşılacaktır.",
+    "foundingStatus": "5 Şubat 2026 tarihinde Kırşehir ilinde kurulmuş olan hak temelli bir sivil toplum kuruluşudur.",
+    "foundingDate": "5 Şubat 2026",
+    "foundingCity": "Kırşehir",
     "goals": [
       "Görme engelli bireylerin eğitime erişimini kolaylaştırmak",
       "İstihdam olanaklarını artırmak ve mesleki rehabilitasyonu desteklemek",
@@ -140,31 +149,49 @@
     "title": "Dernek Tüzüğü",
     "pageLead": "Kırşehir Görme Engelliler Derneği'nin resmi kuruluş belgesi ve yönetim esasları.",
     "sectionTitle": "Tüzük Belgesi",
-    "statusStrong": "Tüzük belgesi hazırlanma aşamasındadır.",
-    "infoBanner": "Tüzük belgesi hazır olduğunda bu sayfa güncellenecektir. Menü ve sayfa URL'si değişmeyecektir.",
+    "statusStrong": "Tüzük belgesi dijital ortama aktarılmıştır.",
+    "infoBanner": "Kırşehir Görme Engelliler Derneği resmi tüzüğünü aşağıdan inceleyebilir veya PDF formatında indirebilirsiniz.",
     "infoTitle": "Tüzük Nedir?",
+    "conversionNote": "Tüzük belgemiz Microsoft Word formatında (.doc) mevcuttur. Yakında PDF olarak yayınlanacaktır.",
     "infoParagraphs": [
       "Dernek tüzüğü; derneğin kuruluş amacını, faaliyet alanlarını, üyelik koşullarını, yönetim yapısını ve mali esaslarını belirleyen temel belgedir. 5253 sayılı Dernekler Kanunu kapsamında hazırlanır.",
       "Tüzüğümüz yayınlandığında şu konuları kapsayacaktır: Derneğin adı ve merkezi, amaç ve faaliyet alanı, üyelik şartları, yönetim ve denetim kurulu yapısı, genel kurul esasları, mali hükümler ve fesih prosedürü."
     ],
     "ctaTitle": "Tüzük Hakkında Bilgi Alın",
-    "ctaLead": "Sorularınız için bize ulaşın.",
+    "ctaLead": "Tüzüğümüz hakkında sorularınız için bize ulaşın.",
     "ctaPrimaryLabel": "İletişime Geç",
     "ctaSecondaryLabel": null,
-    "status": "Tüzüğümüz tamamlandığında bu sayfadan indirebileceksiniz.",
+    "status": "Tüzük belgemiz dijital ortama aktarılma aşamasındadır. En kısa sürede bu sayfadan PDF olarak indirilebilecektir.",
     "lastUpdated": null,
-    "pdfPath": null
+    "pdfPath": "/Tuzuk.pdf"
+  },
+  "gallery": {
+    "title": "Galeri & Aktiviteler",
+    "pageLead": "Derneğimizin etkinlikleri, toplantıları ve faaliyetlerinden kareler.",
+    "emptyMessage": "Henüz galeri görseli eklenmemiştir. Yakında aktivitelerimizden kareler burada yer alacaktır.",
+    "categories": {
+      "etkinlik": "Etkinlik",
+      "toplanti": "Toplantı",
+      "egitim": "Eğitim",
+      "ziyaret": "Ziyaret",
+      "diger": "Diğer"
+    }
   },
   "seo": {
     "index": {
       "title": "Kırşehir Görme Engelliler Derneği | Resmi Web Sitesi",
-      "description": "Kırşehir Görme Engelliler Derneği — görme engelli bireylerin topluma eşit katılımı için çalışan sivil toplum kuruluşu. Destek, eğitim ve hak savunuculuğu.",
+      "description": "Kırşehir Görme Engelliler Derneği — 5 Şubat 2026'da kurulan, görme engelli bireylerin topluma eşit katılımı için çalışan hak temelli sivil toplum kuruluşu.",
       "canonical": "/"
     },
     "hakkimizda": {
       "title": "Hakkımızda | Kırşehir Görme Engelliler Derneği",
-      "description": "Kırşehir Görme Engelliler Derneği hakkında bilgi alın. Misyonumuz, vizyonumuz, amaçlarımız ve faaliyetlerimiz hakkında detaylı bilgi.",
+      "description": "5 Şubat 2026'da Kırşehir'de kurulan Kırşehir Görme Engelliler Derneği hakkında bilgi alın. Misyonumuz, vizyonumuz, amaçlarımız ve faaliyetlerimiz.",
       "canonical": "/hakkimizda"
+    },
+    "galeri": {
+      "title": "Galeri & Aktiviteler | Kırşehir Görme Engelliler Derneği",
+      "description": "Kırşehir Görme Engelliler Derneği etkinlikleri, toplantıları ve faaliyetlerinden fotoğraf galerisi.",
+      "canonical": "/galeri"
     },
     "tuzuk": {
       "title": "Dernek Tüzüğü | Kırşehir Görme Engelliler Derneği",
@@ -178,7 +205,7 @@
     }
   },
   "footer": {
-    "description": "Görme engelli bireylerin topluma eşit katılımı için çalışan sivil toplum kuruluşu."
+    "description": "5 Şubat 2026'dan bu yana görme engelli bireylerin topluma eşit katılımı için çalışan hak temelli sivil toplum kuruluşu."
   },
   "toolbar": {
     "fontSizes": [

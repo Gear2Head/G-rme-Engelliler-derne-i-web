@@ -9,6 +9,9 @@ import { initToolbar } from './toolbar.js';
 import { initLoader } from './loader.js';
 import { initNav } from './nav.js';
 
+// FOUC prevention: reveal body after CSS is parsed
+document.body.classList.add('ready');
+
 initTheme();
 initToolbar();
 

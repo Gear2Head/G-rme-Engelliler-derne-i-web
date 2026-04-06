@@ -318,8 +318,16 @@
 }
 
 @keyframes menuSlideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { 
+    opacity: 0; 
+    transform: translateY(-20px) scale(0.98);
+    filter: blur(4px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
 }
 
 .nav--mobile .nav__link {
@@ -714,12 +722,12 @@ body.menu-open {
 }
 
 .hero__title {
-  font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+  font-size: clamp(var(--text-2xl), 9vw, var(--text-5xl));
   font-weight: var(--weight-extrabold);
   color: #F1F5F9;
   line-height: var(--leading-tight);
-  letter-spacing: -0.03em;
-  margin-bottom: var(--space-3);
+  letter-spacing: -0.04em;
+  margin-bottom: var(--space-4);
 }
 
 .hero__subtitle {
@@ -772,6 +780,13 @@ body.menu-open {
   position: relative;
   width: 280px;
   height: 280px;
+}
+
+@media (max-width: 374px) {
+  .hero__icon-wrap {
+    width: 200px;
+    height: 200px;
+  }
 }
 
 .hero__icon-bg {
