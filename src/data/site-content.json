@@ -5,7 +5,7 @@
     "slogan": "Işığa Giden Yolda Birlikte",
     "description": "Kırşehir Görme Engelliler Derneği olarak görme engelli bireylerin topluma eşit katılımını destekliyor, yaşam kalitelerini artırmak için çalışıyor ve haklarını savunuyoruz.",
     "url": "https://kirshehirgormeengelliler.org.tr",
-    "logoPath": "/Logo.png",
+    "logoPath": "/logo.png",
     "logoAlt": "Kırşehir Görme Engelliler Derneği Logosu",
     "ogImagePath": null,
     "appleTouchIconPath": null,
@@ -172,7 +172,7 @@
     "ctaSecondaryLabel": null,
     "status": "Tüzük belgemiz dijital ortama aktarılma aşamasındadır. En kısa sürede bu sayfadan PDF olarak indirilebilecektir.",
     "lastUpdated": null,
-    "pdfPath": "/Tuzuk.pdf"
+    "pdfPath": "/tuzuk.pdf"
   },
   "gallery": {
     "title": "Galeri & Aktiviteler",
