@@ -152,12 +152,13 @@ function renderHeader(content, currentPath, options = {}) {
           <span class="header__logo-tagline">${escapeHtml(content.site.slogan)}</span>
         </div>
       </a>
-      <nav class="nav--desktop" aria-label="Ana menü">
+      <nav class="nav--desktop" aria-label="Hızlı menü">
         ${renderNavLinks(content.nav, currentPath, 'nav__link')}
       </nav>
       <div class="header__actions">
         ${ctaMarkup}
-        <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menüyü aç">
+        <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menüyü genişlet/daralt" title="Menü">
+          <span class="sr-only">Menü</span>
           ${icon('menuOpen')}
           ${icon('menuClose')}
         </button>
@@ -191,7 +192,7 @@ function renderFooter(content, options = {}) {
   const isMinimal = options.minimal === true;
   const navMarkup = renderNavLinks(content.nav, '', 'footer__link');
   const addressMarkup = content.site.status.hasAddress && content.contact.address?.short
-    ? `<p class="footer__contact-row">${icon('map')}<a href="${escapeAttr(content.contact.googleMapsUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(content.contact.address.short)}</a></p>`
+    ? `<p class="footer__contact-row">${icon('map')}<a href="${escapeAttr(content.contact.googleMapsUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Haritada görüntüle: ${escapeAttr(content.contact.address.short)}">${escapeHtml(content.contact.address.short)}</a></p>`
     : '';
 
   const socialLinks = Object.values(content.contact.social || {}).filter(Boolean);
@@ -588,6 +589,13 @@ function renderGalleryContent(content) {
   <script type="module">
     import { getGalleryItems } from '/src/supabase/gallery.js';
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+      });
+    }
+
     let galleryItems = [];
     let currentFilter = 'all';
     
@@ -598,36 +606,37 @@ function renderGalleryContent(content) {
     const catColors = { etkinlik:'#4F46E5', toplanti:'#16A34A', egitim:'#D97706', ziyaret:'#0891B2', diger:'#6B7280' };
     const catLabels = { etkinlik:'Etkinlik', toplanti:'Toplantı', egitim:'Eğitim', ziyaret:'Ziyaret', diger:'Diğer' };
 
-    function renderGalleryItem(item) {
-      const cat = item.category || 'etkinlik';
-      const src = item.url || item.imageData || '';
-      const cap = item.caption || '';
-      const label = catLabels[cat] || 'Diğer';
-      const color = catColors[cat] || '#6B7280';
-      const lid = item.id;
-      
-      let imgHtml = '';
-      if (src) {
-        imgHtml = \`<img class="gallery-card__img" data-src="\${src}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="\${cap}" onclick="window.openLightbox('\${lid}')" style="cursor:pointer;" />\`;
-      } else {
-        imgHtml = \`<div class="gallery-card__img-placeholder">\${cap || 'Görsel'}</div>\`;
-      }
+      function renderGalleryItem(item) {
+        const cat = item.category || 'etkinlik';
+        const src = item.url || item.imageData || '';
+        const cap = item.caption || '';
+        const alt = item.alt_text || cap || 'KGED Galeri Görseli';
+        const label = catLabels[cat] || 'Diğer';
+        const color = catColors[cat] || '#6B7280';
+        const lid = item.id;
+        
+        let imgHtml = '';
+        if (src) {
+          imgHtml = \`<img class="gallery-card__img" data-src="\${src}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="\${alt}" onclick="window.openLightbox('\${lid}')" style="cursor:pointer;" />\`;
+        } else {
+          imgHtml = \`<div class="gallery-card__img-placeholder" aria-label="\${alt}">\${cap || 'Görsel'}</div>\`;
+        }
 
-      let dateHtml = '';
-      if (item.created_at || item.createdAt) {
-        const d = item.created_at || item.createdAt;
-        dateHtml = \`<p class="gallery-card__date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>\${new Date(d).toLocaleDateString("tr-TR", {day:"numeric",month:"long",year:"numeric"})}</p>\`;
-      }
+        let dateHtml = '';
+        if (item.created_at || item.createdAt) {
+          const d = item.created_at || item.createdAt;
+          dateHtml = \`<p class="gallery-card__date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>\${new Date(d).toLocaleDateString("tr-TR", {day:"numeric",month:"long",year:"numeric"})}</p>\`;
+        }
 
-      return \`<article class="gallery-card" data-category="\${cat}">
-        \${imgHtml}
-        <div class="gallery-card__body">
-          <span class="gallery-card__cat" style="background:\${color};">\${label}</span>
-          \${cap ? \`<p class="gallery-card__title">\${cap}</p>\` : ''}
-          \${dateHtml}
-        </div>
-      </article>\`;
-    }
+        return \`<article class="gallery-card" data-category="\${cat}">
+          \${imgHtml}
+          <div class="gallery-card__body">
+            <span class="gallery-card__cat" style="background:\${color};" aria-label="Kategori: \${label}">\${label}</span>
+            \${cap ? \`<p class="gallery-card__title">\${cap}</p>\` : ''}
+            \${dateHtml}
+          </div>
+        </article>\`;
+      }
 
     function renderGalleryPage() {
       const grid = document.getElementById('gallery-page-grid');
@@ -986,18 +995,18 @@ function renderContactContent(content) {
   ${addressDetailSection}`;
 }
 
-function renderNotFoundContent() {
-  return `<div class="error-page" role="alert" aria-labelledby="error-title" aria-describedby="error-desc">
-    <div style="max-width: 560px; margin-inline: auto;">
-      <p class="error-page__code" aria-hidden="true">404</p>
-      <h1 class="error-page__title" id="error-title">Sayfa Bulunamadı</h1>
-      <p class="error-page__desc" id="error-desc">Aradığınız sayfa taşınmış, silinmiş ya da hiç var olmamış olabilir.</p>
+function renderNotFoundContent(content) {
+  return `<section class="section section--center" style="min-height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, var(--brand-50), #fff);">
+    <div class="container">
+      <div style="font-family: var(--font-heading); font-size: clamp(6rem, 15vw, 10rem); font-weight: 800; line-height: 1; color: var(--brand-100); margin-bottom: 1rem; user-select: none;">404</div>
+      <h1 class="section__title" style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1.5rem; color: var(--brand-900);">Sayfa Bulunamadı</h1>
+      <p class="section__lead" style="margin-bottom: 3rem; max-width: 600px; margin-inline: auto;">Aradığınız sayfa silinmiş, taşınmış veya henüz oluşturulmamış olabilir. Aşağıdaki bağlantıları kullanarak yolunuzu bulabilirsiniz.</p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="/" class="btn btn--primary btn--lg" id="error-home-btn">${icon('home')}Ana Sayfaya Dön</a>
-        <a href="/iletisim" class="btn btn--secondary btn--lg" id="error-contact-btn">${icon('phone')}İletişime Geç</a>
+        <a href="/" class="btn btn--primary">${icon('home')} Ana Sayfaya Dön</a>
+        <a href="/iletisim" class="btn btn--outline">${icon('mail')} Bize Bildirin</a>
       </div>
     </div>
-  </div>`;
+  </section>`;
 }
 
 function renderPageContent(pageKey, content) {

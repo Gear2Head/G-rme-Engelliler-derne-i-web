@@ -3,7 +3,7 @@
  * Strateji: Cache-First CSS/JS/fonts, Network-First HTML
  */
 
-const CACHE_NAME = 'kged-v1';
+const CACHE_NAME = 'kged-v1.1'; // Increment version
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE = [
@@ -14,6 +14,7 @@ const PRECACHE = [
   '/iletisim/',
   '/offline.html',
   '/favicon.svg',
+  '/Logo.png', // Added Logo
   '/site.webmanifest',
 ];
 
@@ -40,7 +41,24 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
 
   // Skip non-GET and cross-origin (Supabase etc.)
-  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+  if (request.method !== 'GET') return;
+  
+  // Handle cross-origin images (Supabase Storage) - strictly Cache-First
+  if (url.origin !== self.location.origin && url.pathname.includes('/storage/v1/object/public/')) {
+    event.respondWith(
+      caches.match(request).then(cached => {
+        return cached || fetch(request).then(res => {
+          if (!res.ok) return res;
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(c => c.put(request, clone));
+          return res;
+        });
+      })
+    );
+    return;
+  }
+
+  if (url.origin !== self.location.origin) return;
 
   // HTML: Network-first with offline fallback
   if (request.headers.get('accept')?.includes('text/html')) {

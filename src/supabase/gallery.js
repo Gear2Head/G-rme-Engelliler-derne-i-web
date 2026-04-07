@@ -24,20 +24,44 @@ export async function uploadGalleryImage(file, path) {
 }
 
 export async function addGalleryItem(item) {
-  // album_id and is_cover are optional; included if column exists in DB
   const payload = {
     url: item.url,
     caption: item.caption,
     category: item.category,
     order: item.order ?? 0,
     ...(item.album_id ? { album_id: item.album_id } : {}),
+    ...(item.alt_text ? { alt_text: item.alt_text } : {}),
     ...(item.is_cover !== undefined ? { is_cover: item.is_cover } : {}),
   };
+
   const { data, error } = await supabase
     .from('gallery_items')
-    .insert([payload])
-    .select();
-  if (error) throw error;
+    .insert([payload]);
+
+  // Handle potential schema mismatch (400 Bad Request) - Retry without optional fields
+  if (error) {
+    console.group("Supabase Insert Error Diagnostic");
+    console.error("Error Code:", error.code);
+    console.error("Error Message:", error.message);
+    console.groupEnd();
+    
+    // PGRST204 is 'Column not found'
+    if (error.code === 'PGRST204' || error.message.includes('album_id') || error.message.includes('alt_text') || error.status === 400) {
+      console.warn("Retrying upload with Core Fields ONLY due to potential schema mismatch...");
+      const fallbackPayload = {
+        url: item.url,
+        caption: item.caption,
+        category: item.category,
+        order: item.order ?? 0
+      };
+      const { data: retryData, error: retryError } = await supabase
+        .from('gallery_items')
+        .insert([fallbackPayload]);
+      if (retryError) throw retryError;
+      return retryData;
+    }
+    throw error;
+  }
   return data;
 }
 
@@ -60,10 +84,23 @@ export async function deleteAlbum(albumId) {
 }
 
 export async function getGalleryItems() {
+  // First try with everything
   const { data, error } = await supabase
     .from('gallery_items')
     .select('*')
     .order('created_at', { ascending: false });
+  
+  // If album_id is missing in DB (PGRST204), fallback to core columns
+  if (error && (error.code === 'PGRST204' || error.message.includes('album_id'))) {
+    console.warn("Falling back to core columns select due to missing album_id in DB.");
+    const { data: fallbackData, error: fallbackError } = await supabase
+      .from('gallery_items')
+      .select('id, url, caption, category, created_at, order')
+      .order('created_at', { ascending: false });
+    if (fallbackError) throw fallbackError;
+    return fallbackData;
+  }
+  
   if (error) throw error;
   return data;
 }

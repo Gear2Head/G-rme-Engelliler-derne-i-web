@@ -9,9 +9,9 @@ export async function getSiteConfig() {
     .from('site_config')
     .select('data, updated_at')
     .eq('id', 'content')
-    .single();
+    .maybeSingle();
     
-  if (error && error.code !== 'PGRST116') { // PGRST116: No rows found
+  if (error) {
     throw error;
   }
   if (data) {

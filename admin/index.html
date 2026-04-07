@@ -15,20 +15,21 @@
     :root {
       --brand-50: #EEF2FF; --brand-100: #E0E7FF; --brand-200: #C7D2FE;
       --brand-500: #6366F1; --brand-600: #4F46E5; --brand-700: #4338CA;
-      --brand-800: #3730A3; --brand-900: #312E81; --brand-950: #1E1B4B;
+      --brand-800: #3730A3; --brand-950: #1E1B4B;
       --accent-500: #F97316; --accent-600: #EA580C;
-      --success: #059669; --danger: #EF4444; --warning: #F59E0B;
-      --surface: #F1F5F9; --card: #FFFFFF; --border: #E2E8F0;
-      --text: #0F172A; --text-muted: #475569; --text-faint: #94A3B8;
-      --radius: 1rem; --radius-sm: 0.5rem; --radius-xs: 0.25rem;
-      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+      --success: #10B981; --danger: #EF4444; --warning: #F59E0B;
+      --surface: #F8FAFC; --card: #FFFFFF; --border: #E2E8F0;
+      --text: #1E293B; --text-muted: #64748B; --text-faint: #94A3B8;
+      --radius: 1.25rem; --radius-sm: 0.75rem; --radius-xs: 0.5rem;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --glass: rgba(255, 255, 255, 0.7); --glass-border: rgba(255, 255, 255, 0.4);
     }
     html[data-theme="dark"] {
-      --surface: #0F1117; --card: #1E1E28; --border: #2D2D3B;
-      --text: #F8FAFC; --text-muted: #94A3B8; --text-faint: #64748B;
-      --shadow: 0 4px 16px rgba(0,0,0,0.4);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+      --surface: #0B0E14; --card: #151921; --border: #242B38;
+      --text: #F1F5F9; --text-muted: #94A3B8; --text-faint: #64748B;
+      --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+      --glass: rgba(21, 25, 33, 0.75); --glass-border: rgba(255, 255, 255, 0.08);
+      --brand-50: #171E2E; --brand-100: #1E293B;
     }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -53,61 +54,82 @@
         radial-gradient(ellipse 60% 50% at 80% 70%, rgba(249,115,22,0.06) 0%, transparent 50%),
         var(--surface);
     }
-    .login-card { width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; }
-    .login-header { background: linear-gradient(135deg, var(--brand-950) 0%, #1a0a3d 100%); padding: 2.5rem 2rem 2rem; text-align: center; position: relative; overflow: hidden; }
-    .login-header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 80%, rgba(99,102,241,0.25) 0%, transparent 60%); }
-    .login-header__icon { width: 64px; height: 64px; margin: 0 auto 1rem; background: rgba(99,102,241,0.2); border: 2px solid rgba(165,180,252,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
-    .login-header__icon svg { width: 32px; height: 32px; color: #C7D2FE; }
-    .login-header__title { font-family: 'Outfit', system-ui, sans-serif; font-size: 1.5rem; font-weight: 700; color: #F1F5F9; position: relative; z-index: 1; margin-bottom: 0.25rem; }
-    .login-header__sub { font-size: 0.85rem; color: rgba(165,180,252,0.8); position: relative; z-index: 1; }
-    .login-body { padding: 2rem; }
-    .form-group { margin-bottom: 1.25rem; }
-    .form-label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
-    .form-input { width: 100%; height: 48px; padding: 0 1rem; font-family: inherit; font-size: 0.95rem; color: var(--text); background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-sm); outline: none; transition: border-color 150ms, box-shadow 150ms; }
-    .form-input:focus { border-color: var(--brand-500); box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
-    .form-input.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
-    .form-error { display: none; align-items: center; gap: 0.5rem; margin-top: 0.75rem; padding: 0.75rem 1rem; background: #FEF2F2; border: 1px solid #FECACA; border-radius: var(--radius-sm); color: #DC2626; font-size: 0.85rem; font-weight: 500; }
-    .form-error.visible { display: flex; }
-    .form-error svg { width: 18px; height: 18px; flex-shrink: 0; }
-    .login-btn { width: 100%; height: 52px; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: linear-gradient(135deg, var(--brand-600), var(--brand-700)); color: #fff; font-family: inherit; font-size: 1rem; font-weight: 600; border: none; border-radius: var(--radius-sm); cursor: pointer; box-shadow: 0 4px 12px rgba(79,70,229,0.3); transition: all 150ms; margin-top: 0.5rem; }
-    .login-btn:hover { background: linear-gradient(135deg, var(--brand-700), var(--brand-800)); box-shadow: 0 6px 16px rgba(79,70,229,0.4); transform: translateY(-1px); }
+    .login-card { width: 100%; max-width: 420px; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; animation: fadeIn 0.6s ease-out; }
+    .login-header { background: linear-gradient(135deg, var(--brand-950) 0%, #000 100%); padding: 3rem 2rem 2.5rem; text-align: center; position: relative; overflow: hidden; }
+    .login-header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 120%, var(--brand-600) 0%, transparent 70%); opacity: 0.4; }
+    .login-header__icon { width: 64px; height: 64px; margin: 0 auto 1.25rem; background: rgba(99,102,241,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; backdrop-filter: blur(4px); }
+    .login-header__icon svg { width: 32px; height: 32px; color: #fff; }
+    .login-header__title { font-family: 'Outfit', system-ui, sans-serif; font-size: 1.75rem; font-weight: 800; color: #fff; position: relative; z-index: 1; letter-spacing: -0.02em; }
+    .login-header__sub { font-size: 0.9rem; color: rgba(255,255,255,0.6); position: relative; z-index: 1; }
+    .login-body { padding: 2.5rem 2.25rem; }
+    .form-input { width: 100%; height: 52px; padding: 0 1.25rem; font-family: inherit; font-size: 1rem; color: var(--text); background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: var(--radius-sm); outline: none; transition: all 0.2s; }
+    .form-input:focus { border-color: var(--brand-500); background: var(--card); box-shadow: 0 0 0 4px rgba(99,102,241,0.1); }
+    .login-btn { width: 100%; height: 54px; background: var(--brand-600); color: #fff; font-weight: 700; border-radius: var(--radius-sm); border: none; cursor: pointer; transition: all 0.3s; margin-top: 1rem; box-shadow: 0 10px 15px -3px rgba(79,70,229,0.3); }
+    .login-btn:hover { background: var(--brand-700); transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(79,70,229,0.4); }
     .login-btn:active { transform: translateY(0); }
     .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
     .login-btn svg { width: 20px; height: 20px; }
     .login-footer { text-align: center; padding: 0 2rem 1.5rem; font-size: 0.8rem; color: var(--text-faint); }
     .login-footer a { color: var(--brand-600); text-decoration: none; font-weight: 500; }
     .login-footer a:hover { text-decoration: underline; }
-    .lockout-msg { display: none; text-align: center; padding: 1rem; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: var(--radius-sm); color: #92400E; font-size: 0.85rem; font-weight: 500; margin-bottom: 1rem; }
     .lockout-msg.visible { display: block; }
+    .form-error { display: none; align-items: center; gap: 0.75rem; margin-top: 1.25rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-sm); color: #EF4444; font-size: 0.9rem; font-weight: 500; }
+    .form-error.visible { display: flex; }
+    .form-error svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .login-btn svg { width: 22px; height: 22px; }
 
     /* ─── ADMIN APP ─── */
-    .admin-app { display: none; }
-    .admin-app.visible { display: block; }
+    .admin-app { display: none; opacity: 0; }
+    .admin-app.visible { display: block; animation: fadeIn 0.5s ease-out forwards; }
 
     /* ─── TOPBAR ─── */
     .admin-topbar {
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      height: 64px; display: flex; align-items: center;
+      background: var(--glass);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      height: 72px; display: flex; align-items: center;
       justify-content: space-between; padding: 0 2rem;
       position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04);
+      box-shadow: var(--shadow);
     }
-    .admin-topbar__brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
-    .admin-topbar__logo { width: 36px; height: 36px; background: linear-gradient(135deg, var(--brand-600), var(--brand-700)); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: #fff; box-shadow: 0 2px 8px rgba(79,70,229,0.35); }
-    .admin-topbar__logo svg { width: 20px; height: 20px; }
-    .admin-topbar__title { font-family: 'Outfit', system-ui, sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); }
-    .admin-topbar__actions { display: flex; align-items: center; gap: 0.75rem; }
-    .admin-btn-site { display: flex; align-items: center; gap: 0.4rem; height: 36px; padding: 0 1rem; background: var(--brand-50); border: 1px solid var(--brand-200); border-radius: var(--radius-sm); color: var(--brand-700); font-family: inherit; font-size: 0.8rem; font-weight: 600; text-decoration: none; transition: all 150ms; }
-    .admin-btn-site:hover { background: var(--brand-100); }
-    .admin-btn-logout { display: flex; align-items: center; gap: 0.5rem; height: 36px; padding: 0 1rem; background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-muted); font-family: inherit; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 150ms; }
-    .admin-btn-logout:hover { border-color: var(--danger); color: var(--danger); background: #FEF2F2; }
-    .admin-btn-logout svg { width: 16px; height: 16px; }
+    .admin-topbar__brand { display: flex; align-items: center; gap: 0.875rem; text-decoration: none; }
+    .admin-topbar__logo {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--brand-600), var(--brand-700));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      color: #fff; box-shadow: 0 8px 20px -6px rgba(79,70,229,0.5);
+    }
+    .admin-topbar__logo svg { width: 24px; height: 24px; }
+    .admin-topbar__title { font-family: 'Outfit', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+    
+    .admin-btn-site {
+      display: flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem;
+      background: var(--brand-500); border: none; border-radius: 99px;
+      color: #fff; font-size: 0.85rem; font-weight: 600; text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(99,102,241,0.25);
+    }
+    .admin-btn-site:hover { background: var(--brand-600); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(99,102,241,0.4); }
+    
+    .admin-btn-logout {
+      width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;
+      background: var(--glass); border: 1px solid var(--glass-border); border-radius: 50%;
+      color: var(--text-muted); cursor: pointer; transition: all 0.3s;
+    }
+    .admin-btn-logout:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.1); transform: rotate(15deg); }
 
     /* ─── CONTENT LAYOUT ─── */
-    .admin-content { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+    .admin-layout { display: flex; min-height: calc(100vh - 72px); }
+    .admin-sidebar { width: 280px; background: var(--glass); border-right: 1px solid var(--glass-border); padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; position: sticky; top: 72px; height: calc(100vh - 72px); }
+    .admin-main { flex: 1; padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+    
+    .nav-item { display: flex; align-items: center; gap: 0.875rem; padding: 0.875rem 1.25rem; border-radius: var(--radius-sm); color: var(--text-muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: all 0.2s; }
+    .nav-item:hover { background: var(--brand-50); color: var(--brand-600); }
+    .nav-item.active { background: var(--brand-600); color: #fff; box-shadow: 0 4px 12px rgba(79,70,229,0.2); }
+    .nav-item svg { width: 20px; height: 20px; }
+
+    .fade-in { animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* ─── WELCOME / STATS ─── */
     .admin-welcome { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; box-shadow: var(--shadow); margin-bottom: 2rem; }
@@ -125,14 +147,17 @@
     .admin-sections { display: flex; flex-direction: column; gap: 1.5rem; }
 
     .panel-card {
-      background: var(--card); border: 1px solid var(--border);
+      background: var(--glass); backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius); box-shadow: var(--shadow);
-      overflow: hidden;
+      overflow: hidden; animation: fadeIn 0.4s ease-out backwards;
+      transition: box-shadow 0.3s;
     }
+    .panel-card:hover { box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
     .panel-card__header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.25rem 1.75rem; border-bottom: 1px solid var(--border);
-      background: linear-gradient(to right, #fafbff, var(--card));
+      padding: 1.5rem 2rem; border-bottom: 1px solid var(--glass-border);
+      background: rgba(255,255,255,0.02);
     }
     .panel-card__title {
       display: flex; align-items: center; gap: 0.625rem;
@@ -140,22 +165,29 @@
       font-size: 1.05rem; font-weight: 700; color: var(--text);
     }
     .panel-card__title svg { width: 20px; height: 20px; color: var(--brand-500); flex-shrink: 0; }
-    .panel-card__body { padding: 1.75rem; }
+    .panel-card__body { padding: 1.75rem; position: relative; }
+    .panel-card { animation: fadeIn 0.4s ease-out backwards; }
+    .panel-card:nth-child(1) { animation-delay: 0.1s; }
+    .panel-card:nth-child(2) { animation-delay: 0.2s; }
+    .panel-card:nth-child(3) { animation-delay: 0.3s; }
 
     /* ─── FORM ELEMENTS (Dashboard) ─── */
     .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
     .field-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
     .field-input, .field-textarea, .field-select {
-      width: 100%; padding: 0.625rem 0.875rem;
-      font-family: inherit; font-size: 0.9rem; color: var(--text);
-      background: var(--surface); border: 1.5px solid var(--border);
+      width: 100%; padding: 0.75rem 1rem;
+      font-family: inherit; font-size: 0.95rem; color: var(--text);
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
       border-radius: var(--radius-sm); outline: none;
-      transition: border-color 150ms, box-shadow 150ms;
+      transition: all 0.2s;
     }
+    .field-input::placeholder { color: var(--text-faint); }
     .field-input:focus, .field-textarea:focus, .field-select:focus {
-      border-color: var(--brand-500); box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
-      background: #fff;
+      border-color: var(--brand-500); background: var(--card);
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
     }
+    .field-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem; padding-right: 2.5rem; }
+    .field-select option { background: var(--card); color: var(--text); }
     .field-textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
     /* ─── BUTTONS ─── */
@@ -197,6 +229,9 @@
     .gallery-list__item { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 0.875rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); transition: background 150ms; }
     .gallery-list__item:last-child { border-bottom: none; }
     .gallery-list__item:hover { background: var(--surface); }
+    .gallery-album-group { margin-bottom: 2rem; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--surface); animation: fadeIn 0.4s ease-out backwards; }
+    .gallery-album-header { background: var(--brand-50); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+    .gallery-album-title { font-size: 0.9rem; font-weight: 700; color: var(--brand-800); margin: 0; }
     .gallery-list__thumb { width: 56px; height: 56px; border-radius: var(--radius-xs); object-fit: cover; background: var(--surface); display: block; }
     .gallery-list__info p { margin: 0; }
     .gallery-list__caption { font-size: 0.875rem; font-weight: 600; color: var(--text); }
@@ -210,7 +245,7 @@
     .board-row__drag-handle { cursor: grab; padding: 0 0.5rem; color: var(--text-faint); display: flex; align-items: center; justify-content: center; }
     .board-row__drag-handle:active { cursor: grabbing; }
     .board-rows-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
-    .board-row input { border: 1.5px solid var(--border); padding: 0.45rem 0.7rem; border-radius: var(--radius-xs); font-size: 0.875rem; font-family: inherit; background: #fff; width: 100%; outline: none; transition: border-color 150ms; }
+    .board-row input { border: 1.5px solid var(--border); padding: 0.45rem 0.7rem; border-radius: var(--radius-xs); font-size: 0.875rem; font-family: inherit; background: var(--card); color: var(--text); width: 100%; outline: none; transition: border-color 150ms; }
     .board-row input:focus { border-color: var(--brand-500); }
     .board-row__del { background: none; border: none; color: var(--text-faint); cursor: pointer; width: 28px; height: 28px; border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 150ms; font-size: 1rem; }
     .board-row__del:hover { background: #FEE2E2; color: var(--danger); }
@@ -231,7 +266,7 @@
 
     /* ─── TOAST ─── */
     #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
-    .toast { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1.25rem; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); font-size: 0.875rem; font-weight: 500; min-width: 280px; max-width: 360px; animation: toastIn 250ms ease; }
+    .toast { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1.25rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); color: var(--text); font-size: 0.875rem; font-weight: 500; min-width: 280px; max-width: 360px; animation: toastIn 250ms ease; }
     .toast--success { border-left: 4px solid var(--success); }
     .toast--error { border-left: 4px solid var(--danger); }
     .toast--info { border-left: 4px solid var(--brand-500); }
@@ -318,54 +353,34 @@
         </button>
       </div>
     </div>
-    <div class="admin-content">
-      <div class="admin-welcome">
-        <div class="admin-welcome__top">
-          <div>
-            <h1>Hoş Geldiniz 👋</h1>
-            <p>KGED yönetim paneli — site içeriklerini, galeriyi ve üyeleri buradan yönetebilirsiniz.</p>
-          </div>
+    <div class="admin-layout">
+      <aside class="admin-sidebar">
+        <a href="#" class="nav-item active" onclick="window.switchTab('dashboard', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="#" class="nav-item" onclick="window.switchTab('gallery', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Galeri Yönetimi
+        </a>
+        <a href="#" class="nav-item" onclick="window.switchTab('site', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Site Bilgileri
+        </a>
+        <a href="#" class="nav-item" onclick="window.switchTab('board', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Yönetim Kurulu
+        </a>
+      </aside>
+      
+      <main class="admin-main">
+        <div id="admin-view-dashboard" class="admin-view active">
+          <!-- Dynamic Dashboard Content -->
         </div>
-        <div class="admin-stats">
-          <div class="admin-stat">
-            <div class="admin-stat__icon">📄</div>
-            <div class="admin-stat__value" id="stat-pages">5</div>
-            <div class="admin-stat__label">Aktif Sayfa</div>
-          </div>
-          <div class="admin-stat">
-            <div class="admin-stat__icon">🖼️</div>
-            <div class="admin-stat__value" id="stat-gallery">—</div>
-            <div class="admin-stat__label">Galeri Görseli</div>
-          </div>
-          <div class="admin-stat">
-            <div class="admin-stat__icon">✅</div>
-            <div class="admin-stat__value" id="stat-constitution">✓</div>
-            <div class="admin-stat__label">Tüzük Durumu</div>
-          </div>
+        <div id="admin-view-sections" class="admin-view" style="display:none;">
+          <div class="admin-sections" id="admin-sections-root"></div>
         </div>
-
-        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
-          <h3 style="font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:1rem;">Hızlı Eylemler</h3>
-          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <button class="btn btn--primary" onclick="document.querySelector('#upload-file-real').click()" title="Yeni Görsel Yükle">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-              Görsel Yükle
-            </button>
-            <button class="btn btn--dashed" onclick="window.addBoardMember()" style="width: auto;" title="Yönetim Kurulu Üyesi Ekle">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-              Pano Üyesi Ekle
-            </button>
-            <button class="btn btn--ghost" onclick="document.getElementById('edit-about-title').focus()" title="Site Bilgilerini Düzenle">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              Siteyi Düzenle
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-sections" id="admin-sections-root">
-        <!-- Populated by JS -->
-      </div>
+      </main>
     </div>
   </div>
 
@@ -380,7 +395,7 @@
     <!-- Supabase Admin Panel Script -->
     <script type="module">
       import { login, logout, getSession } from '../src/supabase/auth.js';
-      import { uploadGalleryImage, addGalleryItem, getGalleryItems, deleteGalleryItem } from '../src/supabase/gallery.js';
+      import { uploadGalleryImage, addGalleryItem, getGalleryItems, deleteGalleryItem, deleteAlbum } from '../src/supabase/gallery.js';
       import { getSiteConfig, saveSiteConfig } from '../src/supabase/site_config.js';
 
       // ─── CONSTANTS ───────────────────────────────────────────────
@@ -449,12 +464,6 @@
         document.getElementById('admin-app').classList.remove('visible');
       }
 
-      function showDashboard() {
-        document.getElementById('login-page').style.display = 'none';
-        document.getElementById('admin-app').classList.add('visible');
-        loadSiteContent();
-      }
-
       async function handleLogin(e) {
         e.preventDefault();
         const errorEl = document.getElementById('login-error');
@@ -489,6 +498,181 @@
       async function handleLogout() { await logout(); window.location.reload(); }
 
       // ─── LOAD SITE CONTENT ────────────────────────────────────────
+      // ─── NAVIGATION ──────────────────────────────────────────────
+      window.switchTab = (tab, el) => {
+        // Update nav UI
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        if (el) el.classList.add('active');
+
+        const dashView = document.getElementById('admin-view-dashboard');
+        const sectionsView = document.getElementById('admin-view-sections');
+        const root = document.getElementById('admin-sections-root');
+
+        dashView.style.display = 'none';
+        sectionsView.style.display = 'none';
+        root.innerHTML = ''; // Clear previous
+
+        if (tab === 'dashboard') {
+          dashView.style.display = 'block';
+          dashView.classList.add('fade-in');
+          renderDashboardHome();
+        } else {
+          sectionsView.style.display = 'block';
+          sectionsView.classList.add('fade-in');
+          renderSectionView(tab);
+        }
+      };
+
+      function renderDashboardHome() {
+        const dash = document.getElementById('admin-view-dashboard');
+        dash.innerHTML = `
+          <div class="admin-welcome fade-in">
+            <div class="admin-welcome__top">
+              <div>
+                <h1 style="font-family:'Outfit'; font-size: 2rem; margin-bottom: 0.5rem;">Hoş Geldiniz 👋</h1>
+                <p>KGED Premium Dashboard — tüm sistem kontrolleri parmaklarınızın ucunda.</p>
+              </div>
+            </div>
+            
+            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1rem;">
+              <div class="panel-card" style="padding: 1.5rem; cursor: pointer;" onclick="window.switchTab('gallery', document.querySelectorAll('.nav-item')[1])">
+                <div style="display:flex; align-items:center; gap: 1rem;">
+                  <div style="width:50px; height:50px; background:rgba(99,102,241,0.1); color:var(--brand-600); border-radius:12px; display:flex; align-items:center; justify-content:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  </div>
+                  <div>
+                    <h4 style="margin:0; font-size:1.1rem;">Galeriye Git</h4>
+                    <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">Görsel ve albümleri yönetin</p>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-card" style="padding: 1.5rem; cursor: pointer;" onclick="window.switchTab('site', document.querySelectorAll('.nav-item')[2])">
+                <div style="display:flex; align-items:center; gap: 1rem;">
+                  <div style="width:50px; height:50px; background:rgba(16,185,129,0.1); color:var(--success); border-radius:12px; display:flex; align-items:center; justify-content:center;">
+                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </div>
+                  <div>
+                    <h4 style="margin:0; font-size:1.1rem;">Siteyi Düzenle</h4>
+                    <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">İletişim ve Hakkımızda bilgileri</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderSectionView(type) {
+        if (!siteContent) return;
+        const root = document.getElementById('admin-sections-root');
+        
+        if (type === 'gallery') {
+          root.innerHTML = renderGalleryUI();
+          loadGalleryManagement();
+          setTimeout(setupDropzone, 100);
+        } else if (type === 'site') {
+          root.innerHTML = renderSiteInfoUI();
+          document.getElementById('btn-save-config').addEventListener('click', handleSaveConfig);
+        } else if (type === 'board') {
+          root.innerHTML = renderBoardUI();
+          window.renderBoardRows();
+        }
+      }
+
+      // ─── UI TEMPLATES ──────────────────────────────────────────
+      function renderGalleryUI() {
+        return `
+          <div class="panel-card fade-in">
+            <div class="panel-card__header">
+              <div class="panel-card__title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Galeri Yönetimi
+              </div>
+              <span style="font-size:0.75rem;color:var(--text-faint);">Max 10 görsel / yükleme</span>
+            </div>
+            <div class="panel-card__body">
+              <input type="file" id="upload-file-real" accept="image/*" multiple />
+              <div class="dropzone" id="upload-dropzone">
+                <svg class="dropzone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <p class="dropzone__text"><strong>Görselleri sürükleyin</strong> veya tıklayın</p>
+              </div>
+              <div class="upload-preview-grid" id="upload-preview-grid"></div>
+
+              <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:1rem;margin-top:1.5rem;">
+                <div class="field-group"><label class="field-label">Başlık</label><input class="field-input" type="text" id="upload-caption" /></div>
+                <div class="field-group"><label class="field-label">Erişilebilirlik</label><input class="field-input" type="text" id="upload-alt" /></div>
+                <div class="field-group"><label class="field-label">Albüm</label><input class="field-input" type="text" id="upload-album" /></div>
+                <div class="field-group">
+                  <label class="field-label">Kategori</label>
+                  <select class="field-select" id="upload-category">
+                    <option value="etkinlik">Etkinlik</option><option value="toplanti">Toplantı</option><option value="egitim">Eğitim</option><option value="diger">Diğer</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="upload-progress" id="upload-progress">
+                <div class="upload-progress__bar-track"><div class="upload-progress__bar-fill" id="upload-bar" style="width:0%"></div></div>
+                <div class="upload-progress__text" id="upload-status-text">Hazırlanıyor...</div>
+              </div>
+
+              <button id="btn-upload" class="btn btn--primary" style="margin-top:1.5rem;width:100%;justify-content:center;" onclick="window.handleImageAdd()">
+                Yüklemeyi Başlat
+              </button>
+
+              <div class="quota-container" id="quota-container">
+                <div class="quota-header"><span>Depolama</span><span id="quota-text">...</span></div>
+                <div class="quota-bar-track"><div class="quota-bar-fill" id="quota-fill" style="width:0%"></div></div>
+              </div>
+
+              <div style="margin-top:2.5rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                  <h3 style="font-size:0.85rem;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin:0;">Mevcut Görseller</h3>
+                  <input type="text" id="gallery-search" placeholder="Ara..." class="field-input" style="width:200px; height:36px;" onkeyup="window.filterAdminGalleryList(this.value)" />
+                </div>
+                <div class="gallery-list" id="gallery-manager-list"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderSiteInfoUI() {
+        return `
+          <div class="panel-card fade-in">
+            <div class="panel-card__header">
+              <div class="panel-card__title">Site Bilgileri</div>
+              <button id="btn-save-config" class="btn btn--primary">Kaydet</button>
+            </div>
+            <div class="panel-card__body">
+               <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+                  <div>
+                    <h4 style="font-size:0.7rem;color:var(--brand-600);text-transform:uppercase;margin-bottom:1rem;border-bottom:1px solid var(--border);">Hakkımızda</h4>
+                    <div class="field-group"><label class="field-label">Başlık</label><input class="field-input" id="edit-about-title" value="${siteContent.about?.title || ''}" /></div>
+                    <div class="field-group"><label class="field-label">Tanıtım</label><textarea class="field-textarea" id="edit-about-intro">${siteContent.about?.intro || ''}</textarea></div>
+                  </div>
+                  <div>
+                    <h4 style="font-size:0.7rem;color:var(--brand-600);text-transform:uppercase;margin-bottom:1rem;border-bottom:1px solid var(--border);">İletişim</h4>
+                    <div class="field-group"><label class="field-label">Telefon</label><input class="field-input" id="edit-contact-phone" value="${siteContent.contact?.phone || ''}" /></div>
+                    <div class="field-group"><label class="field-label">E-posta</label><input class="field-input" id="edit-contact-email" value="${siteContent.contact?.email || ''}" /></div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderBoardUI() {
+        return `
+          <div class="panel-card fade-in">
+            <div class="panel-card__header"><div class="panel-card__title">Yönetim Kurulu</div></div>
+            <div class="panel-card__body">
+              <div class="board-rows-list" id="board-editor-list"></div>
+              <button class="btn btn--dashed" onclick="window.addBoardMember()">Yeni Üye Ekle</button>
+            </div>
+          </div>
+        `;
+      }
+
       async function loadSiteContent() {
         try {
           let data = await getSiteConfig();
@@ -497,13 +681,18 @@
             data = await res.json();
           }
           siteContent = data;
-          renderDashboardUI();
-          loadGalleryManagement();
         } catch (e) {
           console.error('Veri yükleme hatası', e);
-          document.getElementById('admin-sections-root').innerHTML =
-            '<div style="padding:2rem;color:var(--danger);text-align:center;background:#fff;border-radius:var(--radius);border:1px solid var(--border);">⚠️ Site verileri yüklenemedi. <button onclick="loadSiteContent()" style="margin-left:1rem;color:var(--brand-600);border:none;background:none;cursor:pointer;font-weight:600;">Tekrar Dene</button></div>';
+          showToast('Site verileri yüklenemedi.', 'error');
         }
+      }
+
+      async function showDashboard() {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('admin-app').style.display = 'block';
+        document.getElementById('admin-app').classList.add('visible');
+        await loadSiteContent();
+        window.switchTab('dashboard', document.querySelector('.nav-item'));
       }
 
       // ─── GALLERY MANAGEMENT ───────────────────────────────────────
@@ -515,16 +704,24 @@
         galleryList.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted);">Yükleniyor...</div>';
         try {
           adminGalleryItems = await getGalleryItems();
-          document.getElementById('stat-gallery').textContent = adminGalleryItems.length;
+          const galleryCount = adminGalleryItems.length;
+          document.getElementById('stat-gallery').textContent = galleryCount;
+          if (document.getElementById('stat-gallery-big')) {
+            document.getElementById('stat-gallery-big').textContent = galleryCount;
+          }
           
           try {
             const { getStorageQuota } = await import('/src/supabase/gallery.js');
             const quota = await getStorageQuota();
             const fill = document.getElementById('quota-fill');
             const pText = document.getElementById('quota-text');
+            const qBig = document.getElementById('stat-quota-big');
+
             if (fill && pText) {
               fill.style.width = `${quota.percentUsed}%`;
               pText.textContent = `${(quota.totalBytes / (1024 * 1024)).toFixed(1)} MB / 50 MB`;
+              if (qBig) qBig.textContent = `${quota.percentUsed}%`;
+              
               if (quota.percentUsed > 85) fill.classList.add('danger');
               else fill.classList.remove('danger');
             }
@@ -542,22 +739,55 @@
         const galleryList = document.getElementById('gallery-manager-list');
         if (!galleryList) return;
         if (items.length === 0) {
-          galleryList.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted);">Henüz görsel bulunmuyor.</div>';
+          galleryList.innerHTML = `
+            <div style="padding:4rem 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem;">
+              <div style="width:64px;height:64px;border-radius:50%;background:var(--brand-50);color:var(--brand-300);display:flex;align-items:center;justify-content:center;margin-bottom:0.5rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              </div>
+              <p style="font-weight:600;color:var(--text);margin:0;">Henüz görsel bulunmuyor</p>
+              <p style="font-size:0.875rem;color:var(--text-faint);margin:0;max-width:240px;">Yukarıdaki alanı kullanarak ilk görsellerinizi yüklemeye başlayabilirsiniz.</p>
+            </div>
+          `;
           return;
         }
-        galleryList.innerHTML = items.map(item => `
-          <div class="gallery-list__item">
-            <img class="gallery-list__thumb" src="${item.url}" alt="${item.caption || ''}" loading="lazy" />
-            <div class="gallery-list__info">
-              <p class="gallery-list__caption">${item.caption || 'Açıklamasız'}</p>
-              <p class="gallery-list__meta">
-                ${item.category || 'etkinlik'}
-                ${item.album_id ? `<span class="gallery-list__badge">📁 ${item.album_id}</span>` : ''}
-              </p>
+
+        // Group by album_id
+        const albums = {};
+        items.forEach(item => {
+          const aid = item.album_id || 'Genel (Albüm Dışı)';
+          if (!albums[aid]) albums[aid] = [];
+          albums[aid].push(item);
+        });
+
+        let html = '';
+        Object.entries(albums).forEach(([albumId, albumItems]) => {
+          const isRealAlbum = albumId !== 'Genel (Albüm Dışı)';
+          html += `
+            <div class="gallery-album-group">
+              <div class="gallery-album-header">
+                <h4 class="gallery-album-title">📁 ${albumId} (${albumItems.length} Görsel)</h4>
+                ${isRealAlbum ? `<button class="btn btn--danger" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;" onclick="window.handleDeleteAlbum('${albumId}')">Albümü Komple Sil</button>` : ''}
+              </div>
+              <div style="display: flex; flex-direction: column; background: var(--card);">
+                ${albumItems.map(item => `
+                  <div class="gallery-list__item">
+                    <img class="gallery-list__thumb" src="${item.url}" alt="${item.caption || ''}" loading="lazy" />
+                    <div class="gallery-list__info">
+                      <p class="gallery-list__caption">${item.caption || 'Açıklamasız'}</p>
+                      <p class="gallery-list__meta">
+                        ${item.category || 'etkinlik'}
+                        ${item.alt_text ? `<span style="font-style: italic; color: var(--text-faint); margin-left: 0.5rem;">Alt: ${item.alt_text}</span>` : ''}
+                      </p>
+                    </div>
+                    <button class="btn btn--danger" onclick="window.handleDeleteGallery('${item.id}', '${item.url}')">Sil</button>
+                  </div>
+                `).join('')}
+              </div>
             </div>
-            <button class="btn btn--danger" onclick="window.handleDeleteGallery('${item.id}', '${item.url}')">Sil</button>
-          </div>
-        `).join('');
+          `;
+        });
+
+        galleryList.innerHTML = html;
       }
 
       window.filterAdminGalleryList = (query) => {
@@ -592,158 +822,63 @@
         }
       };
 
-      // ─── RENDER DASHBOARD UI ──────────────────────────────────────
-      function renderDashboardUI() {
+      window.handleDeleteAlbum = async (albumId) => {
+        if (!confirm(`'${albumId}' albümündeki TÜM görselleri silmek istediğinize emin misiniz? Bu işlem geri alınamaz!`)) return;
+        const btn = event.target;
+        const oldText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Siliniyor...';
+        try {
+          await deleteAlbum(albumId);
+          showToast(`'${albumId}' albümü başarıyla silindi.`, 'success');
+          loadGalleryManagement();
+        } catch (e) {
+          showToast('Albüm silme hatası: ' + e.message, 'error');
+          btn.disabled = false;
+          btn.textContent = oldText;
+        }
+      };
+
+      // ─── HANDLERS ────────────────────────────────────────────────
+      window.handleSaveConfig = async () => {
         if (!siteContent) return;
-        const root = document.getElementById('admin-sections-root');
-        root.innerHTML = `
-          <!-- 1. Site Bilgileri -->
-          <div class="panel-card">
-            <div class="panel-card__header">
-              <div class="panel-card__title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                1. Site Bilgileri (Hakkımızda & İletişim)
-              </div>
-              <button id="btn-save-config" class="btn btn--primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                Kaydet
-              </button>
-            </div>
-            <div class="panel-card__body">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
-                <div style="display:flex;flex-direction:column;gap:1rem;">
-                  <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--brand-600);padding-bottom:.5rem;border-bottom:2px solid var(--brand-100);">Hakkımızda</div>
-                  <div class="field-group">
-                    <label class="field-label">Başlık</label>
-                    <input class="field-input" type="text" id="edit-about-title" value="${siteContent.about?.title || ''}" />
-                  </div>
-                  <div class="field-group">
-                    <label class="field-label">Kısa Tanıtım</label>
-                    <textarea class="field-textarea" id="edit-about-intro" rows="3">${siteContent.about?.intro || ''}</textarea>
-                  </div>
-                  <div class="field-group">
-                    <label class="field-label">Detaylı Açıklama</label>
-                    <textarea class="field-textarea" id="edit-about-desc" rows="5">${siteContent.about?.description || ''}</textarea>
-                  </div>
-                </div>
-                <div style="display:flex;flex-direction:column;gap:1rem;">
-                  <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--brand-600);padding-bottom:.5rem;border-bottom:2px solid var(--brand-100);">İletişim</div>
-                  <div class="field-group">
-                    <label class="field-label">Telefon</label>
-                    <input class="field-input" type="text" id="edit-contact-phone" value="${siteContent.contact?.phone || ''}" />
-                  </div>
-                  <div class="field-group">
-                    <label class="field-label">E-posta</label>
-                    <input class="field-input" type="email" id="edit-contact-email" value="${siteContent.contact?.email || ''}" />
-                  </div>
-                  <div class="field-group">
-                    <label class="field-label">WhatsApp (href)</label>
-                    <input class="field-input" type="text" id="edit-contact-whatsapp" value="${siteContent.contact?.whatsappHref || ''}" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        const btn = document.getElementById('btn-save-config');
+        const oldText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Kaydediliyor...';
 
-          <!-- 2. Galeri Yönetimi -->
-          <div class="panel-card">
-            <div class="panel-card__header">
-              <div class="panel-card__title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                2. Galeri Yönetimi
-              </div>
-              <span style="font-size:0.75rem;color:var(--text-faint);">Max ${MAX_FILES} görsel / yükleme · Sıkıştırma: otomatik</span>
-            </div>
-            <div class="panel-card__body">
-              <input type="file" id="upload-file-real" accept="image/*" multiple />
-              <div class="dropzone" id="upload-dropzone">
-                <svg class="dropzone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                <p class="dropzone__text"><strong>Görselleri buraya sürükleyin</strong> veya tıklayın</p>
-                <p class="dropzone__sub">PNG, JPG, WebP — max ${MAX_FILES} dosya — otomatik sıkıştırılır</p>
-              </div>
-              <div class="upload-preview-grid" id="upload-preview-grid"></div>
+        try {
+          siteContent.about.title = document.getElementById('edit-about-title')?.value || '';
+          siteContent.about.intro = document.getElementById('edit-about-intro')?.value || '';
+          siteContent.contact.phone = document.getElementById('edit-contact-phone')?.value || '';
+          siteContent.contact.email = document.getElementById('edit-contact-email')?.value || '';
 
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem;">
-                <div class="field-group">
-                  <label class="field-label">Açıklama</label>
-                  <input class="field-input" type="text" id="upload-caption" placeholder="İsteğe bağlı" />
-                </div>
-                <div class="field-group">
-                  <label class="field-label">Albüm Adı</label>
-                  <input class="field-input" type="text" id="upload-album" placeholder="Boş bırakılabilir" />
-                </div>
-                <div class="field-group">
-                  <label class="field-label">Kategori</label>
-                  <select class="field-select" id="upload-category">
-                    <option value="etkinlik">Etkinlik</option>
-                    <option value="toplanti">Toplantı</option>
-                    <option value="egitim">Eğitim</option>
-                    <option value="ziyaret">Ziyaret</option>
-                    <option value="diger">Diğer</option>
-                  </select>
-                </div>
-              </div>
+          await saveSiteConfig(siteContent);
+          showToast('Site bilgileri güncellendi.', 'success');
+        } catch (e) {
+          showToast('Hata: ' + e.message, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = oldText;
+        }
+      };
 
-              <div class="upload-progress" id="upload-progress">
-                <div class="upload-progress__bar-track"><div class="upload-progress__bar-fill" id="upload-bar" style="width:0%"></div></div>
-                <div class="upload-progress__text" id="upload-status-text">Hazırlanıyor...</div>
-              </div>
-
-              <button id="btn-upload" class="btn btn--primary" style="margin-top:1rem;width:100%;justify-content:center;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-                Veritabanına Yükle
-              </button>
-
-              <div class="quota-container" id="quota-container">
-                <div class="quota-header">
-                  <span>Depolama Alanı</span>
-                  <span id="quota-text">Hesaplanıyor...</span>
-                </div>
-                <div class="quota-bar-track">
-                  <div class="quota-bar-fill" id="quota-fill" style="width: 0%"></div>
-                </div>
-                <div class="quota-footer">Limit: 50MB</div>
-              </div>
-
-              <div style="display:flex; justify-content:space-between; align-items:center; margin:1.75rem 0 0.75rem;">
-                <h3 style="font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:0;">Mevcut Görseller</h3>
-                <input type="text" id="gallery-search" placeholder="Görsellerde veya albümlerde ara..." class="field-input" style="width:250px; font-size:0.8rem; padding: 0.35rem 0.5rem; height:auto;" onkeyup="window.filterAdminGalleryList(this.value)" />
-              </div>
-              <div class="gallery-list" id="gallery-manager-list">
-                <div style="padding:2rem;text-align:center;color:var(--text-muted);">Yükleniyor...</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 3. Yönetim Kurulu -->
-          <div class="panel-card">
-            <div class="panel-card__header">
-              <div class="panel-card__title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                3. Yönetim Kurulu
-              </div>
-            </div>
-            <div class="panel-card__body">
-              <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.25rem;">Yönetim kurulu üyelerini aşağıdan düzenleyebilirsiniz. Değişiklikler "Site Bilgileri" kaydet butonuyla kaydedilir.</p>
-              <div class="board-rows-list" id="board-editor-list">
-                <!-- Board list is rendered by window.renderBoardRows() -->
-              </div>
-              <button class="btn btn--dashed" onclick="window.addBoardMember()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Yeni Üye Ekle
-              </button>
-            </div>
-          </div>
-        `;
-
-        // Wait for DOM to attach
-        setTimeout(() => {
-          window.renderBoardRows();
-          document.getElementById('btn-upload').addEventListener('click', handleImageAdd);
-          document.getElementById('btn-save-config').addEventListener('click', handleSaveConfig);
-          setupDropzone();
-        }, 50);
-      }
+      window.handleSaveBoard = async () => {
+        if (!siteContent) return;
+        const btn = document.getElementById('btn-save-board');
+        const oldText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Kaydediliyor...';
+        try {
+          await saveSiteConfig(siteContent);
+          showToast('Yönetim kurulu güncellendi.', 'success');
+        } catch (e) {
+          showToast('Hata: ' + e.message, 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = oldText;
+        }
+      };
 
       // ─── DROPZONE ─────────────────────────────────────────────────
       function setupDropzone() {
@@ -844,32 +979,12 @@
         window.renderBoardRows();
       };
 
-      // ─── SAVE CONFIG ──────────────────────────────────────────────
-      async function handleSaveConfig() {
-        const btn = document.getElementById('btn-save-config');
-        btn.disabled = true; btn.textContent = 'Kaydediliyor...';
-        try {
-          siteContent.about.title = document.getElementById('edit-about-title').value;
-          siteContent.about.intro = document.getElementById('edit-about-intro').value;
-          siteContent.about.description = document.getElementById('edit-about-desc').value;
-          siteContent.contact.phone = document.getElementById('edit-contact-phone').value;
-          siteContent.contact.email = document.getElementById('edit-contact-email').value;
-          siteContent.contact.whatsappHref = document.getElementById('edit-contact-whatsapp').value;
-          await saveSiteConfig(siteContent);
-          showToast('Site konfigürasyonu başarıyla kaydedildi!', 'success');
-        } catch (e) {
-          showToast('Hata: ' + e.message, 'error');
-        } finally {
-          btn.disabled = false;
-          btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Kaydet`;
-        }
-      }
-
       // ─── IMAGE UPLOAD ─────────────────────────────────────────────
-      async function handleImageAdd() {
+      window.handleImageAdd = async () => {
         if (pendingFiles.length === 0) { showToast('Lütfen en az bir görsel seçin.', 'info'); return; }
 
         const captionInput = document.getElementById('upload-caption');
+        const altInput = document.getElementById('upload-alt');
         const categoryInput = document.getElementById('upload-category');
         const albumInput = document.getElementById('upload-album');
         const progress = document.getElementById('upload-progress');
@@ -895,6 +1010,7 @@
             await addGalleryItem({
               url: publicUrl,
               caption: captionInput.value || file.name.replace(/\.[^.]+$/, ''),
+              alt_text: altInput.value || captionInput.value || file.name.replace(/\.[^.]+$/, ''),
               category: categoryInput.value || 'etkinlik',
               album_id: albumInput.value.trim() || null,
               order: 0,
@@ -903,6 +1019,7 @@
           } catch (error) {
             console.error('Yükleme hatası:', error);
             failCount++;
+            showToast(`Yükleme hatası (${file.name}): ${error.message || error.code || 'Bilinmeyen hata'}`, 'error');
           }
         }
 
@@ -912,6 +1029,7 @@
 
         pendingFiles = [];
         captionInput.value = '';
+        altInput.value = '';
         albumInput.value = '';
         renderPreview();
         loadGalleryManagement();
