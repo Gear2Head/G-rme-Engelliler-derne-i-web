@@ -1,25 +1,62 @@
 import { supabase } from './config.js';
 
+function sanitizePath(str) {
+  return str
+    .toLowerCase()
+    .replace(/\s+/g, '_')
+    .replace(/[çÇ]/g, 'c').replace(/[ğĞ]/g, 'g').replace(/[ıİ]/g, 'i')
+    .replace(/[öÖ]/g, 'o').replace(/[şŞ]/g, 's').replace(/[üÜ]/g, 'u')
+    .replace(/[^a-z0-9_.\-]/g, '');
+}
+
 export async function uploadGalleryImage(file, path) {
+  const safePath = sanitizePath(path);
   const { data, error } = await supabase.storage
     .from('gallery')
-    .upload(path, file, { cacheControl: '3600', upsert: false });
+    .upload(safePath, file, { cacheControl: '3600', upsert: false });
   if (error) throw error;
-  
+
   const { data: publicURLData } = supabase.storage
     .from('gallery')
-    .getPublicUrl(path);
-    
+    .getPublicUrl(safePath);
+
   return publicURLData.publicUrl;
 }
 
 export async function addGalleryItem(item) {
+  // album_id and is_cover are optional; included if column exists in DB
+  const payload = {
+    url: item.url,
+    caption: item.caption,
+    category: item.category,
+    order: item.order ?? 0,
+    ...(item.album_id ? { album_id: item.album_id } : {}),
+    ...(item.is_cover !== undefined ? { is_cover: item.is_cover } : {}),
+  };
   const { data, error } = await supabase
     .from('gallery_items')
-    .insert([item])
+    .insert([payload])
     .select();
   if (error) throw error;
   return data;
+}
+
+export async function deleteAlbum(albumId) {
+  const { data: items } = await supabase
+    .from('gallery_items')
+    .select('id, url')
+    .eq('album_id', albumId);
+  if (items && items.length > 0) {
+    for (const item of items) {
+      let path = null;
+      try {
+        const urlObj = new URL(item.url);
+        const parts = urlObj.pathname.split('/storage/v1/object/public/gallery/');
+        if (parts.length > 1) path = parts[1];
+      } catch {}
+      await deleteGalleryItem(item.id, path);
+    }
+  }
 }
 
 export async function getGalleryItems() {
@@ -55,4 +92,23 @@ export async function updateGalleryItemOrder(id, newOrder) {
     .update({ order: newOrder })
     .eq('id', id);
   if (error) throw error;
+}
+
+export async function getStorageQuota() {
+  const { data, error } = await supabase.storage.from('gallery').list();
+  if (error) throw error;
+  
+  let totalBytes = 0;
+  if (data) {
+    totalBytes = data.reduce((sum, file) => sum + (file.metadata?.size || 0), 0);
+  }
+  
+  const limitBytes = 50 * 1024 * 1024; // 50MB
+  const percentUsed = Math.min((totalBytes / limitBytes) * 100, 100);
+  
+  return {
+    totalBytes,
+    limitBytes,
+    percentUsed: percentUsed.toFixed(1)
+  };
 }

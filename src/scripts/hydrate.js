@@ -42,6 +42,21 @@ export async function initHydration() {
       }
     }
 
+    // 4. Footer Last Updated
+    if (config._last_updated) {
+      const dateStr = new Date(config._last_updated).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+      updateText('last-updated-date', dateStr);
+    }
+
+    // 5. SEO / Meta Tag Hydration
+    if (config.about && config.about.intro) {
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute('content', config.about.intro);
+
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute('content', config.about.intro);
+    }
+
   } catch (err) {
     console.warn('[KGED] Hydrate hatası (site statik verilerle devam ediyor):', err);
   }

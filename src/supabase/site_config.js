@@ -7,14 +7,20 @@ import { supabase } from './config.js';
 export async function getSiteConfig() {
   const { data, error } = await supabase
     .from('site_config')
-    .select('data')
+    .select('data, updated_at')
     .eq('id', 'content')
     .single();
     
   if (error && error.code !== 'PGRST116') { // PGRST116: No rows found
     throw error;
   }
-  return data ? data.data : null;
+  if (data) {
+    if (data.data) {
+       data.data._last_updated = data.updated_at;
+    }
+    return data.data;
+  }
+  return null;
 }
 
 export async function saveSiteConfig(configData) {

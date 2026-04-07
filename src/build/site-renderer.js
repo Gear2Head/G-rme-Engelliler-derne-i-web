@@ -235,7 +235,10 @@ function renderFooter(content, options = {}) {
         </div>
       </div>
       <div class="footer__bottom">
-        <p class="footer__copy">© <span id="footer-year"></span> ${escapeHtml(content.site.name)}. Tüm hakları saklıdır.</p>
+        <p class="footer__copy">
+          © <span id="footer-year"></span> ${escapeHtml(content.site.name)}. Tüm hakları saklıdır.
+          <span style="opacity: 0.6; margin-left: 0.5rem; font-size: 0.8rem;">(Son Güncelleme: <span id="last-updated-date">Yükleniyor...</span>)</span>
+        </p>
         <a href="#main-content" id="back-to-top-footer" class="btn btn--ghost btn--sm" style="font-size: 0.8rem;">${icon('chevronUp')}Başa Dön</a>
       </div>
     </div>
@@ -524,10 +527,30 @@ function renderGalleryContent(content) {
       .gallery-empty svg { width: 64px; height: 64px; color: var(--color-text-faint); margin-inline: auto; margin-bottom: var(--space-4); display: block; }
       .gallery-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: var(--space-8); }
       .gallery-lightbox.open { display: flex; }
-      .gallery-lightbox img { max-width: 90vw; max-height: 80vh; object-fit: contain; border-radius: var(--radius-lg); }
+      .gallery-lightbox img { max-width: 90vw; max-height: 80vh; object-fit: contain; border-radius: var(--radius-lg); transition: opacity 200ms ease; }
       .gallery-lightbox-close { position: absolute; top: var(--space-6); right: var(--space-6); background: rgba(255,255,255,0.1); border: none; color: white; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 24px; transition: background var(--transition-fast); }
       .gallery-lightbox-close:hover { background: rgba(255,255,255,0.2); }
-      .gallery-lightbox-caption { position: absolute; bottom: var(--space-6); left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: var(--space-3) var(--space-6); border-radius: var(--radius-lg); font-size: var(--text-sm); text-align: center; white-space: nowrap; }
+      .gallery-lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; color: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background var(--transition-fast); }
+      .gallery-lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+      .gallery-lightbox-nav.prev { left: var(--space-6); }
+      .gallery-lightbox-nav.next { right: var(--space-6); }
+      .gallery-lightbox-caption { position: absolute; bottom: var(--space-6); left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: var(--space-3) var(--space-6); border-radius: var(--radius-lg); font-size: var(--text-sm); text-align: center; white-space: nowrap; transition: opacity 200ms ease; }
+      
+      /* Album Styles */
+      .gallery-album-wrap { grid-column: 1 / -1; display: flex; flex-direction: column; gap: var(--space-4); margin-bottom: var(--space-4); }
+      .gallery-album-header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); cursor: pointer; user-select: none; transition: background var(--transition-fast); }
+      .gallery-album-header:hover { background: var(--color-bg-card); }
+      .gallery-album-title { font-size: var(--text-lg); font-weight: var(--weight-bold); color: var(--color-text); display: flex; align-items: center; gap: var(--space-2); }
+      .gallery-album-badge { font-size: var(--text-xs); background: var(--color-primary-100); color: var(--color-primary-700); padding: 2px 8px; border-radius: var(--radius-full); font-weight: var(--weight-semibold); }
+      .gallery-album-icon { transition: transform 300ms ease; }
+      .gallery-album-wrap.expanded .gallery-album-icon { transform: rotate(180deg); }
+      .gallery-album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-6); overflow: hidden; display: none; }
+      .gallery-album-wrap.expanded .gallery-album-grid { display: grid; animation: fadeInDown 300ms ease forwards; }
+      
+      @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
     </style>`;
 
   return `${galleryStyles}
@@ -555,8 +578,10 @@ function renderGalleryContent(content) {
   </section>
 
   <div id="gallery-lightbox" class="gallery-lightbox" tabindex="-1" role="dialog" aria-modal="true" aria-label="Görsel büyütücü">
-    <button class="gallery-lightbox-close" onclick="window.closeLightbox()" aria-label="Kapat">×</button>
+    <button class="gallery-lightbox-close" onclick="window.closeLightbox()" aria-label="Kapat">✕</button>
+    <button class="gallery-lightbox-nav prev" id="lightbox-prev" onclick="window.navLightbox(-1)" aria-label="Önceki" style="display:none;"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
     <img id="lightbox-img" src="" alt="" />
+    <button class="gallery-lightbox-nav next" id="lightbox-next" onclick="window.navLightbox(1)" aria-label="Sonraki" style="display:none;"><svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
     <p id="lightbox-caption" class="gallery-lightbox-caption"></p>
   </div>
 
@@ -565,15 +590,51 @@ function renderGalleryContent(content) {
 
     let galleryItems = [];
     let currentFilter = 'all';
+    
+    // Lightbox state
+    let lbItems = [];
+    let lbIndex = -1;
 
     const catColors = { etkinlik:'#4F46E5', toplanti:'#16A34A', egitim:'#D97706', ziyaret:'#0891B2', diger:'#6B7280' };
     const catLabels = { etkinlik:'Etkinlik', toplanti:'Toplantı', egitim:'Eğitim', ziyaret:'Ziyaret', diger:'Diğer' };
 
+    function renderGalleryItem(item) {
+      const cat = item.category || 'etkinlik';
+      const src = item.url || item.imageData || '';
+      const cap = item.caption || '';
+      const label = catLabels[cat] || 'Diğer';
+      const color = catColors[cat] || '#6B7280';
+      const lid = item.id;
+      
+      let imgHtml = '';
+      if (src) {
+        imgHtml = \`<img class="gallery-card__img" data-src="\${src}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="\${cap}" onclick="window.openLightbox('\${lid}')" style="cursor:pointer;" />\`;
+      } else {
+        imgHtml = \`<div class="gallery-card__img-placeholder">\${cap || 'Görsel'}</div>\`;
+      }
+
+      let dateHtml = '';
+      if (item.created_at || item.createdAt) {
+        const d = item.created_at || item.createdAt;
+        dateHtml = \`<p class="gallery-card__date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>\${new Date(d).toLocaleDateString("tr-TR", {day:"numeric",month:"long",year:"numeric"})}</p>\`;
+      }
+
+      return \`<article class="gallery-card" data-category="\${cat}">
+        \${imgHtml}
+        <div class="gallery-card__body">
+          <span class="gallery-card__cat" style="background:\${color};">\${label}</span>
+          \${cap ? \`<p class="gallery-card__title">\${cap}</p>\` : ''}
+          \${dateHtml}
+        </div>
+      </article>\`;
+    }
+
     function renderGalleryPage() {
       const grid = document.getElementById('gallery-page-grid');
-      const items = currentFilter === 'all' ? galleryItems : galleryItems.filter(i => (i.category || 'etkinlik') === currentFilter);
+      // Update global context for lightbox filtering
+      lbItems = currentFilter === 'all' ? galleryItems : galleryItems.filter(i => (i.category || 'etkinlik') === currentFilter);
 
-      if (items.length === 0) {
+      if (lbItems.length === 0) {
         grid.innerHTML = \`<div class="gallery-empty" style="grid-column:1/-1;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           <p style="font-size:var(--text-lg); font-weight:600; margin-bottom:8px;">Henüz görsel eklenmemiş</p>
@@ -582,35 +643,47 @@ function renderGalleryContent(content) {
         return;
       }
 
-      grid.innerHTML = items.map((item, idx) => {
-        const cat = item.category || 'etkinlik';
-        const src = item.url || item.imageData || '';
-        const cap = item.caption || '';
-        const label = catLabels[cat] || 'Diğer';
-        const color = catColors[cat] || '#6B7280';
-        
-        let imgHtml = '';
-        if (src) {
-          imgHtml = '<img class="gallery-card__img" src="' + src + '" alt="' + cap + '" loading="lazy" onclick="window.openLightbox(\\'' + src + '\\', \\'' + cap + '\\')" style="cursor:pointer;" />';
+      // Group by album_id
+      const ungrouped = [];
+      const albums = {};
+
+      lbItems.forEach(item => {
+        if (item.album_id) {
+          if (!albums[item.album_id]) albums[item.album_id] = [];
+          albums[item.album_id].push(item);
         } else {
-          imgHtml = '<div class="gallery-card__img-placeholder">' + (cap || 'Görsel') + '</div>';
+          ungrouped.push(item);
         }
+      });
 
-        let dateHtml = '';
-        if (item.created_at || item.createdAt) {
-          const d = item.created_at || item.createdAt;
-          dateHtml = '<p class="gallery-card__date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + new Date(d).toLocaleDateString("tr-TR", {day:"numeric",month:"long",year:"numeric"}) + '</p>';
-        }
+      let finalHtml = '';
 
-        return '<article class="gallery-card" data-category="' + cat + '">' +
-          imgHtml +
-          '<div class="gallery-card__body">' +
-            '<span class="gallery-card__cat" style="background:' + color + ';">' + label + '</span>' +
-            (cap ? '<p class="gallery-card__title">' + cap + '</p>' : '') +
-            dateHtml +
-          '</div>' +
-        '</article>';
-      }).join('');
+      // Render albums first
+      for (const [albumName, aItems] of Object.entries(albums)) {
+        if (aItems.length === 0) continue;
+        const albumHtml = aItems.map(item => renderGalleryItem(item)).join('');
+        finalHtml += \`
+          <div class="gallery-album-wrap">
+            <div class="gallery-album-header" onclick="this.parentElement.classList.toggle('expanded')">
+              <div class="gallery-album-title">
+                📁 \${escapeHtml(albumName)}
+                <span class="gallery-album-badge">\${aItems.length} Görsel</span>
+              </div>
+              <svg class="gallery-album-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <div class="gallery-album-grid">
+              \${albumHtml}
+            </div>
+          </div>
+        \`;
+      }
+
+      // Then ungrouped items
+      if (ungrouped.length > 0) {
+         finalHtml += ungrouped.map(item => renderGalleryItem(item)).join('');
+      }
+
+      grid.innerHTML = finalHtml;
     }
 
     window.filterGallery = function(btn, cat) {
@@ -619,27 +692,95 @@ function renderGalleryContent(content) {
       currentFilter = cat;
       renderGalleryPage();
     };
+    
+    function updateLightboxState() {
+      if (lbIndex < 0 || lbIndex >= lbItems.length) return;
+      const item = lbItems[lbIndex];
+      const src = item.url || item.imageData || '';
+      const cap = item.caption || '';
+      
+      const imgEl = document.getElementById('lightbox-img');
+      const capEl = document.getElementById('lightbox-caption');
+      
+      imgEl.style.opacity = '0.5';
+      capEl.style.opacity = '0';
+      
+      setTimeout(() => {
+        imgEl.src = src;
+        imgEl.alt = cap || 'Görsel';
+        capEl.textContent = cap;
+        if (item.album_id) capEl.textContent = \`[📁 \${item.album_id}] \${cap}\`;
+        
+        imgEl.style.opacity = '1';
+        capEl.style.opacity = '1';
+      }, 150);
+      
+      document.getElementById('lightbox-prev').style.display = lbIndex > 0 ? 'flex' : 'none';
+      document.getElementById('lightbox-next').style.display = lbIndex < lbItems.length - 1 ? 'flex' : 'none';
+    }
 
-    window.openLightbox = function(src, caption) {
-      const lb = document.getElementById('gallery-lightbox');
-      document.getElementById('lightbox-img').src = src;
-      document.getElementById('lightbox-img').alt = caption || 'Görsel';
-      document.getElementById('lightbox-caption').textContent = caption || '';
-      lb.classList.add('open');
-      lb.focus();
+    window.openLightbox = function(id) {
+       lbIndex = lbItems.findIndex(i => String(i.id) === String(id));
+       if (lbIndex === -1) return;
+       const lb = document.getElementById('gallery-lightbox');
+       updateLightboxState();
+       lb.classList.add('open');
+       lb.focus();
+       document.body.style.overflow = 'hidden'; // Lock scroll
     };
 
     window.closeLightbox = function() {
       document.getElementById('gallery-lightbox').classList.remove('open');
+       document.body.style.overflow = ''; // Restore scroll
+       lbIndex = -1;
     };
+    
+    window.navLightbox = function(dir) {
+      const newIdx = lbIndex + dir;
+      if (newIdx >= 0 && newIdx < lbItems.length) {
+        lbIndex = newIdx;
+        updateLightboxState();
+      }
+    };
+
+    function initIntersectionObserver() {
+      if (!('IntersectionObserver' in window)) return;
+      
+      const lazyImages = [].slice.call(document.querySelectorAll('.gallery-card__img'));
+      const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const lazyImage = entry.target;
+            const src = lazyImage.dataset.src;
+            if (src) {
+              lazyImage.src = src;
+              lazyImage.removeAttribute('data-src');
+            }
+            lazyImage.classList.add('loaded'); // You can add some css transition for .loaded
+            observer.unobserve(lazyImage);
+          }
+        });
+      }, {
+        rootMargin: '0px 0px 200px 0px', // start loading up to 200px before the element comes into viewport
+        threshold: 0.01 
+      });
+
+      lazyImages.forEach(function(lazyImage) {
+        lazyImageObserver.observe(lazyImage);
+      });
+    }
 
     document.getElementById('gallery-lightbox').addEventListener('click', function(e) {
       if (e.target === this) window.closeLightbox();
     });
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') window.closeLightbox();
+       if (!document.getElementById('gallery-lightbox').classList.contains('open')) return;
+       if (e.key === 'Escape') { window.closeLightbox(); return; }
+       if (e.key === 'ArrowRight') { window.navLightbox(1); return; }
+       if (e.key === 'ArrowLeft') { window.navLightbox(-1); return; }
     });
+
 
     async function initGallery() {
       const grid = document.getElementById('gallery-page-grid');
@@ -651,6 +792,7 @@ function renderGalleryContent(content) {
         console.error("Galeri yükleme hatası:", err);
       }
       renderGalleryPage();
+      initIntersectionObserver();
     }
 
     initGallery();
@@ -948,7 +1090,7 @@ function renderHead(pageKey, content) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#4F46E5" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0F1117" media="(prefers-color-scheme: dark)" />
-  <style>:root{--color-bg:#fff;--color-primary-600:#4F46E5;--font-heading:'Outfit',system-ui,sans-serif;--header-height:72px}body{margin:0;opacity:0;font-family:'Inter',system-ui,sans-serif;background:var(--color-bg)}body.ready{opacity:1;transition:opacity .15s ease}#loader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e1b4b,#1a0a3d)}</style>
+  <style>:root{--color-bg:#fff;--color-primary-600:#4F46E5;--font-heading:'Outfit',system-ui,sans-serif;--header-height:72px}body{margin:0;opacity:0;font-family:'Inter',system-ui,sans-serif;background:var(--color-bg)}body.ready{opacity:1;transition:opacity .15s ease}#main-content{animation: fade-in-page 0.3s ease-out forwards;}@keyframes fade-in-page{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}#loader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e1b4b,#1a0a3d)}</style>
   <title>${escapeHtml(pageMeta.title)}</title>
   <meta name="description" content="${escapeAttr(pageMeta.description)}" />
   ${pageMeta.robots ? `<meta name="robots" content="${escapeAttr(pageMeta.robots)}" />` : ''}
