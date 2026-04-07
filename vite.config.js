@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import { renderDocumentFragments } from './src/build/site-renderer.js';
+import { generateSitemapPlugin } from './src/build/generate-sitemap.js';
 
 function resolvePageKey(context) {
   const rawPath = context?.originalUrl || context?.url || context?.path || context?.filename || '/';
@@ -31,10 +32,13 @@ export default defineConfig({
   root: '.',
   base: '/',
   publicDir: 'public',
-  plugins: [siteContentPlugin()],
+  plugins: [siteContentPlugin(), generateSitemapPlugin()],
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    minify: 'terser',
+    terserOptions: { compress: { drop_console: true, drop_debugger: true } },
+    cssCodeSplit: true,
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
@@ -43,6 +47,7 @@ export default defineConfig({
         tuzuk: resolve(__dirname, 'tuzuk/index.html'),
         iletisim: resolve(__dirname, 'iletisim/index.html'),
         notfound: resolve(__dirname, '404.html'),
+        admin: resolve(__dirname, 'admin/index.html'),
       },
     },
   },

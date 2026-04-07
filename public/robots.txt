@@ -1,5 +1,11 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /assets/
+Crawl-delay: 10
+
+# Google
+User-agent: Googlebot
+Allow: /
 
 Sitemap: https://kirshehirgormeengelliler.org.tr/sitemap.xml

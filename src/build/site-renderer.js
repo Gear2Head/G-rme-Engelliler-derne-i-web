@@ -346,11 +346,11 @@ function renderIndexContent(content) {
     <div class="container hero__inner">
       <div class="hero__content">
         <div class="hero__badge" aria-hidden="true">${icon('map')}${escapeHtml(locationLabel)}</div>
-        <h1 class="hero__title" id="hero-heading">${escapeHtml(content.hero.title)}</h1>
-        <p class="hero__subtitle">${escapeHtml(content.hero.subtitle)}</p>
-        <p class="hero__lead">${escapeHtml(content.hero.lead)}</p>
+        <h1 class="hero__title" id="live-hero-title">${escapeHtml(content.hero.title)}</h1>
+        <p class="hero__subtitle" id="live-hero-subtitle">${escapeHtml(content.hero.subtitle)}</p>
+        <p class="hero__lead" id="live-hero-lead">${escapeHtml(content.hero.lead)}</p>
         <div class="hero__actions">
-          <a href="${escapeAttr(content.hero.cta.primary.href)}" class="btn btn--accent btn--lg" id="hero-cta-primary">${icon('phone')}${escapeHtml(content.hero.cta.primary.label)}</a>
+          <a href="${escapeAttr(content.hero.cta.primary.href)}" class="btn btn--accent btn--lg" id="hero-cta-primary">${icon('phone')}<span id="live-hero-cta-label">${escapeHtml(content.hero.cta.primary.label)}</span></a>
           <a href="${escapeAttr(content.hero.cta.secondary.href)}" class="btn btn--secondary btn--lg" id="hero-cta-secondary" style="border-color: rgba(165,180,252,0.4); color: #C7D2FE; background: rgba(99,102,241,0.1);">${icon('info')}${escapeHtml(content.hero.cta.secondary.label)}</a>
         </div>
       </div>
@@ -424,8 +424,8 @@ function renderAboutContent(content) {
           <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">${escapeHtml(content.about.title)}</span></li>
         </ol>
       </nav>
-      <h1 class="page-header__title" id="page-title">${escapeHtml(content.about.title)}</h1>
-      <p class="page-header__lead">${escapeHtml(content.about.pageLead || 'Görme engelli bireylerin yanında, her zaman.')}</p>
+      <h1 class="page-header__title" id="live-about-page-title">${escapeHtml(content.about.title)}</h1>
+      <p class="page-header__lead" id="live-about-page-lead">${escapeHtml(content.about.pageLead || 'Görme engelli bireylerin yanında, her zaman.')}</p>
     </div>
   </section>
 
@@ -434,9 +434,9 @@ function renderAboutContent(content) {
       <div style="max-width: 800px; margin-inline: auto;">
         <div class="section-accent" aria-hidden="true"></div>
         ${foundingBadge}
-        <h2 id="intro-heading" style="font-size: var(--text-3xl); margin-bottom: var(--space-6);">${escapeHtml(content.about.introHeading || 'Biz Kimiz?')}</h2>
-        <p style="font-size: var(--text-lg); line-height: var(--leading-loose); color: var(--color-text-muted); margin-bottom: var(--space-6);">${escapeHtml(content.about.intro)}</p>
-        <p style="font-size: var(--text-base); line-height: var(--leading-loose); color: var(--color-text-muted); margin-bottom: var(--space-6);">${escapeHtml(content.about.description)}</p>
+        <h2 id="live-about-intro-heading" style="font-size: var(--text-3xl); margin-bottom: var(--space-6);">${escapeHtml(content.about.introHeading || 'Biz Kimiz?')}</h2>
+        <p id="live-about-intro" style="font-size: var(--text-lg); line-height: var(--leading-loose); color: var(--color-text-muted); margin-bottom: var(--space-6);">${escapeHtml(content.about.intro)}</p>
+        <p id="live-about-description" style="font-size: var(--text-base); line-height: var(--leading-loose); color: var(--color-text-muted); margin-bottom: var(--space-6);">${escapeHtml(content.about.description)}</p>
         <div class="alert alert--info" role="note" aria-label="Kuruluş bilgisi">
           ${icon('calendar')}
           <span>${escapeHtml(content.about.foundingStatus)}</span>
@@ -461,21 +461,23 @@ function renderAboutContent(content) {
       <div style="max-width: 800px; margin-inline: auto;">
         <div class="section-accent" aria-hidden="true"></div>
         <h2 id="board-heading" style="font-size: var(--text-3xl); margin-bottom: var(--space-6);">${escapeHtml(content.about.boardHeading || 'Yönetim Kurulu')}</h2>
-        ${content.about.boardMembers && content.about.boardMembers.length > 0
-          ? `<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius);padding:var(--space-6);box-shadow:var(--shadow-sm);">
-              <ul style="list-style:none;padding:0;margin:0;display:grid;gap:var(--space-4);">
-                ${content.about.boardMembers.map((member, idx) => `
-                  <li style="display:flex;align-items:center;gap:var(--space-4);padding-bottom:${idx === content.about.boardMembers.length - 1 ? '0' : 'var(--space-4)'};border-bottom:${idx === content.about.boardMembers.length - 1 ? 'none' : '1px solid var(--color-border)'};">
-                    <div style="width:40px;height:40px;background:var(--color-primary-100);color:var(--color-primary-700);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0;">${idx + 1}</div>
-                    <div style="flex:1;">
-                      <p style="font-weight:600;color:var(--color-text);margin-bottom:0.25rem;">${escapeHtml(member.name)}</p>
-                      <p style="font-size:0.85rem;color:var(--color-text-muted);">${escapeHtml(member.role)}</p>
-                    </div>
-                  </li>`).join('')}
-              </ul>
-             </div>`
-          : `<div class="status-banner" role="status" aria-live="polite"><p>${escapeHtml(content.about.boardStatus)}</p></div>`
-        }
+        <div id="live-board-container">
+          ${content.board && content.board.length > 0
+            ? `<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius);padding:var(--space-6);box-shadow:var(--shadow-sm);">
+                <ul style="list-style:none;padding:0;margin:0;display:grid;gap:var(--space-4);">
+                  ${content.board.map((member, idx) => `
+                    <li style="display:flex;align-items:center;gap:var(--space-4);padding-bottom:${idx === content.board.length - 1 ? '0' : 'var(--space-4)'};border-bottom:${idx === content.board.length - 1 ? 'none' : '1px solid var(--color-border)'};">
+                      <div style="width:40px;height:40px;background:var(--color-primary-100);color:var(--color-primary-700);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0;">${idx + 1}</div>
+                      <div style="flex:1;">
+                        <p style="font-weight:600;color:var(--color-text);margin-bottom:0.25rem;">${escapeHtml(member.name)}</p>
+                        <p style="font-size:0.85rem;color:var(--color-text-muted);">${escapeHtml(member.role)}</p>
+                      </div>
+                    </li>`).join('')}
+                </ul>
+               </div>`
+            : `<div class="status-banner" role="status" aria-live="polite"><p>${escapeHtml(content.about.boardStatus)}</p></div>`
+          }
+        </div>
       </div>
     </div>
   </section>
@@ -559,7 +561,9 @@ function renderGalleryContent(content) {
   </div>
 
   <script type="module">
-    let galleryItems = ${JSON.stringify((content.gallery && content.gallery.items) ? content.gallery.items.sort((a,b)=>b.createdAt-a.createdAt) : [])};
+    import { getGalleryItems } from '/src/supabase/gallery.js';
+
+    let galleryItems = [];
     let currentFilter = 'all';
 
     const catColors = { etkinlik:'#4F46E5', toplanti:'#16A34A', egitim:'#D97706', ziyaret:'#0891B2', diger:'#6B7280' };
@@ -580,7 +584,7 @@ function renderGalleryContent(content) {
 
       grid.innerHTML = items.map((item, idx) => {
         const cat = item.category || 'etkinlik';
-        const src = item.imageData || item.url || '';
+        const src = item.url || item.imageData || '';
         const cap = item.caption || '';
         const label = catLabels[cat] || 'Diğer';
         const color = catColors[cat] || '#6B7280';
@@ -593,8 +597,9 @@ function renderGalleryContent(content) {
         }
 
         let dateHtml = '';
-        if (item.createdAt) {
-          dateHtml = '<p class="gallery-card__date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + new Date(item.createdAt).toLocaleDateString("tr-TR", {day:"numeric",month:"long",year:"numeric"}) + '</p>';
+        if (item.created_at || item.createdAt) {
+          const d = item.created_at || item.createdAt;
+          dateHtml = '<p class="gallery-card__date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' + new Date(d).toLocaleDateString("tr-TR", {day:"numeric",month:"long",year:"numeric"}) + '</p>';
         }
 
         return '<article class="gallery-card" data-category="' + cat + '">' +
@@ -636,14 +641,21 @@ function renderGalleryContent(content) {
       if (e.key === 'Escape') window.closeLightbox();
     });
 
-    renderGalleryPage();
-  </script>
+    async function initGallery() {
+      const grid = document.getElementById('gallery-page-grid');
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted);font-weight:500;">Görseller Yükleniyor...</div>';
+      try {
+        const items = await getGalleryItems();
+        if (items) galleryItems = items;
+      } catch (err) {
+        console.error("Galeri yükleme hatası:", err);
+      }
+      renderGalleryPage();
+    }
 
-  <div id="gallery-lightbox" class="gallery-lightbox" tabindex="-1" role="dialog" aria-modal="true" aria-label="Görsel büyütücü">
-    <button class="gallery-lightbox-close" onclick="window.closeLightbox()" aria-label="Kapat">×</button>
-    <img id="lightbox-img" src="" alt="" />
-    <p id="lightbox-caption" class="gallery-lightbox-caption"></p>
-  </div>`;
+    initGallery();
+  </script>
+`;
 }
 
 function renderConstitutionContent(content) {
@@ -888,6 +900,15 @@ function buildOrganizationSchema(content) {
   if (content.site.status.hasAddress && content.contact.address?.full) {
     org.address = { '@type': 'PostalAddress', streetAddress: content.contact.address.full, addressLocality: content.contact.address.city, postalCode: content.contact.address.postalCode, addressCountry: 'TR' };
   }
+  // TODO 45: Add areaServed and Google Maps sameAs
+  const mapsUrl = content.contact.googleMapsUrl;
+  if (mapsUrl) {
+    if (!org.sameAs) org.sameAs = [];
+    if (!org.sameAs.includes(mapsUrl)) org.sameAs.push(mapsUrl);
+  }
+  if (org.contactPoint?.length) {
+    org.contactPoint.forEach(cp => { cp.areaServed = 'Kırşehir'; });
+  }
   return org;
 }
 
@@ -924,9 +945,10 @@ function renderHead(pageKey, content) {
   ].filter(Boolean).join('\n');
 
   return `<meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#FFFFFF" />
-  <style>body{opacity:0}body.ready{opacity:1;transition:opacity .15s ease}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#4F46E5" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0F1117" media="(prefers-color-scheme: dark)" />
+  <style>:root{--color-bg:#fff;--color-primary-600:#4F46E5;--font-heading:'Outfit',system-ui,sans-serif;--header-height:72px}body{margin:0;opacity:0;font-family:'Inter',system-ui,sans-serif;background:var(--color-bg)}body.ready{opacity:1;transition:opacity .15s ease}#loader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e1b4b,#1a0a3d)}</style>
   <title>${escapeHtml(pageMeta.title)}</title>
   <meta name="description" content="${escapeAttr(pageMeta.description)}" />
   ${pageMeta.robots ? `<meta name="robots" content="${escapeAttr(pageMeta.robots)}" />` : ''}
@@ -965,7 +987,13 @@ function renderBody(pageKey, content) {
   ${renderFooter(content, { minimal: pageKey === 'notfound' })}
   ${includeGlobalChrome ? renderBackToTop() : ''}
   ${includeGlobalChrome ? renderWhatsAppFloat(content) : ''}
-  ${includeGlobalChrome ? renderToolbar() : ''}`;
+  ${includeGlobalChrome ? renderToolbar() : ''}
+  ${includeGlobalChrome && content.contact.phone ? `<div class="mobile-cta-bar" role="complementary" aria-label="Hızlı arama">
+    <a href="${escapeAttr(content.contact.phoneHref || 'tel:' + content.contact.phone)}" aria-label="Hemen ara: ${escapeAttr(content.contact.phone)}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      Bizi Ara — ${escapeHtml(content.contact.phone)}
+    </a>
+  </div>` : ''}`;
 }
 
 export function renderDocumentFragments(pageKey) {

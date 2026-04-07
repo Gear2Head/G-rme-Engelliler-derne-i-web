@@ -3,6 +3,123 @@
  * MANTIK: BEM benzeri flat sınıf adları; token'a bağlı, tema değişimine reaktif
  */
 
+/* ─── SR-ONLY (TODO 29) ─────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.sr-only-focusable:focus,
+.sr-only-focusable:focus-within {
+  all: revert;
+}
+
+/* ─── TOUCH HOVER FIX (TODO 20) ────────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  .btn:hover,
+  .btn-primary:hover,
+  .btn-outline:hover { transform: none; box-shadow: none; }
+  .card:hover,
+  [class*="-card"]:hover { transform: none; box-shadow: var(--shadow-sm); }
+}
+
+/* ─── SKELETON LOADING (TODO 49) ───────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    var(--color-surface-hover) 50%,
+    var(--color-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-wave 1.5s ease infinite;
+  border-radius: var(--radius-md);
+}
+@keyframes skeleton-wave {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; background: var(--color-surface); }
+}
+.skeleton-card {
+  height: 280px;
+  border-radius: var(--radius-lg);
+}
+
+/* ─── TOAST NOTIFICATION (TODO 50) ─────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: toast-in 0.3s ease forwards;
+  max-width: 360px;
+}
+.toast--success { background: var(--color-success-bg); color: var(--color-success-text); border: 1px solid var(--color-success-border); }
+.toast--error   { background: var(--color-error-bg);   color: var(--color-error-text);   border: 1px solid var(--color-error-border); }
+.toast--info    { background: var(--color-info-bg);    color: var(--color-info-text);    border: 1px solid var(--color-info-border); }
+.toast--out { animation: toast-out 0.3s ease forwards; }
+@keyframes toast-in  { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes toast-out { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(12px); } }
+
+/* ─── MOBILE CTA BAR (TODO 24) ─────────────────────────────────────── */
+.mobile-cta-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-primary-600);
+  color: #fff;
+  z-index: 900;
+  padding: 0;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.15);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.mobile-cta-bar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: var(--text-base);
+  width: 100%;
+}
+.mobile-cta-bar svg { width: 20px; height: 20px; flex-shrink: 0; }
+@media (max-width: 767px) {
+  .mobile-cta-bar { display: flex; }
+  /* Push content above CTA bar */
+  body { padding-bottom: 60px; }
+}
+@media (min-width: 768px) {
+  .mobile-cta-bar { display: none !important; }
+}
+
 /* ─── SKIP LINK ─────────────────────────────────────────────────────── */
 .skip-link {
   position: absolute;

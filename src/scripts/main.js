@@ -8,6 +8,18 @@ import { initTheme } from './theme.js';
 import { initToolbar } from './toolbar.js';
 import { initLoader } from './loader.js';
 import { initNav } from './nav.js';
+import { showToast } from './toast.js';
+import { initHydration } from './hydrate.js';
+
+// TODO 27: prefers-reduced-motion OS sync
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.documentElement.classList.add('reduced-motion');
+}
+
+// Smooth scroll polyfill (TODO 53) - Safari <15.4
+if (!('scrollBehavior' in document.documentElement.style)) {
+  import('https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/smoothscroll.min.js').catch(() => {});
+}
 
 // FOUC prevention: reveal body after CSS is parsed
 document.body.classList.add('ready');
@@ -15,14 +27,24 @@ document.body.classList.add('ready');
 initTheme();
 initToolbar();
 
-// Vercel Speed Insights (production only, dynamic to avoid build issues)
+// Vercel Speed Insights + Analytics (TODO 58)
 if (import.meta.env.PROD) {
   import('@vercel/speed-insights').then(({ inject }) => inject()).catch(() => {});
+  import('@vercel/analytics').then(({ inject }) => inject()).catch(() => {});
+
+  // TODO 18: PWA Service Worker registration
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
 }
+
+// Export toast for global use (admin panel, gallery etc.)
+window.__showToast = showToast;
 
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initNav();
+  initHydration();
 
   const yearEl = document.getElementById('footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();

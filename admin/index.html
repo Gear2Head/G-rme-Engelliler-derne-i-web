@@ -447,8 +447,8 @@
         <div class="lockout-msg" id="lockout-msg"></div>
         <form id="login-form" autocomplete="off" novalidate>
           <div class="form-group">
-            <label class="form-label" for="admin-username">Kullanıcı Adı</label>
-            <input class="form-input" type="text" id="admin-username" name="username" autocomplete="username" required placeholder="admin" />
+            <label class="form-label" for="admin-email">E-posta Adresi</label>
+            <input class="form-input" type="email" id="admin-email" name="email" autocomplete="email" required placeholder="admin@kged.tr" />
           </div>
           <div class="form-group">
             <label class="form-label" for="admin-password">Şifre</label>
@@ -533,53 +533,17 @@
     </div>
   </div>
 
-    <!-- Offline Admin Panel Script -->
+    <!-- Supabase Admin Panel Script -->
     <script type="module">
-      const STORAGE_KEY = 'kged_admin_session';
+      import { login, logout, getSession } from '../src/supabase/auth.js';
+      import { uploadGalleryImage, addGalleryItem, getGalleryItems, deleteGalleryItem } from '../src/supabase/gallery.js';
+      import { getSiteConfig, saveSiteConfig } from '../src/supabase/site_config.js';
+
       const LOCKOUT_KEY = 'kged_admin_lockout';
       const MAX_ATTEMPTS = 5;
       const LOCKOUT_DURATION_MS = 30000;
-      const SESSION_TIMEOUT_MS = 2 * 60 * 60 * 1000;
-
-      const ADMIN_USER = 'admin';
-      const ADMIN_PASS_HASH = hashString('kged2026');
       
       let siteContent = null;
-
-      function hashString(str) {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-          const char = str.charCodeAt(i);
-          hash = ((hash << 5) - hash) + char;
-          hash = hash & hash;
-        }
-        return hash.toString(36);
-      }
-
-      function getSession() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (!raw) return null;
-          const session = JSON.parse(raw);
-          if (Date.now() - session.loginTime > SESSION_TIMEOUT_MS) {
-            localStorage.removeItem(STORAGE_KEY);
-            return null;
-          }
-          return session;
-        } catch { return null; }
-      }
-
-      function createSession() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          loginTime: Date.now(),
-          user: ADMIN_USER
-        }));
-      }
-
-      function destroySession() {
-        localStorage.removeItem(STORAGE_KEY);
-        window.location.reload();
-      }
 
       function getLockout() {
         try {
@@ -604,113 +568,236 @@
         loadSiteContent();
       }
 
-      function handleLogin(e) {
+      async function handleLogin(e) {
         e.preventDefault();
         const errorEl = document.getElementById('login-error');
         const errorText = document.getElementById('login-error-text');
         errorEl.classList.remove('visible');
+        
+        const btn = document.getElementById('login-submit');
+        btn.disabled = true;
 
         const lockout = getLockout();
         if (Date.now() < lockout.until) {
           const remaining = Math.ceil((lockout.until - Date.now()) / 1000);
-          errorText.textContent = `Çok fazla hatalı deneme. ${remaining}s bekleyin.`;
+          errorText.textContent = `Kilitlendiniz. ${remaining}s bekleyin.`;
           errorEl.classList.add('visible');
+          btn.disabled = false;
           return;
         }
 
-        const username = document.getElementById('admin-username').value.trim();
+        const email = document.getElementById('admin-email').value.trim();
         const password = document.getElementById('admin-password').value.trim();
 
-        if (username === ADMIN_USER && hashString(password) === ADMIN_PASS_HASH) {
+        try {
+          await login(email, password);
           setLockout({ attempts: 0, until: 0 });
-          createSession();
           showDashboard();
-        } else {
+        } catch (error) {
           lockout.attempts++;
           if (lockout.attempts >= MAX_ATTEMPTS) {
             lockout.until = Date.now() + LOCKOUT_DURATION_MS;
             setLockout(lockout);
-            errorText.textContent = `Kilitlendiniz. ${LOCKOUT_DURATION_MS/1000}s bekleyin.`;
+            errorText.textContent = `Çok fazla hatalı deneme. ${LOCKOUT_DURATION_MS/1000}s bekleyin.`;
           } else {
             setLockout(lockout);
-            errorText.textContent = 'Kullanıcı adı veya şifre hatalı.';
+            errorText.textContent = error.message.includes('Invalid login') 
+              ? 'E-posta veya şifre hatalı.' 
+              : error.message;
           }
           errorEl.classList.add('visible');
+        } finally {
+          btn.disabled = false;
         }
+      }
+
+      async function handleLogout() {
+        await logout();
+        window.location.reload();
       }
 
       async function loadSiteContent() {
         try {
-          const res = await fetch('/src/data/site-content.json');
-          siteContent = await res.json();
+          // TODO 13: Prefer Supabase config, fallback to local JSON
+          let data = await getSiteConfig();
+          if (!data) {
+            const res = await fetch('/src/data/site-content.json');
+            data = await res.json();
+          }
+          siteContent = data;
           renderDashboardUI();
+          loadGalleryManagement();
         } catch(e) {
-          console.error("Local veriyi okuma hatası", e);
-          document.querySelector('.admin-sections').innerHTML = '<div style="color:red; padding:2rem;">site-content.json okunamadı. Vite sunucusunun (npm run dev) çalıştığından emin olun.</div>';
+          console.error("Veri yükleme hatası", e);
+          document.querySelector('.admin-sections').innerHTML = '<div style="color:red; padding:2rem;">Sistem verileri yüklenemedi.</div>';
         }
       }
 
+      async function loadGalleryManagement() {
+        const galleryList = document.getElementById('gallery-manager-list');
+        if (!galleryList) return;
+        galleryList.innerHTML = '<p style="padding:1rem;color:var(--text-muted);">Yükleniyor...</p>';
+        try {
+          const items = await getGalleryItems();
+          document.getElementById('stat-gallery').textContent = items.length;
+          if (items.length === 0) {
+            galleryList.innerHTML = '<p style="padding:1.5rem;color:var(--text-muted);text-align:center;">Henüz görsel bulunmuyor.</p>';
+            return;
+          }
+          galleryList.innerHTML = items.map(item => `
+            <div class="gallery-item-row" style="display:flex;align-items:center;gap:1rem;padding:0.75rem;border-bottom:1px solid var(--border);">
+              <img src="${item.url}" style="width:50px;height:50px;object-fit:cover;border-radius:4px;" />
+              <div style="flex:1;">
+                <p style="font-size:0.85rem;font-weight:600;margin:0;">${item.caption || 'Açıklamasız'}</p>
+                <p style="font-size:0.7rem;color:var(--text-muted);margin:0;">${item.category}</p>
+              </div>
+              <button class="btn-delete" onclick="window.handleDeleteGallery('${item.id}', '${item.url}')" style="background:#FEF2F2;color:#EF4444;border:1px solid #FECACA;padding:4px 8px;border-radius:4px;font-size:0.75rem;cursor:pointer;">Sil</button>
+            </div>
+          `).join('');
+        } catch (e) {
+          galleryList.innerHTML = '<p style="color:red;">Liste yüklenemedi.</p>';
+        }
+      }
+
+      window.handleDeleteGallery = async (id, url) => {
+        if (!confirm('Bu görseli silmek istediğinize emin misiniz?')) return;
+        try {
+          // Extract path from URL to delete from storage if possible
+          let path = null;
+          try {
+            const urlObj = new URL(url);
+            const pathParts = urlObj.pathname.split('/storage/v1/object/public/gallery/');
+            if (pathParts.length > 1) path = pathParts[1];
+          } catch {}
+
+          await deleteGalleryItem(id, path);
+          alert('Görsel başarıyla silindi.');
+          loadGalleryManagement();
+        } catch (e) {
+          alert('Silme hatası: ' + e.message);
+        }
+      };
+
       function renderDashboardUI() {
         if (!siteContent) return;
-        document.getElementById('stat-gallery').textContent = (siteContent.gallery && siteContent.gallery.items) ? siteContent.gallery.items.length : 0;
         
         const sections = document.querySelector('.admin-sections');
         sections.innerHTML = `
-          <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:2rem;">
-            <h2 style="font-family:'Outfit';margin-bottom:1rem;color:var(--text);font-size:1.4rem;">1. İçerik Düzenleme (Hakkımızda)</h2>
-            <div style="display:flex; flex-direction:column; gap:1rem;">
-              <label style="font-weight:600;">Hakkımızda Başlık</label>
-              <input type="text" id="edit-about-title" value="${siteContent.about.title || ''}" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);"/>
-              <label style="font-weight:600;">Hakkımızda Kısa Yazı</label>
-              <textarea id="edit-about-intro" rows="3" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);font-family:inherit;">${siteContent.about.intro || ''}</textarea>
-              <label style="font-weight:600;">Hakkımızda Detay</label>
-              <textarea id="edit-about-desc" rows="5" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);font-family:inherit;">${siteContent.about.description || ''}</textarea>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:2rem;grid-column:1 / -1;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+              <h2 style="font-family:'Outfit';color:var(--text);font-size:1.4rem;">1. Site Bilgileri (Hakkımızda & İletişim)</h2>
+              <button id="btn-save-config" style="background:var(--brand-600);color:#fff;border:none;padding:0.75rem 1.5rem;border-radius:var(--radius-sm);font-weight:600;cursor:pointer;">Değişiklikleri Veritabanına Kaydet</button>
             </div>
             
-            <h2 style="font-family:'Outfit';margin-bottom:1rem;margin-top:2rem;color:var(--text);font-size:1.4rem;">2. İletişim Bilgileri</h2>
-            <div style="display:flex; flex-direction:column; gap:1rem;">
-              <label style="font-weight:600;">Telefon</label>
-              <input type="text" id="edit-contact-phone" value="${siteContent.contact.phone || ''}" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);"/>
-              <label style="font-weight:600;">E-posta</label>
-              <input type="text" id="edit-contact-email" value="${siteContent.contact.email || ''}" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);"/>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+              <div style="display:flex; flex-direction:column; gap:1rem;">
+                <h3 style="font-size:1rem;color:var(--brand-700);">Hakkımızda</h3>
+                <label style="font-size:0.8rem;font-weight:600;">Başlık</label>
+                <input type="text" id="edit-about-title" value="${siteContent.about?.title || ''}" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);"/>
+                <label style="font-size:0.8rem;font-weight:600;">Kısa Tanıtım</label>
+                <textarea id="edit-about-intro" rows="3" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);font-family:inherit;">${siteContent.about?.intro || ''}</textarea>
+                <label style="font-size:0.8rem;font-weight:600;">Detaylı Açıklama</label>
+                <textarea id="edit-about-desc" rows="5" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);font-family:inherit;">${siteContent.about?.description || ''}</textarea>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:1rem;">
+                <h3 style="font-size:1rem;color:var(--brand-700);">İletişim & Sosyal</h3>
+                <label style="font-size:0.8rem;font-weight:600;">Telefon</label>
+                <input type="text" id="edit-contact-phone" value="${siteContent.contact?.phone || ''}" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);"/>
+                <label style="font-size:0.8rem;font-weight:600;">E-posta</label>
+                <input type="text" id="edit-contact-email" value="${siteContent.contact?.email || ''}" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);"/>
+                <label style="font-size:0.8rem;font-weight:600;">WhatsApp URL</label>
+                <input type="text" id="edit-contact-whatsapp" value="${siteContent.contact?.whatsappUrl || ''}" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);"/>
+              </div>
             </div>
           </div>
 
           <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:2rem;">
-            <h2 style="font-family:'Outfit';margin-bottom:1rem;color:var(--text);font-size:1.4rem;">3. Galeriye Fotoğraf Ekle</h2>
-            <div style="display:flex; gap:1rem; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap;">
-              <input type="file" id="upload-file" accept="image/*" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);width:100%;max-width:300px;"/>
-              <input type="text" id="upload-caption" placeholder="Fotoğraf açıklaması (Örn: Eğitim etkinliği)" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);width:100%;max-width:250px;"/>
-              <select id="upload-category" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);">
-                <option value="etkinlik">Etkinlik</option>
-                <option value="toplanti">Toplantı</option>
-                <option value="egitim">Eğitim</option>
-                <option value="ziyaret">Ziyaret</option>
-              </select>
-              <button id="btn-upload" class="admin-btn-logout" style="background:var(--brand-600);color:#fff;border:none;">JSON'a Ekle</button>
+            <h2 style="font-family:'Outfit';margin-bottom:1.5rem;color:var(--text);font-size:1.4rem;">2. Galeri Yönetimi</h2>
+            
+            <div style="background:#f8fafc;padding:1.5rem;border-radius:var(--radius-sm);margin-bottom:2rem;border:1px solid var(--border);">
+              <h3 style="font-size:0.9rem;margin-bottom:1rem;color:var(--brand-800);">Yeni Görsel Ekle (Toplu Seçim Uyumludur)</h3>
+              <div style="display:flex; flex-direction:column; gap:1rem;">
+                <input type="file" id="upload-file" accept="image/*" multiple style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);width:100%;"/>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                  <input type="text" id="upload-caption" placeholder="Açıklama (boş bırakılabilir)" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);"/>
+                  <select id="upload-category" style="border:1px solid var(--border);padding:0.5rem;border-radius:var(--radius-sm);">
+                    <option value="etkinlik">Etkinlik</option>
+                    <option value="toplanti">Toplantı</option>
+                    <option value="egitim">Eğitim</option>
+                    <option value="ziyaret">Ziyaret</option>
+                    <option value="diger">Diğer</option>
+                  </select>
+                </div>
+                <button id="btn-upload" style="background:var(--brand-600);color:#fff;border:none;padding:0.75rem;border-radius:var(--radius-sm);font-weight:600;cursor:pointer;">Veritabanına Yükle</button>
+              </div>
+              <div id="upload-status" style="margin-top:1rem;font-size:0.85rem;"></div>
             </div>
-            <div id="upload-status" style="font-size:0.9rem;font-weight:500;"></div>
-            <p style="font-size:0.8rem;color:gray;margin-top:0.5rem;">Not: Yüklenen fotoğraf otomatik olarak Base64'e sıkıştırılıp JSON içine eklenecektir.</p>
+
+            <h3 style="font-size:1rem;margin-bottom:1rem;">Mevcut Görseller</h3>
+            <div id="gallery-manager-list" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);">
+            </div>
           </div>
 
-          <div style="background:#f8fafc;border:2px dashed var(--brand-500);border-radius:var(--radius);padding:2rem;text-align:center;">
-            <h2 style="font-family:'Outfit';margin-bottom:1rem;color:var(--brand-700);font-size:1.4rem;">Son Aşama: Değişiklikleri Kaydet</h2>
-            <p style="margin-bottom:1rem;color:var(--text-muted);">Yukarıda yaptığınız tüm metin ve galeri değişiklikleri şu an sadece tarayıcınızın hafızasındadır. Bu yeni bilgileri içeren JSON dosyasını <b>İndir</b>erek projedeki ilgili dosyayla (<code>src/data/site-content.json</code>) değiştirmelisiniz.</p>
-            <button id="btn-download" style="background:var(--brand-600);color:#fff;border:none;padding:1rem 2rem;border-radius:var(--radius);font-weight:600;font-size:1.1rem;cursor:pointer;">Değişiklikleri Dosya Olarak İndir (site-content.json)</button>
+          <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:2rem;">
+            <h2 style="font-family:'Outfit';margin-bottom:1rem;color:var(--text);font-size:1.4rem;">3. Yönetim Kurulu Yönetimi</h2>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.5rem;">Dernek yönetim kurulu üyelerini buradan güncelleyebilirsiniz.</p>
+            <div id="board-editor-list" style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;">
+               ${(siteContent.board || []).map((m, idx) => `
+                 <div class="board-member-row" style="display:flex;gap:0.5rem;align-items:center;background:#f8fafc;padding:0.75rem;border-radius:var(--radius-sm);border:1px solid var(--border);">
+                   <input type="text" value="${m.name}" placeholder="Ad Soyad" onchange="window.updateBoardMember(${idx}, 'name', this.value)" style="flex:1;border:1px solid var(--border);padding:0.4rem;border-radius:4px;font-size:0.85rem;" />
+                   <input type="text" value="${m.role}" placeholder="Görev" onchange="window.updateBoardMember(${idx}, 'role', this.value)" style="flex:1;border:1px solid var(--border);padding:0.4rem;border-radius:4px;font-size:0.85rem;" />
+                   <button onclick="window.removeBoardMember(${idx})" style="background:none;border:none;color:#EF4444;cursor:pointer;padding:4px;">✕</button>
+                 </div>
+               `).join('')}
+            </div>
+            <button onclick="window.addBoardMember()" style="background:#f1f5f9;border:1px dashed var(--brand-500);color:var(--brand-700);width:100%;padding:0.75rem;border-radius:var(--radius-sm);font-weight:600;cursor:pointer;">+ Yeni Üye Ekle</button>
           </div>
         `;
 
         document.getElementById('btn-upload').addEventListener('click', handleImageAdd);
-        document.getElementById('btn-download').addEventListener('click', handleDownload);
+        document.getElementById('btn-save-config').addEventListener('click', handleSaveConfig);
       }
 
-      function updateDataFromInputs() {
+      window.updateBoardMember = (idx, field, val) => {
+        if (!siteContent.board) siteContent.board = [];
+        if (siteContent.board[idx]) siteContent.board[idx][field] = val;
+      };
+
+      window.removeBoardMember = (idx) => {
+        siteContent.board.splice(idx, 1);
+        renderDashboardUI();
+      };
+
+      window.addBoardMember = () => {
+        if (!siteContent.board) siteContent.board = [];
+        siteContent.board.push({ name: '', role: '' });
+        renderDashboardUI();
+      };
+
+      async function handleSaveConfig() {
         if (!siteContent) return;
-        siteContent.about.title = document.getElementById('edit-about-title').value;
-        siteContent.about.intro = document.getElementById('edit-about-intro').value;
-        siteContent.about.description = document.getElementById('edit-about-desc').value;
-        siteContent.contact.phone = document.getElementById('edit-contact-phone').value;
-        siteContent.contact.email = document.getElementById('edit-contact-email').value;
+        const btn = document.getElementById('btn-save-config');
+        btn.disabled = true;
+        btn.textContent = 'Kaydediliyor...';
+        
+        try {
+          // Update local object
+          siteContent.about.title = document.getElementById('edit-about-title').value;
+          siteContent.about.intro = document.getElementById('edit-about-intro').value;
+          siteContent.about.description = document.getElementById('edit-about-desc').value;
+          siteContent.contact.phone = document.getElementById('edit-contact-phone').value;
+          siteContent.contact.email = document.getElementById('edit-contact-email').value;
+          siteContent.contact.whatsappUrl = document.getElementById('edit-contact-whatsapp').value;
+          
+          await saveSiteConfig(siteContent);
+          alert('Site konfigürasyonu başarıyla kaydedildi!');
+        } catch (e) {
+          alert('Hata: ' + e.message);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Değişiklikleri Veritabanına Kaydet';
+        }
       }
 
       async function handleImageAdd() {
@@ -719,84 +806,65 @@
         const categoryInput = document.getElementById('upload-category');
         const statusEl = document.getElementById('upload-status');
         
-        const file = fileInput.files[0];
-        if(!file) return alert("Lütfen bir resim seçin.");
+        const files = Array.from(fileInput.files);
+        if(files.length === 0) return alert("Lütfen en az bir resim seçin.");
 
-        statusEl.innerHTML = `<span style="color:var(--brand-600)">Sıkıştırılıyor... Lütfen bekleyin.</span>`;
+        statusEl.innerHTML = `<span style="color:var(--brand-600)">Hazırlanıyor... (${files.length} dosya)</span>`;
         document.getElementById('btn-upload').disabled = true;
 
-        try {
-          const base64Image = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              const img = new Image();
-              img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 800;
-                let width = img.width;
-                let height = img.height;
+        let successCount = 0;
+        let failCount = 0;
 
-                if (width > MAX_WIDTH) {
-                  height = Math.round((height * MAX_WIDTH) / width);
-                  width = MAX_WIDTH;
-                }
-                
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                resolve(canvas.toDataURL('image/jpeg', 0.6));
-              };
-              img.onerror = reject;
-              img.src = e.target.result;
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-          });
-
-          if (!siteContent.gallery) siteContent.gallery = { items: [] };
-          if (!siteContent.gallery.items) siteContent.gallery.items = [];
-
-          siteContent.gallery.items.push({
-            imageData: base64Image,
-            caption: captionInput.value || 'Etkinlik Görseli',
-            category: categoryInput.value || 'etkinlik',
-            createdAt: Date.now()
-          });
-
-          statusEl.innerHTML = `<span style="color:#059669">✅ Başarılı! Resim JSON yapısına eklendi. (İndirmeyi unutmayın)</span>`;
-          fileInput.value = '';
-          captionInput.value = '';
-          document.getElementById('stat-gallery').textContent = siteContent.gallery.items.length;
-
-        } catch (error) {
-          statusEl.innerHTML = `<span style="color:#DC2626">❌ Hata: ${error.message}</span>`;
-        } finally {
-          document.getElementById('btn-upload').disabled = false;
+        for (const file of files) {
+          try {
+            statusEl.innerHTML = `<span style="color:var(--brand-600)">Yükleniyor: ${file.name}...</span>`;
+            const timestamp = Date.now();
+            const ext = file.name.split('.').pop() || 'jpg';
+            const path = `${timestamp}_${Math.random().toString(36).substring(7)}.${ext}`;
+            
+            const publicUrl = await uploadGalleryImage(file, path);
+            await addGalleryItem({
+              url: publicUrl,
+              caption: captionInput.value || 'Etkinlik Görseli',
+              category: categoryInput.value || 'etkinlik',
+              order: 0
+            });
+            successCount++;
+          } catch (error) {
+            console.error("Yükleme hatası:", error);
+            failCount++;
+          }
         }
-      }
 
-      function handleDownload() {
-        updateDataFromInputs();
-        const dataStr = JSON.stringify(siteContent, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = "site-content.json";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        alert('site-content.json dosyası indirildi! Lütfen bu dosyayı src/data/site-content.json dosyasının üzerine kopyalayınız.');
+        statusEl.innerHTML = `<span style="color:#059669">✅ Tamamlandı: ${successCount} başarılı, ${failCount} hatalı.</span>`;
+        fileInput.value = '';
+        captionInput.value = '';
+        loadGalleryManagement();
+        document.getElementById('btn-upload').disabled = false;
       }
 
       document.getElementById('login-form').addEventListener('submit', handleLogin);
-      document.getElementById('btn-logout').addEventListener('click', destroySession);
+      document.getElementById('btn-logout').addEventListener('click', handleLogout);
 
-      if (getSession()) showDashboard();
-      else showLogin();
+      getSession().then(session => {
+        if (session) showDashboard();
+        else showLogin();
+      });
+    </script>
+</body>
+</html>
+
+      document.getElementById('login-form').addEventListener('submit', handleLogin);
+      document.getElementById('btn-logout').addEventListener('click', handleLogout);
+
+      // Check Real Auth Session
+      getSession().then(session => {
+        if (session) {
+          showDashboard();
+        } else {
+          showLogin();
+        }
+      });
     </script>
 </body>
 </html>

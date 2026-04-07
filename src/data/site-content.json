@@ -143,8 +143,17 @@
       "Sosyal ve kültürel etkinliklerle kapsayıcı bir toplum oluşturmak",
       "Kamu kurumları ve diğer STK'larla işbirliği geliştirmek"
     ],
-    "boardStatus": "Yönetim kurulu bilgileri yakında bu sayfada yayınlanacaktır."
+    "boardStatus": "Yönetim kurulu bilgileri aşağıda yayınlanmıştır."
   },
+  "board": [
+    { "name": "Oğuzhan YETİŞMEMİŞ", "role": "Geçici Yönetim Kurulu Başkanı" },
+    { "name": "Kiraz DEMİR", "role": "Geçici Yönetim Kurulu Üyesi" },
+    { "name": "Yalçın KARA", "role": "Geçici Yönetim Kurulu Üyesi" },
+    { "name": "Rabia GÖKÇEK", "role": "Geçici Yönetim Kurulu Üyesi" },
+    { "name": "Arif ATAMKOÇYİĞİT", "role": "Geçici Yönetim Kurulu Üyesi" },
+    { "name": "Şakir COŞKUN", "role": "Geçici Yönetim Kurulu Üyesi" },
+    { "name": "Adnan TÜRKMEN", "role": "Geçici Yönetim Kurulu Üyesi" }
+  ],
   "constitution": {
     "title": "Dernek Tüzüğü",
     "pageLead": "Kırşehir Görme Engelliler Derneği'nin resmi kuruluş belgesi ve yönetim esasları.",

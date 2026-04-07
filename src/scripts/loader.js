@@ -43,7 +43,7 @@ function dismissLoader(loader) {
   }, { once: true });
 
   setTimeout(() => {
-    if (loader.parentNode) {
+    if (loader.isConnected) {
       loader.remove();
       moveFocusToMain();
     }

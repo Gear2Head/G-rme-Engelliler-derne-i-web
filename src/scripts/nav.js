@@ -41,11 +41,43 @@ function initMobileMenu() {
     link.addEventListener('click', closeMenu);
   });
 
+  // TODO 21: Swipe right to close
+  let touchStartX = 0;
+  mobileNav.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  mobileNav.addEventListener('touchend', e => {
+    if (e.changedTouches[0].clientX - touchStartX > 60) closeMenu();
+  }, { passive: true });
+
+  // TODO 43: Focus trap inside mobile menu
+  mobileNav.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    const focusable = Array.from(mobileNav.querySelectorAll('a[href], button:not([disabled])'));
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
   function closeMenu() {
     mobileNav.classList.remove('open');
     toggle.setAttribute('aria-expanded', 'false');
     document.body.classList.remove('menu-open');
     toggle.focus();
+  }
+
+  // Footer back-to-top handler
+  const footerBtn = document.getElementById('back-to-top-footer');
+  if (footerBtn) {
+    footerBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 }
 
@@ -54,7 +86,9 @@ function setActiveNavLink() {
 
   document.querySelectorAll('.nav__link').forEach(link => {
     const href = link.getAttribute('href')?.replace(/\/$/, '') || '';
-    const isActive = href === currentPath || (href !== '' && currentPath.startsWith(href));
+    const isActive = href === '/' 
+      ? currentPath === '/' 
+      : currentPath === href || currentPath.startsWith(href + '/');
     link.setAttribute('aria-current', isActive ? 'page' : 'false');
     if (!isActive) link.removeAttribute('aria-current');
   });

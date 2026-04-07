@@ -111,6 +111,17 @@ function hydrateToolbar() {
 function initToolbar() {
   hydrateToolbar();
 
+  // TODO 28: prefers-contrast OS sync
+  const prefersHighContrast = window.matchMedia('(prefers-contrast: more)');
+  if (prefersHighContrast.matches && !localStorage.getItem('kged-theme')) {
+    document.documentElement.setAttribute('data-theme', 'high-contrast');
+  }
+  prefersHighContrast.addEventListener('change', e => {
+    if (e.matches && !localStorage.getItem('kged-theme')) {
+      document.documentElement.setAttribute('data-theme', 'high-contrast');
+    }
+  });
+
   const toggle = document.getElementById('toolbar-toggle');
   const panel  = document.getElementById('toolbar-panel');
 
@@ -147,6 +158,17 @@ function initToolbar() {
     ?.addEventListener('click', toggleDyslexia);
   document.getElementById('toolbar-reset')
     ?.addEventListener('click', resetAll);
+
+  // TODO 51: Alt+A keyboard shortcut
+  document.addEventListener('keydown', e => {
+    if (e.altKey && (e.key === 'a' || e.key === 'A') && panel && toggle) {
+      e.preventDefault();
+      const isOpen = panel.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(isOpen));
+      if (isOpen) panel.querySelector('button, [tabindex]')?.focus();
+      else toggle.focus();
+    }
+  });
 }
 
 export { initToolbar, hydrateToolbar };
