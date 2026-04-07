@@ -5,7 +5,12 @@ const DATA_PATH = path.resolve(process.cwd(), 'src/data/site-content.json');
 const TURKEY_LABEL = 'Türkiye';
 
 function readSiteContent() {
-  return JSON.parse(fs.readFileSync(DATA_PATH, 'utf8'));
+  try {
+    return JSON.parse(fs.readFileSync(DATA_PATH, 'utf8'));
+  } catch (err) {
+    console.error('[KGED] site-content.json okunamadı:', err.message);
+    throw new Error('site-content.json okunamadı veya bozuk. Lütfen dosyayı kontrol edin.');
+  }
 }
 
 function escapeHtml(value) {
@@ -169,7 +174,7 @@ function renderMobileNav(content, currentPath, options = {}) {
         ${icon('phone')} ${escapeHtml(content.hero.cta.primary.label)}
       </a>
     </div>` : '';
-  return `<nav class="nav--mobile" id="mobile-nav" aria-label="Mobil menü">
+  return `<nav class="nav--mobile" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Mobil menü">
     ${renderNavLinks(content.nav, currentPath, 'nav__link')}
     ${ctaMarkup}
   </nav>`;
@@ -282,10 +287,10 @@ function renderLoader(content) {
 
 function renderSkipLink() { return '<a class="skip-link" href="#main-content">İçeriğe atla</a>'; }
 
-function renderSectionHeader(title, lead) {
+function renderSectionHeader(title, lead, id) {
   return `<div class="section__header">
     <div class="section-accent" aria-hidden="true"></div>
-    <h2 class="section__title">${escapeHtml(title)}</h2>
+    <h2 class="section__title"${id ? ` id="${escapeAttr(id)}"` : ''}>${escapeHtml(title)}</h2>
     ${lead ? `<p class="section__lead">${escapeHtml(lead)}</p>` : ''}
   </div>`;
 }
@@ -543,8 +548,17 @@ function renderGalleryContent(content) {
         <button class="gallery-filter-btn active" onclick="filterGallery(this, 'all')">Tümü</button>
         ${categoryFilters}
       </div>
-      <div class="gallery-page-grid" id="gallery-page-grid" aria-live="polite">
-         <script type="module">
+      <div class="gallery-page-grid" id="gallery-page-grid" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <div id="gallery-lightbox" class="gallery-lightbox" tabindex="-1" role="dialog" aria-modal="true" aria-label="Görsel büyütücü">
+    <button class="gallery-lightbox-close" onclick="window.closeLightbox()" aria-label="Kapat">×</button>
+    <img id="lightbox-img" src="" alt="" />
+    <p id="lightbox-caption" class="gallery-lightbox-caption"></p>
+  </div>
+
+  <script type="module">
     let galleryItems = ${JSON.stringify((content.gallery && content.gallery.items) ? content.gallery.items.sort((a,b)=>b.createdAt-a.createdAt) : [])};
     let currentFilter = 'all';
 
@@ -623,7 +637,13 @@ function renderGalleryContent(content) {
     });
 
     renderGalleryPage();
-  </script>`;
+  </script>
+
+  <div id="gallery-lightbox" class="gallery-lightbox" tabindex="-1" role="dialog" aria-modal="true" aria-label="Görsel büyütücü">
+    <button class="gallery-lightbox-close" onclick="window.closeLightbox()" aria-label="Kapat">×</button>
+    <img id="lightbox-img" src="" alt="" />
+    <p id="lightbox-caption" class="gallery-lightbox-caption"></p>
+  </div>`;
 }
 
 function renderConstitutionContent(content) {
@@ -736,8 +756,13 @@ function renderContactContent(content) {
     : `<div class="status-banner" role="status" aria-live="polite"><p>${escapeHtml(content.contact.address?.status || 'Adres bilgisi doğrulanınca bu alanda yayınlanacaktır.')}</p></div>`;
 
   const mapMarkup = hasMap
-    ? `<div style="overflow:hidden;border-radius:var(--radius-xl);border:1px solid var(--color-border);">
-        <iframe src="${escapeAttr(mapEmbedSrc)}" title="${escapeAttr(`${content.site.name} Konumu`)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="width:100%;min-height:360px;border:0;"></iframe>
+    ? `<div style="overflow:hidden;border-radius:var(--radius-xl);border:1px solid var(--color-border);position:relative;" id="map-wrapper">
+        <div id="map-cover" style="width:100%;min-height:360px;background:var(--color-surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;cursor:pointer;" onclick="document.getElementById('map-cover').style.display='none';document.getElementById('map-iframe').style.display='block';" role="button" aria-label="Haritayı yükle">
+          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' style='width:48px;height:48px;color:var(--color-text-faint);'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'/><circle cx='12' cy='10' r='3'/></svg>
+          <p style='color:var(--color-text-muted);font-size:var(--text-sm);'>Haritayı görmek için tıklayın</p>
+          <button style='padding:0.5rem 1.25rem;background:var(--color-primary-600);color:#fff;border:none;border-radius:var(--radius-full);cursor:pointer;font-size:var(--text-sm);'>Haritayı Yükle</button>
+        </div>
+        <iframe id="map-iframe" src="${escapeAttr(mapEmbedSrc)}" title="${escapeAttr(`${content.site.name} Konumu`)}" referrerpolicy="no-referrer-when-downgrade" style="width:100%;min-height:360px;border:0;display:none;"></iframe>
       </div>`
     : `<div class="map-placeholder" role="img" aria-label="Harita henüz etkin değil">
         ${icon('map')}

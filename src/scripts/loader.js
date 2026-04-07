@@ -51,6 +51,8 @@ function dismissLoader(loader) {
 }
 
 function moveFocusToMain() {
+  if (moveFocusToMain._called) return;
+  moveFocusToMain._called = true;
   const main = document.getElementById('main-content');
   if (!main) return;
   main.setAttribute('tabindex', '-1');

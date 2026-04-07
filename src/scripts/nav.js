@@ -73,7 +73,12 @@ function initBackToTop() {
 
   btn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.querySelector('.skip-link')?.focus();
+    const main = document.getElementById('main-content');
+    if (main) {
+      main.setAttribute('tabindex', '-1');
+      main.focus({ preventScroll: true });
+      main.addEventListener('blur', () => main.removeAttribute('tabindex'), { once: true });
+    }
   });
 }
 

@@ -662,6 +662,7 @@ body.menu-open {
   position: relative;
   overflow: hidden;
   padding-block: var(--space-24);
+  background: linear-gradient(135deg, #1E1B4B 0%, #3730a3 50%, #1a0a3d 100%); /* fallback for Safari <16.2 */
   background: linear-gradient(135deg,
     color-mix(in srgb, var(--color-primary-950) 95%, transparent) 0%,
     color-mix(in srgb, var(--color-primary-800) 90%, transparent) 50%,
@@ -954,4 +955,14 @@ html {
   max-width: 48ch;
   margin-inline: auto;
   margin-bottom: var(--space-10);
+}
+
+/* ─── REDUCED MOTION ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .loader__eye-ring,
+  .loader__eye-dot,
+  .loader__eye-outer,
+  .loader__brand {
+    animation: none !important;
+  }
 }
