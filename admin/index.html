@@ -499,7 +499,7 @@
 
       // ─── LOAD SITE CONTENT ────────────────────────────────────────
       // ─── NAVIGATION ──────────────────────────────────────────────
-      window.switchTab = (tab, el) => {
+      window.switchTab = async (tab, el) => {
         // Update nav UI
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
         if (el) el.classList.add('active');
@@ -519,6 +519,12 @@
         } else {
           sectionsView.style.display = 'block';
           sectionsView.classList.add('fade-in');
+          
+          if (!siteContent) {
+            root.innerHTML = '<div style="padding:2rem;text-align:center;">Veriler yükleniyor...</div>';
+            await loadSiteContent();
+          }
+          
           renderSectionView(tab);
         }
       };
@@ -705,10 +711,10 @@
         try {
           adminGalleryItems = await getGalleryItems();
           const galleryCount = adminGalleryItems.length;
-          document.getElementById('stat-gallery').textContent = galleryCount;
-          if (document.getElementById('stat-gallery-big')) {
-            document.getElementById('stat-gallery-big').textContent = galleryCount;
-          }
+          const statEl = document.getElementById('stat-gallery');
+          if (statEl) statEl.textContent = galleryCount;
+          const statBigEl = document.getElementById('stat-gallery-big');
+          if (statBigEl) statBigEl.textContent = galleryCount;
           
           try {
             const { getStorageQuota } = await import('/src/supabase/gallery.js');
@@ -806,19 +812,25 @@
       };
 
       window.handleDeleteGallery = async (id, url) => {
-        if (!confirm('Bu görseli silmek istediğinize emin misiniz?')) return;
+        if (!confirm('Bu görseli kalıcı olarak silmek istediğinize emin misiniz?\\n\\nBu işlem geri alınamaz.')) return;
+        const btn = event.currentTarget;
+        const oldText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = 'Siliniyor...';
         try {
           let path = null;
           try {
             const urlObj = new URL(url);
             const parts = urlObj.pathname.split('/storage/v1/object/public/gallery/');
-            if (parts.length > 1) path = parts[1];
+            if (parts.length > 1) path = decodeURIComponent(parts[1]);
           } catch {}
           await deleteGalleryItem(id, path);
           showToast('Görsel başarıyla silindi.', 'success');
           loadGalleryManagement();
         } catch (e) {
-          showToast('Silme hatası: ' + e.message, 'error');
+          showToast('Silme hatası: ' + (e.message || 'Bilinmeyen hata'), 'error');
+          btn.disabled = false;
+          btn.innerHTML = oldText;
         }
       };
 
@@ -848,10 +860,23 @@
         btn.textContent = 'Kaydediliyor...';
 
         try {
-          siteContent.about.title = document.getElementById('edit-about-title')?.value || '';
-          siteContent.about.intro = document.getElementById('edit-about-intro')?.value || '';
-          siteContent.contact.phone = document.getElementById('edit-contact-phone')?.value || '';
-          siteContent.contact.email = document.getElementById('edit-contact-email')?.value || '';
+          siteContent.about.title = document.getElementById('edit-about-title')?.value?.trim() || siteContent.about.title;
+          siteContent.about.intro = document.getElementById('edit-about-intro')?.value?.trim() || siteContent.about.intro;
+          
+          const phone = document.getElementById('edit-contact-phone')?.value?.trim();
+          if (phone) {
+            siteContent.contact.phone = phone;
+            const digits = phone.replace(/\\D/g, '');
+            siteContent.contact.phoneHref = digits.startsWith('0')
+              ? `tel:+90${digits.slice(1)}`
+              : `tel:+${digits}`;
+          }
+
+          const email = document.getElementById('edit-contact-email')?.value?.trim();
+          if (email) {
+            siteContent.contact.email = email;
+            siteContent.contact.emailHref = `mailto:${email}`;
+          }
 
           await saveSiteConfig(siteContent);
           showToast('Site bilgileri güncellendi.', 'success');
@@ -899,11 +924,22 @@
       function addFilesToQueue(files) {
         const imageFiles = files.filter(f => f.type.startsWith('image/'));
         const remaining = MAX_FILES - pendingFiles.length;
+        
+        const existingKeys = new Set(pendingFiles.map(f => `${f.name}_${f.size}`));
+        const uniqueNew = imageFiles.filter(f => !existingKeys.has(`${f.name}_${f.size}`));
+        const duplicateCount = imageFiles.length - uniqueNew.length;
+        
+        if (duplicateCount > 0) showToast(`${duplicateCount} tekrarlanan görsel atlandı.`, 'info');
         if (remaining <= 0) { showToast(`Maksimum ${MAX_FILES} görsel yükleyebilirsiniz.`, 'error'); return; }
-        const toAdd = imageFiles.slice(0, remaining);
-        if (imageFiles.length > remaining) showToast(`${imageFiles.length - remaining} görsel limit nedeniyle eklenmedi.`, 'info');
+        
+        const toAdd = uniqueNew.slice(0, remaining);
+        if (uniqueNew.length > remaining) showToast(`${uniqueNew.length - remaining} görsel limit nedeniyle eklenmedi.`, 'info');
+        
         pendingFiles.push(...toAdd);
         renderPreview();
+        
+        const realInput = document.getElementById('upload-file-real');
+        if(realInput) realInput.value = '';
       }
 
       function renderPreview() {
@@ -1044,6 +1080,8 @@
 
       function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0B0E14' : '#4F46E5');
         if (theme === 'dark') {
           iconSun.style.display = 'block';
           iconMoon.style.display = 'none';

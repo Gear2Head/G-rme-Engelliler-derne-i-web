@@ -1,4 +1,5 @@
 import { getSiteConfig } from '../supabase/site_config.js';
+import { escapeHtml } from '../utils/html.js';
 
 /**
  * Bu modül, Supabase'deki 'site_config' verilerini okur ve 
@@ -7,7 +8,10 @@ import { getSiteConfig } from '../supabase/site_config.js';
 export async function initHydration() {
   try {
     const config = await getSiteConfig();
-    if (!config) return;
+    if (!config) {
+      console.info('[KGED] Supabase site_config boş — statik verilerle devam ediliyor.');
+      return;
+    }
 
     // 1. Hero Bölümü
     updateText('live-hero-title', config.hero?.title);
@@ -68,11 +72,4 @@ function updateText(id, value) {
   if (el) el.textContent = value;
 }
 
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
+
