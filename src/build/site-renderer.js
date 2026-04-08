@@ -617,7 +617,7 @@ function renderGalleryContent(content) {
         
         let imgHtml = '';
         if (src) {
-          imgHtml = \`<img class="gallery-card__img" data-src="\${src}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="\${alt}" onclick="window.openLightbox('\${lid}')" style="cursor:pointer;" />\`;
+          imgHtml = \`<img class="gallery-card__img" data-src="\${src}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="\${alt}" onclick="window.openLightbox('\${lid}', '\${escapeHtml(item.album_id || '')}')" style="cursor:pointer;" />\`;
         } else {
           imgHtml = \`<div class="gallery-card__img-placeholder" aria-label="\${alt}">\${cap || 'Görsel'}</div>\`;
         }
@@ -673,7 +673,7 @@ function renderGalleryContent(content) {
         const albumHtml = aItems.map(item => renderGalleryItem(item)).join('');
         finalHtml += \`
           <div class="gallery-album-wrap">
-            <div class="gallery-album-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div class="gallery-album-header" data-album-toggle>
               <div class="gallery-album-title">
                 📁 \${escapeHtml(albumName)}
                 <span class="gallery-album-badge">\${aItems.length} Görsel</span>
@@ -693,6 +693,11 @@ function renderGalleryContent(content) {
       }
 
       grid.innerHTML = finalHtml;
+
+      // FIX-01: Event delegation for album toggle
+      grid.querySelectorAll('[data-album-toggle]').forEach(header => {
+        header.addEventListener('click', () => header.parentElement.classList.toggle('expanded'));
+      });
     }
 
     window.filterGallery = function(btn, cat) {
@@ -700,11 +705,16 @@ function renderGalleryContent(content) {
       btn.classList.add('active');
       currentFilter = cat;
       renderGalleryPage();
+      setTimeout(initIntersectionObserver, 50);
     };
     
+    // BUG-08: Lightbox with album context support
+    let lbContextItems = [];
+
     function updateLightboxState() {
-      if (lbIndex < 0 || lbIndex >= lbItems.length) return;
-      const item = lbItems[lbIndex];
+      const items = lbContextItems.length > 0 ? lbContextItems : lbItems;
+      if (lbIndex < 0 || lbIndex >= items.length) return;
+      const item = items[lbIndex];
       const src = item.url || item.imageData || '';
       const cap = item.caption || '';
       
@@ -717,36 +727,43 @@ function renderGalleryContent(content) {
       setTimeout(() => {
         imgEl.src = src;
         imgEl.alt = cap || 'Görsel';
-        capEl.textContent = cap;
-        if (item.album_id) capEl.textContent = \`[📁 \${item.album_id}] \${cap}\`;
-        
+        capEl.textContent = item.album_id ? \`[📁 \${item.album_id}] \${cap}\` : cap;
         imgEl.style.opacity = '1';
         capEl.style.opacity = '1';
       }, 150);
       
       document.getElementById('lightbox-prev').style.display = lbIndex > 0 ? 'flex' : 'none';
-      document.getElementById('lightbox-next').style.display = lbIndex < lbItems.length - 1 ? 'flex' : 'none';
+      document.getElementById('lightbox-next').style.display = lbIndex < items.length - 1 ? 'flex' : 'none';
     }
 
-    window.openLightbox = function(id) {
-       lbIndex = lbItems.findIndex(i => String(i.id) === String(id));
+    window.openLightbox = function(id, albumContext) {
+       // If album context provided, scope navigation to that album
+       if (albumContext) {
+         lbContextItems = lbItems.filter(i => (i.album_id || '') === albumContext);
+       } else {
+         lbContextItems = lbItems;
+       }
+       lbIndex = lbContextItems.findIndex(i => String(i.id) === String(id));
+       if (lbIndex === -1) { lbContextItems = lbItems; lbIndex = lbItems.findIndex(i => String(i.id) === String(id)); }
        if (lbIndex === -1) return;
        const lb = document.getElementById('gallery-lightbox');
        updateLightboxState();
        lb.classList.add('open');
        lb.focus();
-       document.body.style.overflow = 'hidden'; // Lock scroll
+       document.body.style.overflow = 'hidden';
     };
 
     window.closeLightbox = function() {
       document.getElementById('gallery-lightbox').classList.remove('open');
-       document.body.style.overflow = ''; // Restore scroll
-       lbIndex = -1;
+      document.body.style.overflow = '';
+      lbIndex = -1;
+      lbContextItems = [];
     };
     
     window.navLightbox = function(dir) {
+      const items = lbContextItems.length > 0 ? lbContextItems : lbItems;
       const newIdx = lbIndex + dir;
-      if (newIdx >= 0 && newIdx < lbItems.length) {
+      if (newIdx >= 0 && newIdx < items.length) {
         lbIndex = newIdx;
         updateLightboxState();
       }
@@ -790,19 +807,43 @@ function renderGalleryContent(content) {
        if (e.key === 'ArrowLeft') { window.navLightbox(-1); return; }
     });
 
+    // FIX-08: Touch swipe for lightbox
+    let lbTouchStartX = 0;
+    let lbTouchStartY = 0;
+    const lbEl = document.getElementById('gallery-lightbox');
+    lbEl.addEventListener('touchstart', (e) => {
+      lbTouchStartX = e.touches[0].clientX;
+      lbTouchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    lbEl.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - lbTouchStartX;
+      const dy = e.changedTouches[0].clientY - lbTouchStartY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+        window.navLightbox(dx < 0 ? 1 : -1);
+      }
+    }, { passive: true });
 
+    // BUG-02: Gallery init with error handling and retry
     async function initGallery() {
       const grid = document.getElementById('gallery-page-grid');
-      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted);font-weight:500;">Görseller Yükleniyor...</div>';
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--color-text-muted);font-weight:500;">Görseller Yükleniyor...</div>';
       try {
         const items = await getGalleryItems();
-        if (items) galleryItems = items;
+        galleryItems = Array.isArray(items) ? items : [];
       } catch (err) {
-        console.error("Galeri yükleme hatası:", err);
+        console.error('[KGED] Galeri yükleme hatası:', err);
+        grid.innerHTML = \`<div style="grid-column:1/-1;text-align:center;padding:3rem;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;margin:0 auto 1rem;color:var(--color-text-faint);"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          <p style="font-weight:600;margin-bottom:0.5rem;">Görseller yüklenirken bir hata oluştu</p>
+          <p style="font-size:0.875rem;color:var(--color-text-muted);margin-bottom:1rem;">Lütfen internet bağlantınızı kontrol edin.</p>
+          <button onclick="initGallery()" style="padding:0.625rem 1.5rem;background:var(--color-primary-600);color:#fff;border:none;border-radius:9999px;cursor:pointer;font-weight:600;font-size:0.875rem;">Tekrar Dene</button>
+        </div>\`;
+        return;
       }
       renderGalleryPage();
       initIntersectionObserver();
     }
+    window.initGallery = initGallery;
 
     initGallery();
   </script>

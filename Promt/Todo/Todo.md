@@ -1,666 +1,1475 @@
-# KGED Web Sitesi — Nihai TODO Listesi
+# KGED Web Sitesi — Kapsamlı Geliştirme & Bug Fix TODO Listesi
 
-Bu liste, hem önceki geliştirmeleri hem de yeni yapılan audit sonuçlarını kapsamaktadır.
-
-## ✅ TAMAMLANANLAR (Sprint 1)
-
-- [x] **Firebase Temizliği**: Projeden Firebase tamamen kaldırıldı, offline mod aktif edildi.
-- [x] **Bug Fix**: Galeri sayfası HTML kapanış hataları ve lightbox sorunları giderildi.
-- [x] **Bug Fix**: CSP `connect-src` Google Maps engeli düzeltildi.
-- [x] **A11y**: Loader için `prefers-reduced-motion` desteği ve focus yönetimi eklendi.
-- [x] **A11y**: Mobil menü için `aria-modal` ve focus trap iyileştirmesi yapıldı.
-- [x] **A11y**: Başa Dön butonunun skip-link yerine main-content'e odaklanması sağlandı.
-- [x] **Perf**: Google Maps'in tıkla-yükle (lazy load) yöntemiyle gizlilik ve performans artırıldı.
-- [x] **Hukuk**: KVKK/Çerez onay banner'ı eklendi.
-
-## 🔴 KRİTİK & GÜVENLİK (Öncelikli)
-
-- [ ] **Admin Şifre Güvenliği**: Mevcut CRC tabanlı hash yerine daha güvenli bir yöntem.
-- [ ] **Galeri Veri Optimizasyonu**: Base64 resimlerin JSON boyutunu şişirmemesi için Cloudinary vb. kullanımı değerlendirilmeli.
-- [ ] **Toolbar Focus Trap**: Erişilebilirlik panelinde Tab tuşu ile dışarı çıkılması engellenmeli.
-
-## 🟠 İÇERİK & ERİŞİLEBİLİRLİK
-
-- [ ] **Aktif Sayfa Vurgusu**: Navigasyon menüsünde aktif sayfanın görsel olarak belirtilmesi.
-- [ ] **Galeri Alt Metinleri**: Caption olmayan resimler için otomatik anlamlı description üretimi.
-- [ ] **Tüzük PDF Mobil**: Mobil cihazlar için direkt indirme butonunun her zaman görünür olması.
-
-## 🟡 SEO & PERFORMANS
-
-- [ ] **WebP Dönüşümü**: Tüm galeri resimlerinin WebP olarak saklanması.
-- [ ] **Sitemap Auto-Gen**: Build sırasında `sitemap.xml` dosyasının otomatik oluşturulması.
-- [ ] **SEO Meta Tags**: Open Graph görsellerinin her sayfa için özelleştirilmesi.
-
-## 🟢 İLERİ SEVİYE ÖZELLİKLER
-
-- [ ] **İletişim Formu**: Formspree entegrasyonu ile çalışan bir form.
-- [ ] **Yönetim Kurulu Resimleri**: Liste yerine görsel destekli kart yapısı.
-- [ ] **Kuruluş Sayacı**: "X gündür faaliyetteyiz" widget'ı.
+> Bu belge bir AI ajanına yönelik hazırlanmıştır. Her madde hangi **dosya**, hangi **satır/metin**, ne **değişmeli** şeklinde açıklanmıştır.
 
 ---
 
-*Son Güncelleme: 7 Nisan 2026*
-
-
-
-# KGED Web Sitesi — Kapsamlı Geliştirme Listesi
-
-> **AI Kullanım Notu:** Her madde `[DOSYA:SATIR]` referansı içerir. Düzenleme yaparken önce o dosya/satırı oku, sonra minimal diff uygula. Bu format token israfını önler.
+## 🔴 KRİTİK BUGLAR (Önce Bunlar)
 
 ---
 
-## 🔴 KRİTİK BUG FİXLER
-
-### TODO 01 — Galeri Çift `#gallery-lightbox` ID Bug
-**Dosya:** `src/build/site-renderer.js` **Satır: ~870–900** (`renderGalleryContent` fonksiyonu)
-**Sorun:** `renderGalleryContent` içinde `<div id="gallery-lightbox">` HTML'e **iki kez** ekleniyor (hem `<script>` öncesi hem de `<script>` sonrası). Bu `getElementById` ile yanlış elementin yakalanmasına yol açar.
-**Fix:** `src/build/site-renderer.js` satır ~900'deki ikinci `<div id="gallery-lightbox"...>` bloğunu tamamen sil. Sadece script öncesindeki tek örnek kalsın.
-
----
-
-### TODO 02 — `setActiveNavLink` Yanlış Aktif Eşleşmesi
-**Dosya:** `src/scripts/nav.js` **Satır: 35–42**
-**Sorun:** `currentPath.startsWith(href)` kontrolü `/h` ile başlayan her path'i `/hakkimizda` linkini aktif yapar. Örneğin `/hizmetler` gibi hipotetik bir sayfa açılınca Hakkımızda linki de aktif olur.
-**Fix:** Satır 39'u şu şekilde güncelle:
+### BUG-01: Supabase Anon Key doğrudan kaynak kodda — Güvenlik Açığı
+**Dosya:** `src/supabase/config.js`
+**Mevcut metin:**
 ```js
-const isActive = href === '/'
-  ? currentPath === '/'
-  : currentPath === href || currentPath.startsWith(href + '/');
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_z0GaCKmabd0X0OLDqYZp5w_IROXedRY';
 ```
-
----
-
-### TODO 03 — `dismissLoader` Çift `moveFocusToMain` Çağrısı
-**Dosya:** `src/scripts/loader.js` **Satır: 37–47**
-**Sorun:** `transitionend` event'i ile `setTimeout(700ms)` fallback aynı anda tetiklenebilir; `moveFocusToMain._called` guard var ama `loader.remove()` iki kez çağrılıyor.
-**Fix:** Satır 43'teki `if (loader.parentNode)` bloğunu şu şekilde güncelle:
+**Yapılacak değişiklik:**
+- Fallback string'i tamamen kaldır. Sadece env değişkeninden oku:
 ```js
-setTimeout(() => {
-  if (loader.isConnected) { loader.remove(); moveFocusToMain(); }
-}, 700);
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('[KGED] Supabase ortam değişkenleri eksik. .env dosyasını kontrol edin.');
+}
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
 ```
+- `.env.example` dosyası oluştur:
+```
+VITE_SUPABASE_URL=https://xxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=sb_publishable_xxxxx
+```
+- `.gitignore` içinde `.env` satırının var olduğundan emin ol.
 
 ---
 
-### TODO 04 — Admin Panel `hashString` Güvenliksiz Hash
-**Dosya:** `admin/index.html` **Satır: ~207–215**
-**Sorun:** Basit djb2 hash client-side JavaScript'te görünür. `ADMIN_PASS_HASH` ve `hashString` fonksiyonu DevTools'da anında görülebilir.
-**Fix:** Bkz. TODO 20 (Firebase Auth) — şifre doğrulamayı tamamen Firebase'e taşı. Geçici fix olarak admin klasörüne Vercel `x-robots-tag: noindex` header'ı ekle. `vercel.json` içine:
-```json
-{ "source": "/admin/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
-```
-
----
-
-### TODO 05 — `package.json` ve `package-lock.json` Uyumsuzluğu
-**Dosya:** `package.json` **Satır: 10–12**
-**Sorun:** `package.json` → `dependencies`'de `firebase` yok, ama `package-lock.json` firebase@12.11.0 içeriyor. Bu `npm ci` ile deployment'ta hata üretir.
-**Fix:** `package.json` `dependencies` objesine ekle:
-```json
-"firebase": "^12.11.0"
-```
-
----
-
-### TODO 06 — CSP'de Firebase Domain'leri Eksik
-**Dosya:** `vercel.json` **Satır: 16** (`Content-Security-Policy` değeri)
-**Sorun:** Firebase Firestore/Storage kullanan admin paneli için CSP'de `firestore.googleapis.com`, `storage.googleapis.com`, `*.firebaseapp.com` eksik. Firebase çağrıları bloklanır.
-**Fix:** `connect-src` direktifine şunları ekle:
-```
-https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://firebasestorage.googleapis.com
-```
-
----
-
-### TODO 07 — Footer `back-to-top-footer` Butonu Çalışmıyor
-**Dosya:** `src/build/site-renderer.js` **Satır: ~645** (`renderFooter`)
-**Sorun:** Footer'daki "Başa Dön" linki `href="#main-content"` ile anchor link, ama `src/scripts/nav.js`'deki `initBackToTop` sadece `#back-to-top` ID'li butonu dinliyor.
-**Fix:** `src/scripts/nav.js` `initBackToTop` fonksiyonuna şunu ekle:
+### BUG-02: Galeri sayfasında `getGalleryItems()` hata aldığında boş liste render ediliyor, kullanıcıya hata gösterilmiyor
+**Dosya:** `src/build/site-renderer.js`
+**İlgili bölüm:** `renderGalleryContent()` içindeki inline `<script type="module">` — `initGallery()` fonksiyonu
+**Mevcut metin:**
 ```js
-document.getElementById('back-to-top-footer')
-  ?.addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
-```
-
----
-
-## 🔥 ADMİN PANELİ — FİREBASE ENTEGRASYONU
-
-### TODO 08 — Firebase Config Dosyası Oluştur
-**Yeni Dosya:** `src/firebase/config.js`
-**İçerik:** Firebase project config (apiKey, authDomain, storageBucket vb.). Değişkenler Vite env (`import.meta.env.VITE_*`) ile Vercel environment variables'dan okunmalı. `.env.local` dosyası `.gitignore`'a eklenmeli.
-**Bağlı dosya:** `.gitignore` — `*.env*` satırı kontrolü.
-
----
-
-### TODO 09 — Firebase Admin Auth (Email/Password)
-**Dosya:** `admin/index.html` — client-side hash auth tamamen kaldırılacak.
-**Yeni Dosya:** `src/firebase/auth.js`
-**İçerik:** `signInWithEmailAndPassword`, `onAuthStateChanged`, `signOut` sarmalayan modül. Admin paneli login formu bu modülü kullanacak. Firebase Console'dan 1 kullanıcı (admin@kged.tr) manuel oluşturulacak.
-
----
-
-### TODO 10 — Firestore Galeri Koleksiyonu
-**Yeni Dosya:** `src/firebase/gallery.js`
-**İçerik:** `addDoc`, `getDocs`, `deleteDoc`, `onSnapshot` ile `gallery_items` koleksiyonu CRUD. `onSnapshot` ile admin panelindeki galeri listesi anlık senkron olur.
-**Admin panel etkisi:** `admin/index.html` satır ~330 (handleImageAdd) — base64 yerine Firestore doc + Storage URL kullanılacak.
-
----
-
-### TODO 11 — Firebase Storage Görsel Yükleme
-**Yeni Dosya:** `src/firebase/storage.js`
-**İçerik:** `uploadBytes`, `getDownloadURL` ile görsel yükleme. Görseller `gallery/{timestamp}_{filename}` path'iyle Storage'a yüklenecek. Client-side canvas resize (800px, 0.7 quality) korunacak.
-**Bağlı:** TODO 10 — Firestore doc'u Storage URL'i içerecek.
-
----
-
-### TODO 12 — Galeri Sayfası Firestore'dan Çeksin
-**Dosya:** `src/build/site-renderer.js` **Satır: ~770** (`renderGalleryContent` içindeki `<script>` bloğu)
-**Sorun:** Şu an galeri items statik JSON'dan okunuyor — admin panelinden eklenen görseller siteye yansımıyor.
-**Fix:** Gallery `<script>` bloğunu güncelle: sayfa açılışında `getDocs('gallery_items')` çağır, `onSnapshot` ile canlı güncelle. Firebase SDK script tag ile CDN'den yüklenecek (`type="module"` + `import`).
-
----
-
-### TODO 13 — Firestore Site İçerik Düzenleme
-**Yeni Koleksiyon:** `site_config` → doc: `content`
-**Admin panel etkisi:** Hakkımızda, iletişim bilgileri değişiklikleri artık `site-content.json` indirmek yerine Firestore'a yazılacak.
-**Galeri sayfası:** Sayfalar bu koleksiyonu okuyarak dinamik içerik gösterecek (sadece galeri için — statik sayfalar SEO için build-time render'ı koruyacak).
-
----
-
-### TODO 14 — Admin Panel: Görsel Silme
-**Dosya:** `admin/index.html` — galeri listesi render fonksiyonu
-**İçerik:** Her galeri kartına çöp kutusu ikonu ekle. Tıklandığında `deleteDoc(Firestore)` + `deleteObject(Storage)` çağır. Silmeden önce `confirm()` sorusu sor.
-
----
-
-### TODO 15 — Admin Panel: Sürükle-Bırak Sıralama
-**Dosya:** `admin/index.html`
-**İçerik:** HTML5 Drag & Drop API ile galeri görsellerinin sırasını değiştir. Her doc'a `order: number` alanı ekle. `dragstart`, `dragover`, `drop` event'leri ile sıra güncellenir, Firestore'a `updateDoc` ile yazılır.
-
----
-
-### TODO 16 — Admin Panel: Toplu Yükleme (Çoklu Dosya)
-**Dosya:** `admin/index.html` **Satır: ~335** (`<input type="file"...>`)
-**Fix:** `multiple` attribute ekle. Upload handler'ı `Promise.all` ile paralel yükleme yapacak şekilde güncelle. Progress bar göster.
-
----
-
-### TODO 17 — Admin Panel: Yönetim Kurulu Editörü
-**Dosya:** `admin/index.html`
-**İçerik:** `site_config/content` Firestore doc'una `boardMembers` array'i ekle. Admin panelde dinamik liste: isim + görev girişi, sıra değiştirme, silme. Hakkımızda sayfası bu array'i Firestore'dan okuyacak.
-
----
-
-## 📱 MOBİL ENTEGRASYON
-
-### TODO 18 — PWA Manifest ve Service Worker
-**Yeni Dosya:** `public/sw.js`
-**Mevcut Dosya:** `public/site.webmanifest` — `start_url`, `display: standalone`, `theme_color`, ikon dizisi (`192x192`, `512x512`) ekle.
-**`src/scripts/main.js` satır 7 sonrasına** ekle:
-```js
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
-  navigator.serviceWorker.register('/sw.js');
+async function initGallery() {
+  const grid = document.getElementById('gallery-page-grid');
+  grid.innerHTML = '<div style="grid-column:1/-1;...">Görseller Yükleniyor...</div>';
+  try {
+    const items = await getGalleryItems();
+    if (items) galleryItems = items;
+  } catch (err) {
+    console.error("Galeri yükleme hatası:", err);
+  }
+  renderGalleryPage();
+  initIntersectionObserver();
 }
 ```
-**`sw.js` içeriği:** Cache-first strateji — CSS/JS/fontlar önbelleklenir. Offline sayfası (`/offline.html`) ekle.
-
----
-
-### TODO 19 — Viewport Meta Genişletme + Safe Area
-**Dosya:** `src/build/site-renderer.js` **Satır: ~700** (`renderHead` fonksiyonu, viewport meta)
-**Fix:** Viewport meta'yı güncelle:
-```html
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+**Yapılacak değişiklik:** Hata durumunda kullanıcıya hata mesajı göster ve retry butonu ekle:
+```js
+async function initGallery() {
+  const grid = document.getElementById('gallery-page-grid');
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;">Görseller Yükleniyor...</div>';
+  try {
+    const items = await getGalleryItems();
+    galleryItems = Array.isArray(items) ? items : [];
+  } catch (err) {
+    console.error("Galeri yükleme hatası:", err);
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--color-error-text);">
+      <p>Görseller yüklenirken bir hata oluştu.</p>
+      <button onclick="initGallery()" style="margin-top:1rem;padding:0.5rem 1.5rem;background:var(--color-primary-600);color:#fff;border:none;border-radius:9999px;cursor:pointer;">Tekrar Dene</button>
+    </div>`;
+    return;
+  }
+  renderGalleryPage();
+  initIntersectionObserver();
+}
+window.initGallery = initGallery;
 ```
-**`src/styles/layout.css`** — header ve footer'a `padding-inline: max(var(--space-4), env(safe-area-inset-left))` ekle. iPhone notch/Dynamic Island uyumu.
 
 ---
 
-### TODO 20 — Touch Event İyileştirmeleri
-**Dosya:** `src/styles/components.css` **Satır: 1** (dosya başına ekle)
-**İçerik:**
-```css
-@media (hover: none) and (pointer: coarse) {
-  .btn:hover { transform: none; }
-  .card:hover { transform: none; box-shadow: var(--shadow-sm); }
+### BUG-03: Galeri lazy-load `IntersectionObserver` — `renderGalleryPage()` sonrası observer yeniden başlatılmıyor
+**Dosya:** `src/build/site-renderer.js`
+**İlgili bölüm:** `window.filterGallery` fonksiyonu
+**Mevcut metin:**
+```js
+window.filterGallery = function(btn, cat) {
+  document.querySelectorAll('.gallery-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = cat;
+  renderGalleryPage();
+};
+```
+**Yapılacak değişiklik:** `renderGalleryPage()` sonrasında `initIntersectionObserver()` çağır:
+```js
+window.filterGallery = function(btn, cat) {
+  document.querySelectorAll('.gallery-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter = cat;
+  renderGalleryPage();
+  setTimeout(initIntersectionObserver, 50); // DOM settle sonrası
+};
+```
+
+---
+
+### BUG-04: `getGalleryItems()` fallback select'inde `order` sütunu eksik, sonradan yükleme sırası bozuluyor
+**Dosya:** `src/supabase/gallery.js`
+**Mevcut metin (satır ~55):**
+```js
+const { data: fallbackData, error: fallbackError } = await supabase
+  .from('gallery_items')
+  .select('id, url, caption, category, created_at, order')
+  .order('created_at', { ascending: false });
+```
+**Sorun:** `order` bir SQL reserved keyword — Supabase PostgREST ile çakışabilir. Kolon adı tırnak içinde olmalı. Ayrıca sıralama hem `order` hem `created_at` üzerinden yapılmalı:
+```js
+const { data: fallbackData, error: fallbackError } = await supabase
+  .from('gallery_items')
+  .select('id, url, caption, category, created_at, "order"')
+  .order('"order"', { ascending: true })
+  .order('created_at', { ascending: false });
+```
+
+---
+
+### BUG-05: Admin panelinde `stat-gallery` ve `stat-gallery-big` element ID'leri mevcut DOM'da yok — JS hata veriyor
+**Dosya:** `admin/index.html`
+**İlgili bölüm:** `loadGalleryManagement()` fonksiyonu içinde:
+```js
+document.getElementById('stat-gallery').textContent = galleryCount;
+if (document.getElementById('stat-gallery-big')) {
+  document.getElementById('stat-gallery-big').textContent = galleryCount;
 }
 ```
-Dokunmatik ekranlarda hover animasyonları kaldır — mobil'de takılı kalan hover state'leri önler.
+**Sorun:** `renderDashboardHome()` ile oluşturulan HTML'de bu ID'ler tanımlı değil, null referans hatası oluşuyor.
+**Yapılacak değişiklik:** Her iki satırı da null-safe hale getir:
+```js
+const statEl = document.getElementById('stat-gallery');
+if (statEl) statEl.textContent = galleryCount;
+const statBigEl = document.getElementById('stat-gallery-big');
+if (statBigEl) statBigEl.textContent = galleryCount;
+```
 
 ---
 
-### TODO 21 — Mobile Nav Swipe-to-Close
-**Dosya:** `src/scripts/nav.js` **Satır: 15** (`initMobileMenu` fonksiyonu sonuna)
-**İçerik:** Touch swipe right → menü kapat:
+### BUG-06: `uploadGalleryImage()` içinde `sanitizePath` türkçe karakter dönüşümü eksik — bazı karakterler kırpılıyor
+**Dosya:** `src/supabase/gallery.js`
+**Mevcut metin:**
 ```js
+function sanitizePath(str) {
+  return str
+    .toLowerCase()
+    .replace(/\s+/g, '_')
+    .replace(/[çÇ]/g, 'c').replace(/[ğĞ]/g, 'g').replace(/[ıİ]/g, 'i')
+    .replace(/[öÖ]/g, 'o').replace(/[şŞ]/g, 's').replace(/[üÜ]/g, 'u')
+    .replace(/[^a-z0-9_.\-]/g, '');
+}
+```
+**Sorun:** `İ` (büyük noktalı İ) `i`'ye dönüştürülüyor ama küçük harf dönüşümünden önce replace yapıldığı için çalışıyor, ancak path başında timestamp olmadan çakışma riski var. Ayrıca dosya adı boş kalabilir.
+**Yapılacak değişiklik:**
+```js
+function sanitizePath(str) {
+  if (!str) return `file_${Date.now()}`;
+  const result = str
+    .toLowerCase()
+    .replace(/[çÇ]/g, 'c').replace(/[ğĞ]/g, 'g')
+    .replace(/[ıİ]/g, 'i').replace(/[iİ]/g, 'i')
+    .replace(/[öÖ]/g, 'o').replace(/[şŞ]/g, 's').replace(/[üÜ]/g, 'u')
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9_.\-]/g, '')
+    .replace(/_{2,}/g, '_')
+    .replace(/^[_.\-]+|[_.\-]+$/g, '');
+  return result || `file_${Date.now()}`;
+}
+```
+
+---
+
+### BUG-07: Admin panel `handleSaveBoard` butonu DOM'a ekleniyor ama `renderBoardUI()` içinde `id="btn-save-board"` olan buton yok
+**Dosya:** `admin/index.html`
+**Mevcut metin — `renderBoardUI()`:**
+```js
+function renderBoardUI() {
+  return `
+    <div class="panel-card fade-in">
+      <div class="panel-card__header"><div class="panel-card__title">Yönetim Kurulu</div></div>
+      ...
+    </div>
+  `;
+}
+```
+**Sorun:** Panel header'ında kaydet butonu eksik. `window.handleSaveBoard` tanımlı ama çağrılan buton yok.
+**Yapılacak değişiklik:** Header'a kaydet butonu ekle:
+```js
+function renderBoardUI() {
+  return `
+    <div class="panel-card fade-in">
+      <div class="panel-card__header">
+        <div class="panel-card__title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Yönetim Kurulu
+        </div>
+        <button id="btn-save-board" class="btn btn--primary" onclick="window.handleSaveBoard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Kaydet
+        </button>
+      </div>
+      <div class="panel-card__body">
+        <div class="board-rows-list" id="board-editor-list"></div>
+        <button class="btn btn--dashed" onclick="window.addBoardMember()">+ Yeni Üye Ekle</button>
+      </div>
+    </div>
+  `;
+}
+```
+
+---
+
+### BUG-08: Galeri lightbox'ta albüm içi görseller için `lbItems` filtresi albüm açılmadan önce hesaplanıyor — yanlış index
+**Dosya:** `src/build/site-renderer.js`
+**İlgili bölüm:** `window.openLightbox` fonksiyonu
+**Mevcut metin:**
+```js
+window.openLightbox = function(id) {
+   lbIndex = lbItems.findIndex(i => String(i.id) === String(id));
+   if (lbIndex === -1) return;
+   ...
+};
+```
+**Sorun:** `lbItems` global filtreye göre güncel, ama albüm içi bir görsele tıklandığında `lbItems` tüm filtrelenmiş listeyi içeriyor, albüm sıralamasını yansıtmıyor.
+**Yapılacak değişiklik:** `openLightbox`'a hangi grubun lightbox'ını açtığını belirten parametre ekle veya her görsel kartına `data-lightbox-group` ekle:
+```js
+// renderGalleryItem() içinde img tag:
+imgHtml = `<img ... onclick="window.openLightbox('${lid}', '${item.album_id || ''}')" .../>`;
+
+window.openLightbox = function(id, albumContext) {
+  let contextItems = lbItems;
+  if (albumContext) {
+    contextItems = lbItems.filter(i => (i.album_id || '') === albumContext);
+  }
+  lbIndex = contextItems.findIndex(i => String(i.id) === String(id));
+  if (lbIndex === -1) return;
+  // Store context for nav
+  window._lbContextItems = contextItems;
+  const lb = document.getElementById('gallery-lightbox');
+  updateLightboxStateWithItems(contextItems, lbIndex);
+  lb.classList.add('open');
+  lb.focus();
+  document.body.style.overflow = 'hidden';
+};
+
+// updateLightboxState parametreli hale getirilmeli:
+function updateLightboxStateWithItems(items, idx) {
+  if (idx < 0 || idx >= items.length) return;
+  const item = items[idx];
+  // ... mevcut logic
+  document.getElementById('lightbox-prev').style.display = idx > 0 ? 'flex' : 'none';
+  document.getElementById('lightbox-next').style.display = idx < items.length - 1 ? 'flex' : 'none';
+}
+
+window.navLightbox = function(dir) {
+  const items = window._lbContextItems || lbItems;
+  const newIdx = lbIndex + dir;
+  if (newIdx >= 0 && newIdx < items.length) {
+    lbIndex = newIdx;
+    updateLightboxStateWithItems(items, lbIndex);
+  }
+};
+```
+
+---
+
+### BUG-09: `addGalleryItem()` içinde fallback retry `album_id` null olduğunda body'ye dahil edilmemeli ama `is_cover` da kaldırılmıyor
+**Dosya:** `src/supabase/gallery.js`
+**Mevcut metin (fallbackPayload):**
+```js
+const fallbackPayload = {
+  url: item.url,
+  caption: item.caption,
+  category: item.category,
+  order: item.order ?? 0
+};
+```
+**Sorun:** `alt_text` da schema mismatch'e yol açabilir, fallback'te yok ama hata mesajı sadece `album_id` ve `alt_text`'i kontrol ediyor. `is_cover` da eklenememiş.
+**Yapılacak değişiklik:** Hata tespit mekanizmasını daha sağlam hale getir:
+```js
+const SCHEMA_ERROR_CODES = ['PGRST204', '42703'];
+const SCHEMA_ERROR_KEYWORDS = ['album_id', 'alt_text', 'is_cover', 'column'];
+
+function isSchemaError(error) {
+  return SCHEMA_ERROR_CODES.includes(error.code) ||
+    error.status === 400 ||
+    SCHEMA_ERROR_KEYWORDS.some(kw => (error.message || '').toLowerCase().includes(kw));
+}
+
+export async function addGalleryItem(item) {
+  const payload = {
+    url: item.url,
+    caption: item.caption,
+    category: item.category,
+    order: item.order ?? 0,
+    ...(item.album_id ? { album_id: item.album_id } : {}),
+    ...(item.alt_text ? { alt_text: item.alt_text } : {}),
+    ...(item.is_cover !== undefined ? { is_cover: item.is_cover } : {}),
+  };
+
+  const { data, error } = await supabase.from('gallery_items').insert([payload]);
+
+  if (error) {
+    if (isSchemaError(error)) {
+      console.warn('[KGED] Schema mismatch, core-only retry...');
+      const { data: retryData, error: retryError } = await supabase
+        .from('gallery_items')
+        .insert([{ url: item.url, caption: item.caption, category: item.category, order: item.order ?? 0 }]);
+      if (retryError) throw retryError;
+      return retryData;
+    }
+    throw error;
+  }
+  return data;
+}
+```
+
+---
+
+### BUG-10: Galeri admin — `deleteGalleryItem` başarısız storage silme işlemi UI'da hata göstermiyor, başarılıymış gibi davranıyor
+**Dosya:** `admin/index.html`
+**İlgili bölüm:** `window.handleDeleteGallery` fonksiyonu
+**Mevcut metin:**
+```js
+window.handleDeleteGallery = async (id, url) => {
+  if (!confirm('Bu görseli silmek istediğinize emin misiniz?')) return;
+  try {
+    ...
+    await deleteGalleryItem(id, path);
+    showToast('Görsel başarıyla silindi.', 'success');
+    loadGalleryManagement();
+  } catch (e) {
+    showToast('Silme hatası: ' + e.message, 'error');
+  }
+};
+```
+**Yapılacak değişiklik:** Butonu silme sırasında disable et, daha iyi UX sağla:
+```js
+window.handleDeleteGallery = async (id, url) => {
+  if (!confirm('Bu görseli kalıcı olarak silmek istediğinize emin misiniz?\n\nBu işlem geri alınamaz.')) return;
+  const btn = event.currentTarget;
+  const oldText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Siliniyor...';
+  try {
+    let path = null;
+    try {
+      const urlObj = new URL(url);
+      const parts = urlObj.pathname.split('/storage/v1/object/public/gallery/');
+      if (parts.length > 1) path = decodeURIComponent(parts[1]);
+    } catch {}
+    await deleteGalleryItem(id, path);
+    showToast('Görsel başarıyla silindi.', 'success');
+    loadGalleryManagement();
+  } catch (e) {
+    showToast('Silme hatası: ' + (e.message || 'Bilinmeyen hata'), 'error');
+    btn.disabled = false;
+    btn.innerHTML = oldText;
+  }
+};
+```
+
+---
+
+## 🟠 ÖNEMLİ İYİLEŞTİRMELER
+
+---
+
+### FIX-01: Galeri sayfasında filtreleme butonu her renderGalleryPage() çağrısında "Tümü" seçili gibi reset'leniyor
+**Dosya:** `src/build/site-renderer.js`
+**Sorun:** `renderGalleryPage()` fonksiyonu içindeki `lbItems` hesaplaması doğru ama filter state `currentFilter` render sırasında kaybolmuyor. Ancak albüm collapse/expand işleminde `filterGallery` çağrılmadan `renderGalleryPage()` doğrudan çağrılıyor — durum doğru tutulmalı.
+**Yapılacak değişiklik:** `renderGalleryPage()` fonksiyonunu, `currentFilter` state'ini koruyacak şekilde bırak. Albüm toggle butonlarını `renderGalleryPage()` üzerinden değil, doğrudan DOM manipülasyonu ile yönet (class toggle ile). Bu zaten mevcut ama `gallery-album-header` onclick inline string ile yapılıyor — event delegation'a geç:
+```js
+// renderGalleryPage() sonunda:
+grid.addEventListener('click', function(e) {
+  const header = e.target.closest('.gallery-album-header');
+  if (header) {
+    header.parentElement.classList.toggle('expanded');
+  }
+}, { once: false });
+```
+Ve inline onclick'leri kaldır: `onclick="this.parentElement.classList.toggle('expanded')"` → sadece class bırak, event delegation yönetsin.
+
+---
+
+### FIX-02: Admin panel `renderSiteInfoUI()` sadece `about.title` ve `about.intro` kaydediyor — diğer alanlar kaybolabiliyor
+**Dosya:** `admin/index.html`
+**İlgili bölüm:** `window.handleSaveConfig` fonksiyonu
+**Mevcut metin:**
+```js
+siteContent.about.title = document.getElementById('edit-about-title')?.value || '';
+siteContent.about.intro = document.getElementById('edit-about-intro')?.value || '';
+siteContent.contact.phone = document.getElementById('edit-contact-phone')?.value || '';
+siteContent.contact.email = document.getElementById('edit-contact-email')?.value || '';
+```
+**Sorun:** `siteContent` üzerinden tüm nesne Supabase'e yazılıyor ama UI'da sadece 4 alan var. Bu tasarım gereği çalışıyor ama `contact.phoneHref`, `contact.emailHref` gibi türetilmiş alanlar güncellenmeden kalıyor.
+**Yapılacak değişiklik:** Telefon/email değeri güncellendiğinde href'leri de güncelle:
+```js
+window.handleSaveConfig = async () => {
+  if (!siteContent) return;
+  const btn = document.getElementById('btn-save-config');
+  btn.disabled = true; btn.textContent = 'Kaydediliyor...';
+  try {
+    siteContent.about.title = document.getElementById('edit-about-title')?.value?.trim() || siteContent.about.title;
+    siteContent.about.intro = document.getElementById('edit-about-intro')?.value?.trim() || siteContent.about.intro;
+    
+    const phone = document.getElementById('edit-contact-phone')?.value?.trim();
+    if (phone) {
+      siteContent.contact.phone = phone;
+      // Türkiye numarası formatı: 0541 648 45 70 -> +905416484570
+      const digits = phone.replace(/\D/g, '');
+      siteContent.contact.phoneHref = digits.startsWith('0')
+        ? `tel:+90${digits.slice(1)}`
+        : `tel:+${digits}`;
+    }
+    
+    const email = document.getElementById('edit-contact-email')?.value?.trim();
+    if (email) {
+      siteContent.contact.email = email;
+      siteContent.contact.emailHref = `mailto:${email}`;
+    }
+    
+    await saveSiteConfig(siteContent);
+    showToast('Site bilgileri güncellendi ✓', 'success');
+  } catch (e) {
+    showToast('Hata: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Kaydet';
+  }
+};
+```
+
+---
+
+### FIX-03: `getSiteConfig()` veri yoksa `null` dönüyor — hydrate.js bunu sessizce skip ediyor, hata yakalanamıyor
+**Dosya:** `src/scripts/hydrate.js`
+**Mevcut metin:**
+```js
+export async function initHydration() {
+  try {
+    const config = await getSiteConfig();
+    if (!config) return;
+    ...
+  } catch (err) {
+    console.warn('[KGED] Hydrate hatası:', err);
+  }
+}
+```
+**Yapılacak değişiklik:** `null` durumunu loglayarak daha açık hale getir:
+```js
+const config = await getSiteConfig();
+if (!config) {
+  console.info('[KGED] Supabase site_config boş — statik verilerle devam ediliyor.');
+  return;
+}
+```
+
+---
+
+### FIX-04: Galeri admin'de görsel yükleme sırasında aynı dosya birden fazla kez queue'ya eklenebiliyor
+**Dosya:** `admin/index.html`
+**İlgili bölüm:** `addFilesToQueue()` fonksiyonu
+**Yapılacak değişiklik:** Duplicate kontrolü ekle (aynı isim+boyut):
+```js
+function addFilesToQueue(files) {
+  const imageFiles = files.filter(f => f.type.startsWith('image/'));
+  const remaining = MAX_FILES - pendingFiles.length;
+  
+  // Duplicate filter
+  const existingKeys = new Set(pendingFiles.map(f => `${f.name}_${f.size}`));
+  const uniqueNew = imageFiles.filter(f => !existingKeys.has(`${f.name}_${f.size}`));
+  const duplicateCount = imageFiles.length - uniqueNew.length;
+  
+  if (duplicateCount > 0) showToast(`${duplicateCount} tekrarlanan görsel atlandı.`, 'info');
+  if (remaining <= 0) { showToast(`Maksimum ${MAX_FILES} görsel yükleyebilirsiniz.`, 'error'); return; }
+  
+  const toAdd = uniqueNew.slice(0, remaining);
+  if (uniqueNew.length > remaining) showToast(`${uniqueNew.length - remaining} görsel limit nedeniyle eklenmedi.`, 'info');
+  
+  pendingFiles.push(...toAdd);
+  renderPreview();
+  
+  // Reset file input so same file can be re-selected after removal
+  document.getElementById('upload-file-real').value = '';
+}
+```
+
+---
+
+### FIX-05: Admin sidebar tab geçişi sırasında siteContent henüz yüklenmemişken `renderSectionView()` çalışıyor
+**Dosya:** `admin/index.html`
+**İlgili bölüm:** `window.switchTab` fonksiyonu
+**Mevcut metin:**
+```js
+window.switchTab = (tab, el) => {
+  ...
+  if (tab === 'dashboard') {
+    ...
+  } else {
+    sectionsView.style.display = 'block';
+    renderSectionView(tab);
+  }
+};
+```
+**Yapılacak değişiklik:** `siteContent` null kontrolü ekle:
+```js
+window.switchTab = async (tab, el) => {
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  const dashView = document.getElementById('admin-view-dashboard');
+  const sectionsView = document.getElementById('admin-view-sections');
+  const root = document.getElementById('admin-sections-root');
+
+  dashView.style.display = 'none';
+  sectionsView.style.display = 'none';
+  root.innerHTML = '';
+
+  if (tab === 'dashboard') {
+    dashView.style.display = 'block';
+    renderDashboardHome();
+  } else {
+    sectionsView.style.display = 'block';
+    
+    // siteContent henüz yüklenmediyse bekle
+    if (!siteContent) {
+      root.innerHTML = '<div style="padding:2rem;text-align:center;">Veriler yükleniyor...</div>';
+      await loadSiteContent();
+    }
+    
+    renderSectionView(tab);
+  }
+};
+```
+
+---
+
+### FIX-06: `vercel.json` CSP — Supabase realtime WebSocket bağlantıları için `connect-src` eksik
+**Dosya:** `vercel.json`
+**Mevcut metin (Content-Security-Policy value):**
+```
+"connect-src 'self' https://maps.googleapis.com https://vitals.vercel-insights.com https://*.supabase.co"
+```
+**Sorun:** Supabase realtime için `wss://*.supabase.co` eksik. Ayrıca `https://va.vercel-scripts.com` analytics için gerekli.
+**Yapılacak değişiklik:**
+```
+"connect-src 'self' https://maps.googleapis.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://*.supabase.co wss://*.supabase.co"
+```
+Ayrıca `script-src` için `https://va.vercel-scripts.com` ekle:
+```
+"script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://va.vercel-scripts.com https://cdnjs.cloudflare.com"
+```
+
+---
+
+### FIX-07: Admin panel `compressImage()` — WebP formatında dosyalar için extension hatalı kalıyor
+**Dosya:** `admin/index.html`
+**İlgili bölüm:** `window.handleImageAdd` içinde:
+```js
+const ext = file.name.split('.').pop() || 'jpg';
+const path = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
+const publicUrl = await uploadGalleryImage(compressed, path);
+```
+**Sorun:** `compressImage()` her zaman JPEG blob döndürüyor (`'image/jpeg'`), ama path orijinal extension ile oluşturuluyor. Supabase'de Content-Type yanlış olabilir.
+**Yapılacak değişiklik:**
+```js
+const compressed = await compressImage(file);
+// compressImage her zaman JPEG üretir
+const path = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.jpg`;
+const publicUrl = await uploadGalleryImage(compressed, path);
+```
+Ve `uploadGalleryImage()` fonksiyonuna Content-Type ekle:
+```js
+export async function uploadGalleryImage(file, path) {
+  const safePath = sanitizePath(path);
+  const { data, error } = await supabase.storage
+    .from('gallery')
+    .upload(safePath, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type || 'image/jpeg' // Blob'dan type al
+    });
+  if (error) throw error;
+  ...
+}
+```
+
+---
+
+### FIX-08: Galeri sayfasında mobil'de lightbox keyboard navigasyonu çalışmıyor — touch swipe yok
+**Dosya:** `src/build/site-renderer.js`
+**İlgili bölüm:** Galeri lightbox event listener'ları
+**Yapılacak değişiklik:** Touch swipe desteği ekle:
+```js
+// Lightbox swipe support
 let touchStartX = 0;
-mobileNav.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
-mobileNav.addEventListener('touchend', e => {
-  if (e.changedTouches[0].clientX - touchStartX > 60) closeMenu();
-});
-```
-
----
-
-### TODO 22 — Galeri Lightbox Swipe Desteği
-**Dosya:** `src/build/site-renderer.js` **Satır: ~840** (lightbox `<script>` bloğu)
-**İçerik:** `touchstart` / `touchend` ile soldan sağa swipe → önceki görsel, sağdan sola → sonraki görsel. `currentIndex` takibi gerekir.
-
----
-
-### TODO 23 — Bottom Sheet Navigation (Mobil)
-**Dosya:** `src/styles/layout.css` — `.nav--mobile` kuralları (~Satır 185)
-**İçerik:** Mobilde menü yukarıdan açılmak yerine ekranın altından yukarı kayan "bottom sheet" olarak aç. `transform: translateY(100%)` → `translateY(0)` geçişi. `border-radius: 1.5rem 1.5rem 0 0` üst köşelere ekle.
-
----
-
-### TODO 24 — Sticky Mobile CTA Butonu
-**Dosya:** `src/styles/layout.css` — dosya sonuna ekle
-**İçerik:** Mobil cihazlarda ekranın altında sabit "Bizi Ara" butonu:
-```css
-.mobile-cta-bar {
-  display: none;
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: var(--color-primary-600); color: #fff;
-  padding: 1rem; text-align: center; z-index: 900;
-}
-@media (max-width: 767px) { .mobile-cta-bar { display: flex; } }
-```
-`src/build/site-renderer.js` `renderBody` fonksiyonuna bu HTML'i ekle.
-
----
-
-### TODO 25 — vCard Üretimi (Rehbere Ekle)
-**Dosya:** `src/build/site-renderer.js` **Satır: ~585** (`renderContactContent`)
-**İçerik:** İletişim bilgileri kartlarının altına bir buton ekle. Tıklandığında JS ile `.vcf` dosyası oluşturup indir:
-```js
-const vcard = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nEMAIL:${email}\nADR:${address}\nEND:VCARD`;
-```
-Blob ile `URL.createObjectURL` — `download="kged-iletisim.vcf"`.
-
----
-
-### TODO 26 — Web Share API (Galeri Paylaşım)
-**Dosya:** `src/build/site-renderer.js` **Satır: ~830** (galeri `<script>`)
-**İçerik:** Lightbox içine paylaş butonu ekle:
-```js
-if (navigator.share) {
-  await navigator.share({ title: caption, url: window.location.href });
-} else {
-  // Fallback: clipboard copy
-  navigator.clipboard.writeText(window.location.href);
-}
-```
-
----
-
-### TODO 27 — `prefers-reduced-motion` JavaScript Kontrolü
-**Dosya:** `src/scripts/main.js` **Satır: 7 sonrasına** ekle:
-```js
-if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  document.documentElement.classList.add('reduced-motion');
-}
-```
-**`src/styles/layout.css`** içindeki `@media (prefers-reduced-motion: reduce)` bloğunu bu class selector ile güçlendir.
-
----
-
-### TODO 28 — `prefers-contrast: more` OS Senkronizasyonu
-**Dosya:** `src/scripts/toolbar.js` **Satır: `initToolbar` fonksiyonu başına** ekle:
-```js
-const prefersHighContrast = window.matchMedia('(prefers-contrast: more)');
-if (prefersHighContrast.matches && !getStoredTheme()) {
-  applyTheme('high-contrast');
-}
-prefersHighContrast.addEventListener('change', e => {
-  if (e.matches && !localStorage.getItem(STORAGE_KEY)) applyTheme('high-contrast');
-});
-```
-
----
-
-### TODO 29 — `.sr-only` Utility Class
-**Dosya:** `src/styles/components.css` **Satır: 1** (dosya başına ekle):
-```css
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0;
-  margin: -1px; overflow: hidden; clip: rect(0,0,0,0);
-  white-space: nowrap; border: 0;
-}
-.sr-only-focusable:focus { all: revert; }
-```
-Kullanım yerleri: hero ikonları, toolbar butonları, sosyal link metinleri.
-
----
-
-## ⚡ PERFORMANS
-
-### TODO 30 — Galeri Infinite Scroll / Pagination
-**Dosya:** `src/build/site-renderer.js` **Satır: ~820** (galeri `<script>` içi `renderGalleryPage`)
-**İçerik:** `const PAGE_SIZE = 12;` tanımla. İlk render'da sadece ilk 12 item'ı bas. Listenin altına `IntersectionObserver` gözlemcisi ekle — viewport'a girince sonraki 12'yi yükle. DOM'a `insertAdjacentHTML` ile ekle (full re-render değil).
-
----
-
-### TODO 31 — Critical CSS Inline (FOUC Tam Önleme)
-**Dosya:** `src/build/site-renderer.js` **Satır: ~695** (`renderHead`)
-**İçerik:** Mevcut `<style>body{opacity:0}body.ready{opacity:1}</style>` satırını genişlet. Header, loader, hero için minimal kritik CSS inline ekle (`--color-bg`, `--font-heading`, temel layout). Google Fonts gecikmesi sırasında düzen kaymasını önler.
-
----
-
-### TODO 32 — Resim Lazy Loading + `fetchpriority`
-**Dosya:** `src/build/site-renderer.js` **Satır: ~820** (galeri card img render)
-**İçerik:** Galeri kartlarındaki `<img>` etiketlerine:
-- İlk 3 resme: `loading="eager" fetchpriority="high"`
-- Geri kalanına: `loading="lazy" decoding="async"`
-LCP (Largest Contentful Paint) skoru iyileşir.
-
----
-
-### TODO 33 — Google Fonts Self-Host Seçeneği
-**Dosya:** `src/styles/tokens.css` **Satır: 8** (`@import url('https://fonts.googleapis.com/...')`)
-**İçerik:** Fontları `public/fonts/` klasörüne indir. `@font-face` ile self-host et. `font-display: swap` ekle. `size-adjust` + `ascent-override` ile CLS sıfırla:
-```css
-@font-face {
-  font-family: 'Inter'; src: url('/fonts/inter.woff2') format('woff2');
-  font-display: swap; size-adjust: 100.3%; ascent-override: 90%;
-}
-```
-Ayrıca `vercel.json`'dan `fonts.googleapis.com` bağlantısı `preconnect` kaldırılabilir.
-
----
-
-### TODO 34 — Vite Build Optimizasyonu
-**Dosya:** `vite.config.js` **Satır: 33** (`build:` objesine ekle):
-```js
-build: {
-  cssCodeSplit: true,
-  minify: 'terser',
-  terserOptions: { compress: { drop_console: true } },
-  rollupOptions: {
-    output: {
-      manualChunks: { firebase: ['firebase/app', 'firebase/firestore', 'firebase/storage'] }
-    }
+let touchStartY = 0;
+const lbEl = document.getElementById('gallery-lightbox');
+lbEl.addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+lbEl.addEventListener('touchend', (e) => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+    window.navLightbox(dx < 0 ? 1 : -1);
   }
-}
+}, { passive: true });
 ```
 
 ---
 
-### TODO 35 — Print CSS QR Kod
-**Dosya:** `src/styles/layout.css` — `@media print` bloğu **Satır: ~515** (mevcut print bloğunu genişlet)
-**İçerik:** Tüzük ve iletişim sayfaları için sağ üst köşeye QR kod alanı. `qrcode.min.js` CDN'den lazy yüklenecek, sadece print tetiklendiğinde:
-```js
-window.addEventListener('beforeprint', () => {
-  import('https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js')
-    .then(() => { new QRCode(el, window.location.href); });
-});
-```
+## 🟡 ORTA ÖNCELİKLİ DÜZELTMELER
 
 ---
 
-## 🔒 GÜVENLİK
-
-### TODO 36 — Firebase Security Rules
-**Yeni Dosya:** `firestore.rules`
-**İçerik:** 
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /gallery_items/{doc} {
-      allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'admin@kged.tr';
-    }
-    match /site_config/{doc} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-  }
-}
-```
-
----
-
-### TODO 37 — Storage Security Rules
-**Yeni Dosya:** `storage.rules`
-**İçerik:** Herkes okuyabilir (galeri görselleri), sadece auth kullanıcı yazabilir. Max 5MB boyut kontrolü:
-```
-allow write: if request.auth != null && request.resource.size < 5 * 1024 * 1024;
-```
-
----
-
-### TODO 38 — Rate Limiting Admin Login (Firebase)
-**Bağlı:** TODO 09
-**İçerik:** Firebase Auth zaten brute-force koruması sağlar. Ek olarak `admin/index.html`'deki manuel lockout kodu temizlenecek. Firebase `auth/too-many-requests` error'u yakalanacak ve Türkçe mesaj gösterilecek.
-
----
-
-### TODO 39 — Subresource Integrity (SRI) CDN Bağlantıları
-**Dosya:** `src/build/site-renderer.js` **Satır: ~700** (`renderHead`)
-**İçerik:** Harici CDN scriptlerine (QRCode.js vb.) `integrity="sha384-..."` ve `crossorigin="anonymous"` attribute'ları ekle. `openssl dgst -sha384 -binary dosya.js | base64` ile hash hesaplanır.
-
----
-
-### TODO 40 — `.env` Güvenlik Katmanı
-**Yeni Dosya:** `.env.local` (gitignore'da)
-**İçerik:**
-```
-VITE_FIREBASE_API_KEY=...
-VITE_FIREBASE_AUTH_DOMAIN=...
-VITE_FIREBASE_PROJECT_ID=...
-VITE_FIREBASE_STORAGE_BUCKET=...
-```
-**Dosya:** `.gitignore` — `.env*` satırı zaten var mı kontrol et. Yoksa ekle.
-
----
-
-## ♿ ERİŞİLEBİLİRLİK
-
-### TODO 41 — ARIA Live Region Galeri Filtre
-**Dosya:** `src/build/site-renderer.js` **Satır: ~785** (`gallery-page-grid` div'i)
-**Fix:** `aria-live="polite"` var ama `aria-atomic="false"` ve `aria-label` eksik. Filtre sonucunu duyurmak için:
+### FIX-09: `site-renderer.js` inline gallery script modül import'u production build'de yanlış path alıyor
+**Dosya:** `src/build/site-renderer.js`
+**Mevcut metin:**
 ```html
-<p id="gallery-result-count" class="sr-only" aria-live="polite"></p>
+<script type="module">
+  import { getGalleryItems } from '/src/supabase/gallery.js';
 ```
-Her filtre değişiminde: `document.getElementById('gallery-result-count').textContent = `${items.length} görsel gösteriliyor.``;`
+**Sorun:** Vite build sırasında bu inline script içindeki import path'i Vite tarafından resolve edilmiyor. Production build'de `/src/supabase/gallery.js` 404 verir.
+**Yapılacak değişiklik:** Bu scripti ayrı bir dosyaya taşı:
+1. `src/scripts/gallery-page.js` dosyası oluştur ve tüm galeri inline script içeriğini buraya taşı.
+2. `renderGalleryContent()` içindeki `<script type="module">` bloğunu şunla değiştir:
+```html
+<script type="module" src="/src/scripts/gallery-page.js"></script>
+```
+3. Galeri sayfası artık Vite tarafından doğru şekilde bundle edilecek.
 
 ---
 
-### TODO 42 — Galeri Keyboard Navigation (Lightbox)
-**Dosya:** `src/build/site-renderer.js` **Satır: ~850** (lightbox keydown handler)
-**Mevcut:** Sadece `Escape` dinleniyor.
-**Fix:** Sol/sağ ok tuşları ile lightbox'ta gezinme ekle:
+### FIX-10: `hydrate.js` board render'ı `escapeHtml` fonksiyonunu inline tanımlıyor — DRY ihlali ve potansiyel XSS riski
+**Dosya:** `src/scripts/hydrate.js`
+**Mevcut metin:**
 ```js
-document.addEventListener('keydown', e => {
-  if (!lb.classList.contains('open')) return;
-  if (e.key === 'ArrowRight') nextImage();
-  if (e.key === 'ArrowLeft') prevImage();
-  if (e.key === 'Escape') closeLightbox();
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    ...
+}
+```
+**Sorun:** `site-renderer.js`'de de aynı fonksiyon var. Ortak utility'e taşı.
+**Yapılacak değişiklik:**
+1. `src/utils/html.js` oluştur:
+```js
+export function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+```
+2. `hydrate.js` ve `site-renderer.js`'de: `import { escapeHtml } from '../utils/html.js';`
+
+---
+
+### FIX-11: Admin panel tema toggle — sayfa yenilenmeden dark mode icon durumu yanlış başlıyor
+**Dosya:** `admin/index.html`
+**İlgili bölüm:** `applyTheme()` çağrısı
+**Mevcut metin:**
+```js
+getSession().then(session => {
+  applyTheme(localStorage.getItem('kged-theme') || ...);
+  if (session) showDashboard();
+  else showLogin();
 });
 ```
-
----
-
-### TODO 43 — Focus Trap (Lightbox ve Mobile Menu)
-**Dosya:** `src/scripts/nav.js` — `initMobileMenu` **Satır: 15 sonrası**
-**İçerik:** Menü açıkken Tab tuşu menü dışına çıkmasın. Focusable elementler listesi: `a[href], button:not([disabled])`. Son elementin tabı → ilk elemente dön (döngüsel focus trap).
-
----
-
-### TODO 44 — Color Contrast Audit (WCAG AA)
-**Dosya:** `src/styles/tokens.css`
-**İnceleme:** `--color-text-muted: #6B7280` beyaz arka planda 4.1:1 kontrast → WCAG AA için minimum 4.5:1 gerekli.
-**Fix:** Satır ~33: `--color-text-muted: #4B5563;` (kontrast ~6:1)
-Ayrıca `--color-text-faint: #9CA3AF` → sadece dekoratif metin için kullan, bilgi içeren metin için kullanma.
-
----
-
-## 🔍 SEO ve SOSYAL
-
-### TODO 45 — Structured Data: Organization sameAs Sosyal Linkler
-**Dosya:** `src/build/site-renderer.js` **Satır: ~585** (`buildOrganizationSchema`)
-**Mevcut:** `sameAs` sadece sosyal linkler doluysa ekleniyor.
-**İyileştirme:** Google Haritalar URL'ini de `sameAs`'e ekle. `schema.org/contactPoint` içine `areaServed: "Kırşehir"` ekle.
-
----
-
-### TODO 46 — Open Graph Resmi Otomatik Üret
-**Dosya:** Yeni: `src/build/og-image-generator.js`
-**İçerik:** Build sırasında `canvas` (Node.js canvas kütüphanesi) ile her sayfa için 1200x630 OG görseli üret. Dernek adı, sayfa başlığı, logo. `public/og/` klasörüne kaydet.
-**`src/build/site-renderer.js` `renderHead`** içinde `og:image` referansını bu dosyalara yönlendir.
-
----
-
-### TODO 47 — Sitemap.xml Otomatik Üretimi
-**Yeni Dosya:** `src/build/generate-sitemap.js`
-**İçerik:** Vite `closeBundle` hook'unda `sitemap.xml` üret. Tüm statik sayfalar + son değişiklik tarihi. `public/sitemap.xml`'e yaz.
-**`vercel.json`** — `/sitemap.xml` için header: `Cache-Control: public, max-age=86400`.
-
----
-
-### TODO 48 — robots.txt İyileştirme
-**Mevcut Dosya:** `public/robots.txt` (varsa)
-**İçerik:**
-```
-User-agent: *
-Allow: /
-Disallow: /admin/
-Sitemap: https://kirshehirgormeengelliler.org.tr/sitemap.xml
-```
-
----
-
-## 🎨 UX İYİLEŞTİRMELERI
-
-### TODO 49 — Skeleton Loading Ekranları
-**Dosya:** `src/styles/components.css` — dosya sonuna ekle
-**İçerik:** Galeri yüklenirken card placeholder'ları:
-```css
-.skeleton { background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-hover) 50%, var(--color-surface) 75%); background-size: 200% 100%; animation: skeleton-wave 1.5s ease infinite; }
-@keyframes skeleton-wave { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-```
-Galeri `renderGalleryPage` Firestore'dan yüklenirken 6 skeleton card göster.
-
----
-
-### TODO 50 — Toast Notification Sistemi
-**Yeni Dosya:** `src/scripts/toast.js`
-**İçerik:** `showToast(message, type)` — `success | error | info`. DOM'a geçici `<div role="alert">` ekler, 3 saniye sonra kaldırır. Admin panelinde "Kaydedildi ✓" gibi geri bildirimler için kullanılacak.
-**`src/scripts/main.js`** içine import et.
-
----
-
-### TODO 51 — Keyboard Shortcut: Erişilebilirlik Toolbar
-**Dosya:** `src/scripts/toolbar.js` **Satır: `initToolbar` sonu**
-**İçerik:** `Alt + A` kısayolu ile toolbar aç/kapat:
+**Sorun:** `applyTheme` login sayfasında da çalışmalı, ancak admin app gizli olduğunda icon'lar zaten DOM'da var. Sorun değil, ama login sayfasında da `<meta name="theme-color">` güncellenmeli.
+**Yapılacak değişiklik:** `applyTheme` içine meta tag güncellemesi ekle:
 ```js
-document.addEventListener('keydown', e => {
-  if (e.altKey && e.key === 'a') { panel.classList.toggle('open'); toggle.focus(); }
-});
-```
-
----
-
-### TODO 52 — Hata Sayfaları (500, Offline)
-**Yeni Dosya:** `public/offline.html`
-**İçerik:** Service Worker tarafından servis edilecek basit offline sayfası. Dernek iletişim bilgilerini statik olarak içersin (telefon, adres) — internet olmadan bile erişilebilir.
-**`public/500.html`** — Vercel 500 hatası için özel sayfa.
-
----
-
-### TODO 53 — Smooth Scroll Behavior Polyfill
-**Dosya:** `src/scripts/main.js` **Satır: 10 sonrasına**
-**İçerik:** Safari <15.4 `scroll-behavior: smooth` desteklemez. Basit polyfill:
-```js
-if (!('scrollBehavior' in document.documentElement.style)) {
-  import('https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/smoothscroll.min.js');
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#0B0E14' : '#4F46E5');
+  iconSun.style.display = theme === 'dark' ? 'block' : 'none';
+  iconMoon.style.display = theme === 'dark' ? 'none' : 'block';
 }
 ```
 
 ---
 
-## 🧹 KOD KALİTESİ
-
-### TODO 54 — `site-renderer.js` Modüler Ayrıştırma
-**Dosya:** `src/build/site-renderer.js` (~1400 satır)
-**Plan:** Fonksiyonları dosyalara böl:
-- `src/build/renderers/head.js` → `renderHead`
-- `src/build/renderers/layout.js` → `renderHeader`, `renderFooter`, `renderToolbar`
-- `src/build/renderers/pages/*.js` → her sayfa için ayrı dosya
-- `src/build/icons.js` → `icon()` fonksiyonu
-`site-renderer.js` sadece orkestrasyonu yönetir.
-
----
-
-### TODO 55 — ESLint + Prettier Konfigürasyonu
-**Yeni Dosya:** `.eslintrc.json`, `.prettierrc`
-**`package.json`** `devDependencies`'e ekle: `eslint`, `@eslint/js`, `prettier`, `eslint-config-prettier`.
-**`scripts`'e ekle:** `"lint": "eslint src/**/*.js"`, `"format": "prettier --write src/"`.
-
----
-
-### TODO 56 — JSDoc Tip Anotasyonları
-**Dosya:** `src/scripts/toolbar.js`, `src/scripts/theme.js`, `src/scripts/nav.js`
-**İçerik:** Her `export` edilen fonksiyon için `@param`, `@returns` JSDoc ekle. IDE otomatik tamamlama ve hata yakalama için.
-
----
-
-### TODO 57 — CSS Custom Properties Audit
-**Dosya:** `src/styles/tokens.css`
-**İçerik:** `--toolbar-width: 56px` tanımlanmış ama kullanılıyor mu kontrol et. Kullanılmayan token'ları temizle. `src/styles/layout.css` içindeki hardcoded değerleri (`56px`, `72px`) token ile değiştir.
-
----
-
-## 🚀 DEPLOYMENT
-
-### TODO 58 — Vercel Analytics Genişletme
-**Dosya:** `src/scripts/main.js` **Satır: 13–15** (mevcut Speed Insights import)
-**İçerik:** `@vercel/analytics` paketi de ekle:
+### FIX-12: `vite.config.js` — `admin/index.html` giriş noktası var ama `admin` klasörü için ayrı CSS split yok
+**Dosya:** `vite.config.js`
+**Mevcut metin:**
 ```js
-import('@vercel/analytics').then(({ inject }) => inject());
+input: {
+  main: resolve(__dirname, 'index.html'),
+  ...
+  admin: resolve(__dirname, 'admin/index.html'),
+},
 ```
-`package.json`'a `"@vercel/analytics": "^1.0.0"` ekle.
+**Sorun:** Admin paneli prod'da siteyle aynı bundle'ı paylaşıyor — admin için gereksiz CSS yükleniyor. Bu öncelikli değil ama admin CSS'ini ayrı tut.
+**Yapılacak değişiklik:** Admin paneli kendi kendine yeterliyse (ki öyle — inline style'ları var), Vite CSS split varsayılan olarak çalışır. `cssCodeSplit: true` zaten var. Sorun yok, ancak admin'in `main.css` import etmediğinden emin ol — admin `index.html` içinde `<link rel="stylesheet">` veya JS import yok, sadece inline `<style>` var. Kontrol et, temiz.
 
 ---
 
-### TODO 59 — Preview Deployment Environment Değişkenleri
-**Yeni Dosya:** `.env.preview`
-**İçerik:** Vercel preview deployment'larında test Firebase projesi kullanmak için ayrı env. `VITE_FIREBASE_PROJECT_ID=kged-preview` gibi. `vercel.json`'a environment scope ekle.
+## 🚀 İLERİ DÜZEY GELİŞTİRME ÖZELLİKLERİ (En Az 10)
 
 ---
 
-### TODO 60 — GitHub Actions CI/CD
-**Yeni Dosya:** `.github/workflows/deploy.yml`
-**İçerik:** Push on `main` → `npm ci` → `npm run build` → Vercel CLI deploy. PR'larda preview URL otomatik yorum olarak ekle.
+### FEATURE-01: Gerçek zamanlı Galeri Güncellemeleri (Supabase Realtime)
+**Hedef:** Admin panelinden yeni görsel yüklendiğinde galeri sayfası otomatik güncellensin.
+**Dosya oluştur:** `src/scripts/gallery-realtime.js`
+```js
+import { supabase } from '../supabase/config.js';
+
+export function subscribeGalleryUpdates(onInsert, onDelete) {
+  return supabase
+    .channel('gallery_changes')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'gallery_items'
+    }, (payload) => onInsert(payload.new))
+    .on('postgres_changes', {
+      event: 'DELETE',
+      schema: 'public',
+      table: 'gallery_items'
+    }, (payload) => onDelete(payload.old))
+    .subscribe();
+}
+```
+**Dosya:** `src/scripts/gallery-page.js` içinde kullan:
+```js
+import { subscribeGalleryUpdates } from './gallery-realtime.js';
+
+// initGallery() sonunda:
+subscribeGalleryUpdates(
+  (newItem) => {
+    galleryItems.unshift(newItem);
+    renderGalleryPage();
+    initIntersectionObserver();
+  },
+  (deletedItem) => {
+    galleryItems = galleryItems.filter(i => i.id !== deletedItem.id);
+    renderGalleryPage();
+  }
+);
+```
 
 ---
 
-## 📊 TAMAMLANMA DURUMU
-
-| Kategori | Toplam | Kritik |
-|---|---|---|
-| Bug Fix | 7 | 3 |
-| Admin/Firebase | 10 | 5 |
-| Mobil | 11 | 4 |
-| Performans | 6 | 2 |
-| Güvenlik | 5 | 3 |
-| Erişilebilirlik | 5 | 2 |
-| SEO | 4 | 1 |
-| UX | 5 | 2 |
-| Kod Kalitesi | 4 | 1 |
-| Deployment | 3 | 1 |
-| **Toplam** | **60** | **24** |
+### FEATURE-02: Görsel Optimizasyonu — WebP Dönüşümü ve AVIF Fallback
+**Hedef:** Yüklenen görselleri WebP formatına dönüştür, dosya boyutunu %40-60 azalt.
+**Dosya:** `admin/index.html` — `compressImage()` fonksiyonu
+**Yapılacak değişiklik:**
+```js
+async function compressImage(file, format = 'webp') {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > MAX_IMG_DIM || height > MAX_IMG_DIM) {
+          if (width > height) { height = Math.round(height * MAX_IMG_DIM / width); width = MAX_IMG_DIM; }
+          else { width = Math.round(width * MAX_IMG_DIM / height); height = MAX_IMG_DIM; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        
+        // WebP destekleniyorsa WebP, yoksa JPEG
+        const mimeType = format === 'webp' && canvas.toDataURL('image/webp').startsWith('data:image/webp')
+          ? 'image/webp' : 'image/jpeg';
+        const quality = mimeType === 'image/webp' ? 0.80 : IMG_QUALITY;
+        
+        canvas.toBlob((blob) => resolve(blob || file), mimeType, quality);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+```
+**Path değişikliği:** `handleImageAdd()` içinde extension'ı MIME type'a göre belirle:
+```js
+const compressed = await compressImage(file);
+const ext = compressed.type === 'image/webp' ? 'webp' : 'jpg';
+const path = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
+```
 
 ---
 
-## 🗓️ Öneri Sıralama
+### FEATURE-03: Galeri Sayfası — Sonsuz Kaydırma (Infinite Scroll) ile Sayfalama
+**Hedef:** Çok sayıda görselde performans için pagination ekle.
+**Dosya:** `src/scripts/gallery-page.js` (yeni dosya)
+**Yapılacak değişiklik:**
+```js
+const PAGE_SIZE = 12;
+let currentPage = 0;
+let hasMore = true;
+let isLoading = false;
 
-**Sprint 1 (Acil):** TODO 01, 02, 05, 06, 08, 09, 10, 11, 18, 36, 37
-**Sprint 2 (Mobil):** TODO 19, 20, 21, 22, 23, 24, 25, 28, 29
-**Sprint 3 (Performans):** TODO 30, 31, 32, 34, 49, 50
-**Sprint 4 (Kalite):** TODO 45, 47, 48, 54, 55, 58
+async function loadMoreGalleryItems() {
+  if (isLoading || !hasMore) return;
+  isLoading = true;
+  
+  const from = currentPage * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+  
+  const { data, error } = await supabase
+    .from('gallery_items')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .range(from, to);
+  
+  if (error) { isLoading = false; return; }
+  
+  if (data.length < PAGE_SIZE) hasMore = false;
+  galleryItems.push(...data);
+  currentPage++;
+  renderGalleryPage();
+  isLoading = false;
+}
+
+// IntersectionObserver ile sentinel element
+function initInfiniteScroll() {
+  const sentinel = document.createElement('div');
+  sentinel.id = 'gallery-sentinel';
+  sentinel.style.height = '1px';
+  document.getElementById('gallery-page-grid').after(sentinel);
+  
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) loadMoreGalleryItems();
+  }, { rootMargin: '200px' });
+  
+  observer.observe(sentinel);
+}
+```
 
 ---
 
-*Son güncelleme: 2026-04-07 | Aktif geliştirme: TODO 42–48 (bkz. orijinal liste)*
+### FEATURE-04: Admin Panel — Toplu Görsel Kategori Değiştirme (Bulk Edit)
+**Hedef:** Admin listede birden fazla görseli seçip toplu kategori/albüm değiştirme.
+**Dosya:** `admin/index.html`
+**Yapılacak değişiklik:** Galeri listesi item'larına checkbox ekle:
+```js
+// gallery-list__item template:
+`<div class="gallery-list__item" data-id="${item.id}">
+  <input type="checkbox" class="gallery-select-cb" data-id="${item.id}" 
+    onchange="window.updateBulkSelection()" 
+    style="width:18px;height:18px;cursor:pointer;flex-shrink:0;" />
+  <img class="gallery-list__thumb" src="${item.url}" ... />
+  ...
+</div>`
+
+// Bulk action bar:
+function renderBulkActionBar(count) {
+  const existing = document.getElementById('bulk-action-bar');
+  if (existing) existing.remove();
+  if (count === 0) return;
+  
+  const bar = document.createElement('div');
+  bar.id = 'bulk-action-bar';
+  bar.style.cssText = 'position:sticky;top:72px;z-index:50;background:var(--brand-600);color:#fff;padding:0.75rem 1rem;display:flex;align-items:center;gap:1rem;border-radius:var(--radius-sm);margin-bottom:1rem;';
+  bar.innerHTML = `
+    <span>${count} görsel seçildi</span>
+    <select id="bulk-category" style="padding:0.4rem;border-radius:6px;border:none;">
+      <option value="">Kategori Seç</option>
+      <option value="etkinlik">Etkinlik</option>
+      <option value="toplanti">Toplantı</option>
+      <option value="egitim">Eğitim</option>
+      <option value="diger">Diğer</option>
+    </select>
+    <input id="bulk-album" placeholder="Albüm adı" style="padding:0.4rem;border-radius:6px;border:none;width:150px;">
+    <button onclick="window.applyBulkEdit()" class="btn" style="background:#fff;color:var(--brand-700);">Uygula</button>
+    <button onclick="window.cancelBulkSelection()" class="btn" style="background:rgba(255,255,255,0.2);color:#fff;">İptal</button>
+  `;
+  document.getElementById('gallery-manager-list').before(bar);
+}
+
+window.updateBulkSelection = function() {
+  const checked = document.querySelectorAll('.gallery-select-cb:checked');
+  renderBulkActionBar(checked.length);
+};
+
+window.applyBulkEdit = async function() {
+  const ids = [...document.querySelectorAll('.gallery-select-cb:checked')].map(cb => cb.dataset.id);
+  const category = document.getElementById('bulk-category').value;
+  const album = document.getElementById('bulk-album').value.trim();
+  if (!ids.length) return;
+  
+  const updates = {};
+  if (category) updates.category = category;
+  if (album) updates.album_id = album;
+  if (!Object.keys(updates).length) { showToast('Kategori veya albüm seçin.', 'info'); return; }
+  
+  try {
+    const { error } = await supabase.from('gallery_items').update(updates).in('id', ids);
+    if (error) throw error;
+    showToast(`${ids.length} görsel güncellendi.`, 'success');
+    window.cancelBulkSelection();
+    loadGalleryManagement();
+  } catch (e) {
+    showToast('Güncelleme hatası: ' + e.message, 'error');
+  }
+};
+
+window.cancelBulkSelection = function() {
+  document.querySelectorAll('.gallery-select-cb').forEach(cb => cb.checked = false);
+  const bar = document.getElementById('bulk-action-bar');
+  if (bar) bar.remove();
+};
+```
+**Supabase import ekle** `admin/index.html` başında:
+```js
+import { supabase } from '../src/supabase/config.js';
+```
+
+---
+
+### FEATURE-05: Galeri Sayfası — URL Hash ile Doğrudan Görsel Linki
+**Hedef:** `kirshehirgormeengelliler.org.tr/galeri#gorsel-42` şeklinde direkt link paylaşımı.
+**Dosya:** `src/scripts/gallery-page.js`
+**Yapılacak değişiklik:**
+```js
+// initGallery() sonunda:
+function handleGalleryHash() {
+  const hash = window.location.hash;
+  if (!hash) return;
+  const id = hash.replace('#gorsel-', '');
+  if (!id) return;
+  const item = galleryItems.find(i => String(i.id) === id);
+  if (item) {
+    setTimeout(() => window.openLightbox(String(item.id), item.album_id || ''), 300);
+  }
+}
+
+// openLightbox'da hash güncelle:
+window.openLightbox = function(id, albumContext) {
+  // ... mevcut kod
+  history.replaceState(null, '', `#gorsel-${id}`);
+};
+
+window.closeLightbox = function() {
+  // ... mevcut kod
+  history.replaceState(null, '', window.location.pathname);
+};
+
+// Sayfa yüklendiğinde hash kontrolü:
+handleGalleryHash();
+window.addEventListener('popstate', handleGalleryHash);
+```
+
+---
+
+### FEATURE-06: Admin Panel — Sürükle-Bırak ile Görsel Sıralama (Drag & Drop Reorder)
+**Hedef:** Admin galeri listesinde görsellerin sırasını sürükle-bırak ile değiştir, Supabase'e kaydet.
+**Dosya:** `admin/index.html` — `renderAdminGalleryList()` ve yeni fonksiyon
+**Yapılacak değişiklik:**
+```js
+// renderAdminGalleryList() içinde her item'a:
+`<div class="gallery-list__item" data-id="${item.id}" draggable="true">
+  <div style="cursor:grab;padding:0 0.5rem;color:var(--text-faint);">⠿</div>
+  ...
+</div>`
+
+// Sonrasında drag event'leri bağla:
+function initGalleryDragSort() {
+  const list = document.getElementById('gallery-manager-list');
+  if (!list) return;
+  
+  let draggedEl = null;
+  
+  list.addEventListener('dragstart', (e) => {
+    draggedEl = e.target.closest('.gallery-list__item');
+    if (!draggedEl) return;
+    draggedEl.style.opacity = '0.5';
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  
+  list.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const target = e.target.closest('.gallery-list__item');
+    if (!target || target === draggedEl) return;
+    const rect = target.getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    target.style.borderTop = e.clientY < mid ? '2px solid var(--brand-500)' : '';
+    target.style.borderBottom = e.clientY >= mid ? '2px solid var(--brand-500)' : '';
+  });
+  
+  list.addEventListener('dragleave', (e) => {
+    const target = e.target.closest('.gallery-list__item');
+    if (target) { target.style.borderTop = ''; target.style.borderBottom = ''; }
+  });
+  
+  list.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    const target = e.target.closest('.gallery-list__item');
+    if (!target || !draggedEl || target === draggedEl) return;
+    target.style.borderTop = ''; target.style.borderBottom = '';
+    
+    // DOM reorder
+    const parent = target.parentElement;
+    const rect = target.getBoundingClientRect();
+    if (e.clientY < rect.top + rect.height / 2) {
+      parent.insertBefore(draggedEl, target);
+    } else {
+      parent.insertBefore(draggedEl, target.nextSibling);
+    }
+    
+    // Yeni sırayı DB'ye kaydet
+    const items = [...list.querySelectorAll('.gallery-list__item')];
+    const updates = items.map((el, idx) => ({ id: el.dataset.id, order: idx }));
+    
+    try {
+      // Supabase upsert with order
+      for (const { id, order } of updates) {
+        await supabase.from('gallery_items').update({ order }).eq('id', id);
+      }
+      showToast('Sıralama kaydedildi.', 'success');
+    } catch (err) {
+      showToast('Sıralama kaydedilemedi: ' + err.message, 'error');
+    }
+  });
+  
+  list.addEventListener('dragend', () => {
+    if (draggedEl) draggedEl.style.opacity = '1';
+    draggedEl = null;
+    list.querySelectorAll('.gallery-list__item').forEach(el => {
+      el.style.borderTop = ''; el.style.borderBottom = '';
+    });
+  });
+}
+```
+**`updateGalleryItemOrder()` fonksiyonu** `src/supabase/gallery.js`'de zaten tanımlı — bunu kullan.
+
+---
+
+### FEATURE-07: Site Geneli — Arama Fonksiyonu (Galeri + İçerik Arama)
+**Hedef:** Header'a arama ikonu ekle, galeri ve sayfa içeriklerinde arama yap.
+**Yeni dosya oluştur:** `src/scripts/search.js`
+```js
+export function initSearch() {
+  // Arama modal'ı oluştur
+  const modal = document.createElement('div');
+  modal.id = 'search-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'Site araması');
+  modal.style.cssText = `
+    position:fixed;inset:0;z-index:2000;
+    background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+    display:none;align-items:flex-start;justify-content:center;
+    padding-top:15vh;
+  `;
+  modal.innerHTML = `
+    <div style="background:var(--color-bg-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);width:min(640px,90vw);box-shadow:var(--shadow-xl);overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-bottom:1px solid var(--color-border);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="search-input" type="search" placeholder="Aramak istediğinizi yazın..." 
+          style="flex:1;border:none;outline:none;font-size:1.125rem;background:transparent;color:var(--color-text);" 
+          autocomplete="off" />
+        <kbd style="font-size:0.75rem;padding:2px 8px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:4px;">Esc</kbd>
+      </div>
+      <div id="search-results" style="max-height:400px;overflow-y:auto;padding:0.5rem;"></div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  // Keyboard shortcut: Ctrl+K / Cmd+K
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      openSearch();
+    }
+    if (e.key === 'Escape' && modal.style.display === 'flex') closeSearch();
+  });
+  
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeSearch(); });
+  
+  const input = document.getElementById('search-input');
+  input.addEventListener('input', debounce(performSearch, 300));
+  
+  function openSearch() {
+    modal.style.display = 'flex';
+    setTimeout(() => input.focus(), 50);
+  }
+  
+  function closeSearch() {
+    modal.style.display = 'none';
+    input.value = '';
+    document.getElementById('search-results').innerHTML = '';
+  }
+  
+  async function performSearch() {
+    const query = input.value.trim();
+    const results = document.getElementById('search-results');
+    if (query.length < 2) { results.innerHTML = '<p style="padding:1rem;color:var(--color-text-muted);text-align:center;">En az 2 karakter girin...</p>'; return; }
+    
+    results.innerHTML = '<p style="padding:1rem;text-align:center;">Aranıyor...</p>';
+    
+    try {
+      const { data } = await supabase
+        .from('gallery_items')
+        .select('id, caption, category, url')
+        .ilike('caption', `%${query}%`)
+        .limit(10);
+      
+      if (!data || data.length === 0) {
+        results.innerHTML = '<p style="padding:1rem;color:var(--color-text-muted);text-align:center;">Sonuç bulunamadı.</p>';
+        return;
+      }
+      
+      results.innerHTML = data.map(item => `
+        <a href="/galeri#gorsel-${item.id}" onclick="closeSearch()" 
+          style="display:flex;align-items:center;gap:1rem;padding:0.75rem;border-radius:var(--radius-md);text-decoration:none;color:var(--color-text);transition:background 150ms;"
+          onmouseover="this.style.background='var(--color-surface)'" onmouseout="this.style.background=''">
+          <img src="${item.url}" style="width:48px;height:48px;border-radius:var(--radius-md);object-fit:cover;" alt="" />
+          <div>
+            <p style="font-weight:600;margin:0;">${item.caption || 'Açıklamasız'}</p>
+            <p style="font-size:0.8rem;color:var(--color-text-muted);margin:0;">${item.category || 'Galeri'}</p>
+          </div>
+        </a>
+      `).join('');
+    } catch (err) {
+      results.innerHTML = '<p style="padding:1rem;color:var(--color-error-text);">Arama sırasında hata oluştu.</p>';
+    }
+  }
+  
+  window.openSearch = openSearch;
+  window.closeSearch = closeSearch;
+  
+  return { openSearch, closeSearch };
+}
+
+function debounce(fn, delay) {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
+}
+```
+**`src/scripts/main.js`'e ekle:**
+```js
+import { initSearch } from './search.js';
+// DOMContentLoaded içinde:
+initSearch();
+```
+**`site-renderer.js` — renderHeader() içine arama butonu ekle:**
+```js
+// header actions arasına:
+`<button id="search-toggle" onclick="window.openSearch()" aria-label="Ara (Ctrl+K)" title="Ara" style="...">
+  <svg ...>[arama ikonu]</svg>
+</button>`
+```
+
+---
+
+### FEATURE-08: Admin Panel — Etkinlik Takvimi Modülü
+**Hedef:** Supabase'de `events` tablosu üzerinden etkinlik oluştur/listele/sil.
+**Yeni Supabase tablosu** (SQL):
+```sql
+CREATE TABLE events (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  title text NOT NULL,
+  description text,
+  event_date date NOT NULL,
+  event_time time,
+  location text,
+  category text DEFAULT 'etkinlik',
+  is_public boolean DEFAULT true,
+  created_at timestamptz DEFAULT now()
+);
+ALTER TABLE events ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read" ON events FOR SELECT USING (is_public = true);
+CREATE POLICY "Admin write" ON events FOR ALL USING (auth.role() = 'authenticated');
+```
+**Yeni dosya:** `src/supabase/events.js`
+```js
+import { supabase } from './config.js';
+
+export async function getUpcomingEvents(limit = 10) {
+  const { data, error } = await supabase
+    .from('events')
+    .select('*')
+    .gte('event_date', new Date().toISOString().split('T')[0])
+    .order('event_date', { ascending: true })
+    .limit(limit);
+  if (error) throw error;
+  return data;
+}
+
+export async function addEvent(event) {
+  const { data, error } = await supabase.from('events').insert([event]);
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteEvent(id) {
+  const { error } = await supabase.from('events').delete().eq('id', id);
+  if (error) throw error;
+}
+```
+**Admin panele yeni tab ekle:** Sidebar'a "Etkinlikler" nav-item ekle ve `renderSectionView('events')` için handler yaz.
+
+---
+
+### FEATURE-09: PWA — Offline Galeri Önbelleği (Service Worker Güncelleme)
+**Hedef:** Mevcut `sw.js` yoksa oluştur, galeri görselleri önbelleklenir, offline görüntülenebilir.
+**Yeni dosya:** `public/sw.js`
+```js
+const CACHE_NAME = 'kged-v1';
+const STATIC_ASSETS = ['/', '/hakkimizda', '/galeri', '/iletisim', '/tuzuk'];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', (e) => {
+  const url = new URL(e.request.url);
+  
+  // Supabase storage görselleri — cache-first
+  if (url.hostname.includes('supabase.co') && url.pathname.includes('/storage/')) {
+    e.respondWith(
+      caches.open('kged-images').then(async (cache) => {
+        const cached = await cache.match(e.request);
+        if (cached) return cached;
+        const response = await fetch(e.request);
+        if (response.ok) cache.put(e.request, response.clone());
+        return response;
+      }).catch(() => new Response('', { status: 503 }))
+    );
+    return;
+  }
+  
+  // HTML sayfaları — network-first
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request).catch(() => caches.match('/'))
+    );
+    return;
+  }
+  
+  // Statik assets — stale-while-revalidate
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      const fetchPromise = fetch(e.request).then(response => {
+        if (response.ok) {
+          caches.open(CACHE_NAME).then(cache => cache.put(e.request, response.clone()));
+        }
+        return response;
+      });
+      return cached || fetchPromise;
+    })
+  );
+});
+```
+
+---
+
+### FEATURE-10: Erişilebilirlik — Otomatik Alt Text Üretimi (Claude AI Entegrasyonu)
+**Hedef:** Görsel yüklenirken alt text yoksa Claude API ile otomatik Türkçe alt text üret.
+**Yeni dosya:** `src/utils/generate-alt-text.js`
+```js
+/**
+ * Görsel için Claude API kullanarak Türkçe alt text üretir.
+ * Sadece admin panelinde kullanılır.
+ * @param {Blob} imageBlob
+ * @returns {Promise<string>}
+ */
+export async function generateAltText(imageBlob) {
+  // Base64'e çevir
+  const base64 = await new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result.split(',')[1]);
+    reader.readAsDataURL(imageBlob);
+  });
+  
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 150,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: { type: 'base64', media_type: imageBlob.type || 'image/jpeg', data: base64 }
+            },
+            {
+              type: 'text',
+              text: 'Bu görseli Türkçe olarak kısaca açıkla. Sadece açıklama metni yaz, başka bir şey yazma. Maksimum 2 cümle.'
+            }
+          ]
+        }]
+      })
+    });
+    
+    if (!response.ok) return '';
+    const data = await response.json();
+    return data.content?.[0]?.text?.trim() || '';
+  } catch {
+    return '';
+  }
+}
+```
+**Admin panelde kullan:** `handleImageAdd()` içinde, `alt_text` boşsa:
+```js
+const altText = document.getElementById('upload-alt').value.trim();
+const finalAlt = altText || await generateAltText(compressed).catch(() => '');
+```
+> **Not:** Bu özellik için Anthropic API key'i admin panelinde bir konfigürasyon alanından alınmalı veya Supabase Edge Function üzerinden proxy'lenmeli.
+
+---
+
+### FEATURE-11: Analitik Dashboard — Admin Paneli Ziyaretçi ve İçerik İstatistikleri
+**Hedef:** Admin dashboard'a gerçek istatistikler ekle.
+**Yeni Supabase tablosu:**
+```sql
+CREATE TABLE page_views (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  page text NOT NULL,
+  viewed_at timestamptz DEFAULT now(),
+  user_agent text,
+  country text
+);
+CREATE INDEX ON page_views (page, viewed_at);
+```
+**Yeni dosya:** `src/scripts/analytics.js`
+```js
+import { supabase } from '../supabase/config.js';
+
+export async function trackPageView(page) {
+  // Sadece prod'da çalış
+  if (import.meta.env.DEV) return;
+  await supabase.from('page_views').insert([{
+    page,
+    user_agent: navigator.userAgent.substring(0, 200)
+  }]).catch(() => {}); // Sessiz başarısızlık
+}
+
+export async function getPageViewStats(days = 30) {
+  const since = new Date(Date.now() - days * 86400000).toISOString();
+  const { data } = await supabase
+    .from('page_views')
+    .select('page, viewed_at')
+    .gte('viewed_at', since);
+  return data || [];
+}
+```
+**`src/scripts/main.js`'e ekle:**
+```js
+import { trackPageView } from './analytics.js';
+// initHydration() sonrasında:
+trackPageView(window.location.pathname);
+```
+**Admin dashboard'da istatistik göster** — `renderDashboardHome()` içinde async olarak çek.
+
+---
+
+### FEATURE-12: Gelişmiş Form Doğrulama ve İletişim Formu
+**Hedef:** İletişim sayfasına gerçek bir form ekle, Supabase'e kaydet, e-posta gönder.
+**Yeni Supabase tablosu:**
+```sql
+CREATE TABLE contact_messages (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  email text NOT NULL,
+  phone text,
+  subject text,
+  message text NOT NULL,
+  is_read boolean DEFAULT false,
+  created_at timestamptz DEFAULT now()
+);
+```
+**`site-renderer.js` — `renderContactContent()` içine form ekle:**
+```html
+<section class="section section--alt">
+  <div class="container" style="max-width:640px;margin-inline:auto;">
+    <h2 class="section__title">Mesaj Gönderin</h2>
+    <div id="contact-form-wrapper">
+      <!-- Form alanları -->
+      <div class="field-group">
+        <label>Ad Soyad *</label>
+        <input id="cf-name" type="text" required placeholder="Adınız Soyadınız" />
+      </div>
+      <div class="field-group">
+        <label>E-posta *</label>
+        <input id="cf-email" type="email" required />
+      </div>
+      <div class="field-group">
+        <label>Mesajınız *</label>
+        <textarea id="cf-message" rows="5" required></textarea>
+      </div>
+      <button id="cf-submit" class="btn btn--primary btn--lg" style="width:100%;">Gönder</button>
+      <div id="cf-status" role="alert" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+```
+**Yeni dosya:** `src/supabase/contact.js`
+```js
+import { supabase } from './config.js';
+
+export async function submitContactMessage(data) {
+  const { error } = await supabase.from('contact_messages').insert([data]);
+  if (error) throw error;
+}
+```
+**Admin panele "Mesajlar" tab'ı ekle** — okunmamış mesaj sayısını badge olarak göster.
+
+---
+
+## 📋 ÖZET CHECKLIST
+
+### Kritik Buglar (Hemen Düzeltilmeli)
+- [ ] BUG-01: Supabase key'ini kaynak koddan kaldır
+- [ ] BUG-02: Galeri hata durumunda retry UI göster
+- [ ] BUG-03: Filter sonrası IntersectionObserver yeniden başlat
+- [ ] BUG-04: `order` reserved keyword sorununu çöz
+- [ ] BUG-05: Admin `stat-gallery` null ref güvenliğini sağla
+- [ ] BUG-06: `sanitizePath` boş string güvencesi ekle
+- [ ] BUG-07: Board kaydet butonunu renderBoardUI'ya ekle
+- [ ] BUG-08: Lightbox albüm konteksti sorunu düzelt
+- [ ] BUG-09: addGalleryItem schema error detection iyileştir
+- [ ] BUG-10: Silme butonunu disable et / UX iyileştir
+
+### Önemli İyileştirmeler
+- [ ] FIX-01: Filter + albüm toggle event delegation
+- [ ] FIX-02: SaveConfig'te phoneHref/emailHref türet
+- [ ] FIX-03: getSiteConfig null log
+- [ ] FIX-04: Queue duplicate kontrolü
+- [ ] FIX-05: switchTab null siteContent guard
+- [ ] FIX-06: CSP'ye wss:// ekle
+- [ ] FIX-07: WebP MIME type uyumu
+- [ ] FIX-08: Lightbox touch swipe
+- [ ] FIX-09: Gallery inline script → ayrı dosya
+- [ ] FIX-10: escapeHtml shared utility
+- [ ] FIX-11: Admin tema toggle meta tag
+- [ ] FIX-12: Admin CSS split kontrolü
+
+### İleri Düzey Özellikler
+- [ ] FEATURE-01: Supabase Realtime galeri güncellemeleri
+- [ ] FEATURE-02: WebP görsel dönüşümü
+- [ ] FEATURE-03: Infinite scroll pagination
+- [ ] FEATURE-04: Toplu görsel düzenleme (Bulk Edit)
+- [ ] FEATURE-05: URL hash ile görsel linkleme
+- [ ] FEATURE-06: Drag & Drop görsel sıralama
+- [ ] FEATURE-07: Site geneli arama (Ctrl+K)
+- [ ] FEATURE-08: Etkinlik takvimi modülü
+- [ ] FEATURE-09: PWA offline önbellek güncelleme
+- [ ] FEATURE-10: Claude AI ile otomatik alt text
+- [ ] FEATURE-11: Analitik dashboard
+- [ ] FEATURE-12: İletişim formu modülü
+
+---
+
+*Bu dosya KGED web projesi için AI ajan tarafından 2026-04-08 tarihinde üretilmiştir.*
+*Toplam: 10 kritik bug, 12 iyileştirme, 12 ileri düzey özellik.*

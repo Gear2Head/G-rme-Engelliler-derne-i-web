@@ -1,12 +1,17 @@
 import { supabase } from './config.js';
 
 function sanitizePath(str) {
-  return str
+  if (!str) return `file_${Date.now()}`;
+  const result = str
     .toLowerCase()
+    .replace(/[çÇ]/g, 'c').replace(/[ğĞ]/g, 'g')
+    .replace(/[ıİ]/g, 'i').replace(/[öÖ]/g, 'o')
+    .replace(/[şŞ]/g, 's').replace(/[üÜ]/g, 'u')
     .replace(/\s+/g, '_')
-    .replace(/[çÇ]/g, 'c').replace(/[ğĞ]/g, 'g').replace(/[ıİ]/g, 'i')
-    .replace(/[öÖ]/g, 'o').replace(/[şŞ]/g, 's').replace(/[üÜ]/g, 'u')
-    .replace(/[^a-z0-9_.\-]/g, '');
+    .replace(/[^a-z0-9_.\-]/g, '')
+    .replace(/_{2,}/g, '_')
+    .replace(/^[_.\-]+|[_.\-]+$/g, '');
+  return result || `file_${Date.now()}`;
 }
 
 export async function uploadGalleryImage(file, path) {
@@ -21,6 +26,16 @@ export async function uploadGalleryImage(file, path) {
     .getPublicUrl(safePath);
 
   return publicURLData.publicUrl;
+}
+
+const SCHEMA_ERROR_CODES = ['PGRST204', '42703'];
+const SCHEMA_ERROR_KEYWORDS = ['album_id', 'alt_text', 'is_cover', 'column'];
+
+function isSchemaError(error) {
+  if (!error) return false;
+  return SCHEMA_ERROR_CODES.includes(error.code) ||
+    error.status === 400 ||
+    SCHEMA_ERROR_KEYWORDS.some(kw => (error.message || '').toLowerCase().includes(kw));
 }
 
 export async function addGalleryItem(item) {
@@ -38,25 +53,12 @@ export async function addGalleryItem(item) {
     .from('gallery_items')
     .insert([payload]);
 
-  // Handle potential schema mismatch (400 Bad Request) - Retry without optional fields
   if (error) {
-    console.group("Supabase Insert Error Diagnostic");
-    console.error("Error Code:", error.code);
-    console.error("Error Message:", error.message);
-    console.groupEnd();
-    
-    // PGRST204 is 'Column not found'
-    if (error.code === 'PGRST204' || error.message.includes('album_id') || error.message.includes('alt_text') || error.status === 400) {
-      console.warn("Retrying upload with Core Fields ONLY due to potential schema mismatch...");
-      const fallbackPayload = {
-        url: item.url,
-        caption: item.caption,
-        category: item.category,
-        order: item.order ?? 0
-      };
+    if (isSchemaError(error)) {
+      console.warn('[KGED] Schema mismatch, core-only retry...', error.message);
       const { data: retryData, error: retryError } = await supabase
         .from('gallery_items')
-        .insert([fallbackPayload]);
+        .insert([{ url: item.url, caption: item.caption, category: item.category, order: item.order ?? 0 }]);
       if (retryError) throw retryError;
       return retryData;
     }
@@ -84,25 +86,27 @@ export async function deleteAlbum(albumId) {
 }
 
 export async function getGalleryItems() {
-  // First try with everything
+  if (!supabase) return [];
+  // First try with everything, sort by order then created_at
   const { data, error } = await supabase
     .from('gallery_items')
     .select('*')
+    .order('order', { ascending: true })
     .order('created_at', { ascending: false });
   
-  // If album_id is missing in DB (PGRST204), fallback to core columns
-  if (error && (error.code === 'PGRST204' || error.message.includes('album_id'))) {
-    console.warn("Falling back to core columns select due to missing album_id in DB.");
+  // If column missing in DB, fallback to core columns
+  if (error && isSchemaError(error)) {
+    console.warn('[KGED] Fallback to core columns:', error.message);
     const { data: fallbackData, error: fallbackError } = await supabase
       .from('gallery_items')
-      .select('id, url, caption, category, created_at, order')
+      .select('id, url, caption, category, created_at')
       .order('created_at', { ascending: false });
     if (fallbackError) throw fallbackError;
     return fallbackData;
   }
   
   if (error) throw error;
-  return data;
+  return data || [];
 }
 
 export async function deleteGalleryItem(id, imagePath) {

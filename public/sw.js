@@ -3,7 +3,7 @@
  * Strateji: Cache-First CSS/JS/fonts, Network-First HTML
  */
 
-const CACHE_NAME = 'kged-v1.1'; // Increment version
+const CACHE_NAME = 'kged-v1.2';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE = [
@@ -14,7 +14,7 @@ const PRECACHE = [
   '/iletisim/',
   '/offline.html',
   '/favicon.svg',
-  '/Logo.png', // Added Logo
+  '/logo.png',
   '/site.webmanifest',
 ];
 
