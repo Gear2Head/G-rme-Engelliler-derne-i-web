@@ -36,20 +36,20 @@
     "addressSectionTitle": "Adresimiz",
     "directionsLabel": "Yol Tarifi Al",
     "address": {
-      "full": "Kuşdilli, Terme Cd. No:39 Kat 1, 40100 Kırşehir Merkez/Kırşehir, Türkiye",
-      "short": "Terme Cd. No:39 Kat 1, Kırşehir",
+      "full": "Neşet Ertaş Kültür Sanat Merkezi, Yenice, 40200 Kırşehir Merkez/Kırşehir",
+      "short": "Neşet Ertaş Kültür Sanat Merkezi",
       "status": null,
-      "postalCode": "40100",
+      "postalCode": "40200",
       "city": "Kırşehir"
     },
     "geo": {
       "lat": null,
       "lng": null
     },
-    "googleMapsUrl": "https://maps.google.com/?q=Terme+Cd.+No:39+Kat+1+Kırşehir+Merkez+Kırşehir+Türkiye",
+    "googleMapsUrl": "https://maps.google.com/?q=Neşet+Ertaş+Kültür+Sanat+Merkezi+Kırşehir",
     "social": {
-      "facebook": null,
-      "instagram": null,
+      "facebook": "https://www.facebook.com/people/Kir%C5%9Fehir-G%C3%B6rme-Engelliler-derne%C4%9Fi/61588215419537/#",
+      "instagram": "https://www.instagram.com/gormeengellilerdernegi/",
       "twitter": null,
       "youtube": null
     }

@@ -359,10 +359,10 @@ function renderIndexContent(content) {
         </div>
       </div>
       <div class="hero__illustration" aria-hidden="true">
-        <div class="hero__icon-wrap">
-          <div class="hero__icon-bg"></div>
-          <div class="hero__icon-ring"></div>
-          <div class="hero__icon-center">${icon('eye')}</div>
+        <div class="hero__icon-wrap hero__icon-wrap--logo" style="background: transparent; box-shadow: none;">
+          <div class="hero__icon-bg" style="opacity: 0.15; transform: scale(1.4);"></div>
+          <div class="hero__icon-ring" style="opacity: 0.2; transform: scale(1.6);"></div>
+          <div class="hero__icon-center" style="background: transparent; color: inherit;"><img src="${escapeAttr(content.site.logoPath)}" alt="" style="width:140px; height:auto; object-fit:contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));" /></div>
         </div>
       </div>
     </div>
