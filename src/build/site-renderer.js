@@ -92,7 +92,7 @@ function getPageMeta(pageKey, content) {
 function icon(name) {
   const icons = {
     accessibility: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>',
-    mail: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    mail: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/><text x="12" y="14" fill="currentColor" opacity="0.6" font-size="10px" font-weight="bold" font-family="sans-serif" text-anchor="middle" alignment-baseline="middle">@</text></svg>',
     phone: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.36 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.11 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.1a16 16 0 0 0 6 6l.38-.38a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16z"/></svg>',
     map: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
     chat: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
@@ -195,9 +195,9 @@ function renderFooter(content, options = {}) {
     ? `<p class="footer__contact-row">${icon('map')}<a href="${escapeAttr(content.contact.googleMapsUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Haritada görüntüle: ${escapeAttr(content.contact.address.short)}">${escapeHtml(content.contact.address.short)}</a></p>`
     : '';
 
-  const socialLinks = Object.values(content.contact.social || {}).filter(Boolean);
+  const socialLinks = Object.entries(content.contact.social || {}).filter(([k,v]) => Boolean(v));
   const sameAsMarkup = socialLinks.length > 0
-    ? socialLinks.map((href) => `<a href="${escapeAttr(href)}" class="footer__link" target="_blank" rel="noopener noreferrer">${escapeHtml(new URL(href).hostname.replace('www.', ''))}</a>`).join('')
+    ? socialLinks.map(([platform, href]) => `<a href="${escapeAttr(href)}" class="footer__link" target="_blank" rel="noopener noreferrer" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; background:rgba(255,255,255,0.05); border-radius:50%; margin-right:0.25rem;" aria-label="${escapeAttr(platform)} profilimiz">${icon(platform) || escapeHtml(new URL(href).hostname.replace('www.', ''))}</a>`).join('')
     : '';
 
   if (isMinimal) {

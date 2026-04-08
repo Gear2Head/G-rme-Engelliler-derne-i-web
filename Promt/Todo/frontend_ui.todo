@@ -1,0 +1,29 @@
+# Kapsamlı Frontend UI/UX Geliştirme Planı
+
+Bu liste, Kırşehir Görme Engelliler Derneği (KGED) web sitesi ve yönetim panelinin kullanıcı deneyimini (UX) ve modern görünümünü (UI) bir üst seviyeye taşımak için hazırlanmış kapsamlı frontend geliştirme hedeflerini içerir.
+
+## 🎯 Aşama 1: Modern İkonografi ve Kurumsal Kimlik
+- [ ] **Kapsamlı İkon Paketi Geçişı:** Mevcut inline SVG'lerin (sit-renderer.js içindeki) tamamen "Lucide", "Tabler Icons" veya proje ruhuna uygun özel tasarım (örnekteki @ sembollü mail gibi) modern ve tutarlı SVG setleriyle değiştirilmesi.
+- [ ] **Sosyal Medya İkonlarında Orijinal Renkler:** Footer'daki Instagram, Facebook ikonlarına "Hover" durumunda orijinal marka renkleriyle (Instagram degrade, Facebook mavi) parlama veya dolgu efekti eklenmesi.
+- [ ] **Typography (Tipografi) İyileştirmesi:** Erişilebilirliği bozmadan daha okunaklı ve modern heading (başlık) font eşleşmeleri kurma (Örn: Plus Jakarta Sans / Inter kombinasyonu).
+
+## ✨ Aşama 2: Animasyonlar ve Mikro-Etkileşimler
+- [ ] **Sayfa Geçişleri (Page Transitions):** Vite mimarisine uygun (Pjax veya View Transitions API kullanılarak) sayfalar arası yumuşak Fade-in ve Slide-up geçiş animasyonları entegre edilmesi.
+- [ ] **Scroll Reveal (Framer Motion / Intersection Observer):** Kullanıcı sayfayı aşağı kaydırdıkça (Misyon kartları, Galeri resimleri) elemanların zarifçe belirme (fade-up) animasyonları.
+- [ ] **Admin Paneli Geri Bildirimleri:** Butonlara tıklanınca ripple (dalgalanma) efekti ve form elemanlarında focus (odaklanma) halkalarının SVG parlamaları ile modernize edilmesi.
+- [ ] **Başa Dön Butonu İyileştirmesi:** Sadece belirmek yerine yaylanan (bouncy) bir animasyonla görünür/görünmez olması.
+
+## 📱 Aşama 3: Gelişmiş Mobil Deneyim (Mobile-First UI)
+- [ ] **Bottom Sheet Navigation (Mobil):** Mobildeki tam ekran açılan menü yerine, parmak dostu alttan yukarı açılan (Bottom Sheet Swipe) menü sistemine geçilmesi.
+- [ ] **Galeri Lightbox Touch Swipe:** Mobilde galeri görsellerine tıklandığında açılan tam ekran resim önizleyicisinin (Lightbox), parmakla sağa/sola kaydırılarak (Swipe) resim değiştirme özelliğine kavuşması.
+- [ ] **Erişilebilirlik (A11y) İyileştirmesi:** Ekran okuyucuların (VoiceOver, TalkBack) kolayca okuyabilmesi adına tüm `<nav>` ve mobil menülerin ARIA etiketlerinin optimize edilmesi ve klavye gezintisi (Focus Trapping) için modal'ların kilitlenmesi.
+
+## 🛠️ Aşama 4: Admin Paneli Revizyonu
+- [ ] **Veri Kaydetme Deneyimi:** Admin panelindeki "Kaydet" veya "Sil" işlemlerinin, ekranın tamamını kitleyen eski moda "Emin misiniz?" pop-up'ları yerine; silme butonuna bir kez basıldığında "Onayla"ya dönüşen modern "Inline Confirmation" sistemine geçirilmesi.
+- [ ] **Sürükle-Bırak Geliştirmesi:** Yönetim Kurulu sıralaması veya albüm sıralamaları için daha şık, gölge animasyonlu bir sürükle-bırak (Drag & Drop) arayüzü kurulması.
+- [ ] **Zengin Metin Editörü (Rich Text / WYSIWYG):** Hakkımızda "Tanıtım" ve diğer metin alanlarının düz `<textarea>` yerine; kalın, italik, liste eklemeye izin veren hafif bir metin editörüyle (Quill.js veya Tiptap) değiştirilmesi.
+
+## 🚀 Aşama 5: Performans ve Son Dokunuşlar
+- [ ] **Image Optimization (Lazy Load + BlurHash):** Galeri resimlerinin yüklenirken gri kutu yerine, "BlurHash" tarzı bulanık renkli arkaplanlar (placeholder) göstermesi.
+- [ ] **Skeleton Loaders:** Veritabanından (Supabase) veriler yüklenene kadar boşluk yerine iskelet yüklenme animasyonları (Skeleton Screens) gösterilmesi.
+- [ ] **Dark Mode (Karanlık Mod) İnce Ayarı:** Siyah tonların tam siyah (#000) yerine kurumsal lacivertin (brand-950) koyu alt tonlarıyla harmanlanarak göz yormayan, premium bir arka plan renk paletine (OLED dostu) dönüştürülmesi.
