@@ -1,89 +1,118 @@
 /**
- * KGED Progressive Web App — Service Worker
- * Strateji: Cache-First CSS/JS/fonts, Network-First HTML
+ * KGED Service Worker v2
+ * Strateji: Network-first HTML, Cache-first images, Stale-while-revalidate assets
+ * Bypass: Vercel analytics, Supabase API, Google APIs
  */
+const CACHE_NAME = 'kged-v2';
+const IMAGE_CACHE = 'kged-images-v1';
 
-const CACHE_NAME = 'kged-v1.2';
-const OFFLINE_URL = '/offline.html';
+const PRECACHE_URLS = ['/', '/hakkimizda', '/galeri', '/iletisim', '/tuzuk'];
 
-const PRECACHE = [
-  '/',
-  '/hakkimizda/',
-  '/galeri/',
-  '/tuzuk/',
-  '/iletisim/',
-  '/offline.html',
-  '/favicon.svg',
-  '/logo.png',
-  '/site.webmanifest',
+// URL patterns to bypass — never intercept these
+const BYPASS_PATTERNS = [
+  /\/_vercel\//,
+  /vercel-insights/,
+  /va\.vercel-scripts/,
+  /supabase\.co/,
+  /googleapis\.com/,
+  /gstatic\.com/,
 ];
 
-// Install: pre-cache critical assets
-self.addEventListener('install', event => {
-  self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE).catch(() => {}))
+function shouldBypass(url) {
+  return BYPASS_PATTERNS.some(pattern => pattern.test(url));
+}
+
+// Install: precache static pages
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(PRECACHE_URLS))
+      .catch(err => console.warn('[SW] Precache hatası (kritik değil):', err))
   );
+  self.skipWaiting();
 });
 
 // Activate: clean old caches
-self.addEventListener('activate', event => {
-  event.waitUntil(
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+      Promise.all(
+        keys
+          .filter(k => k !== CACHE_NAME && k !== IMAGE_CACHE)
+          .map(k => caches.delete(k))
+      )
     ).then(() => self.clients.claim())
   );
 });
 
-// Fetch strategy
-self.addEventListener('fetch', event => {
-  const { request } = event;
-  const url = new URL(request.url);
+self.addEventListener('fetch', (e) => {
+  const url = e.request.url;
 
-  // Skip non-GET and cross-origin (Supabase etc.)
-  if (request.method !== 'GET') return;
-  
-  // Handle cross-origin images (Supabase Storage) - strictly Cache-First
-  if (url.origin !== self.location.origin && url.pathname.includes('/storage/v1/object/public/')) {
-    event.respondWith(
-      caches.match(request).then(cached => {
-        return cached || fetch(request).then(res => {
-          if (!res.ok) return res;
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then(c => c.put(request, clone));
-          return res;
-        });
+  // 1. Bypass list — let network handle directly
+  if (shouldBypass(url)) return;
+
+  // 2. Non-GET requests — never cache
+  if (e.request.method !== 'GET') return;
+
+  // 3. Non-http protocols — skip
+  if (!url.startsWith('http')) return;
+
+  // 4. Supabase storage images — cache-first
+  if (url.includes('.supabase.co/storage/v1/object/public/')) {
+    e.respondWith(
+      caches.open(IMAGE_CACHE).then(async cache => {
+        const cached = await cache.match(e.request);
+        if (cached) return cached;
+        try {
+          const response = await fetch(e.request);
+          if (response.ok && response.status === 200) {
+            cache.put(e.request, response.clone());
+          }
+          return response;
+        } catch (err) {
+          return new Response('', { status: 503, statusText: 'Offline' });
+        }
       })
     );
     return;
   }
 
-  if (url.origin !== self.location.origin) return;
-
-  // HTML: Network-first with offline fallback
-  if (request.headers.get('accept')?.includes('text/html')) {
-    event.respondWith(
-      fetch(request)
-        .then(res => {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then(c => c.put(request, clone));
-          return res;
+  // 5. Navigation (HTML pages) — network-first, fallback to cache
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request)
+        .then(response => {
+          if (response.ok) {
+            caches.open(CACHE_NAME).then(cache => cache.put(e.request, response.clone()));
+          }
+          return response;
         })
-        .catch(() => caches.match(request).then(r => r || caches.match(OFFLINE_URL)))
+        .catch(() =>
+          caches.match(e.request)
+            .then(cached => cached || caches.match('/'))
+            .then(r => r || new Response('<h1>Çevrimdışı</h1>', {
+              headers: { 'Content-Type': 'text/html; charset=utf-8' }
+            }))
+        )
     );
     return;
   }
 
-  // Assets: Cache-first
-  event.respondWith(
-    caches.match(request).then(cached => {
-      if (cached) return cached;
-      return fetch(request).then(res => {
-        if (!res.ok) return res;
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then(c => c.put(request, clone));
-        return res;
-      });
+  // 6. Static assets (CSS, JS, fonts) — stale-while-revalidate
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      const networkFetch = fetch(e.request)
+        .then(response => {
+          if (response.ok && response.status === 200) {
+            caches.open(CACHE_NAME)
+              .then(cache => cache.put(e.request, response.clone()))
+              .catch(() => {});
+          }
+          return response;
+        })
+        .catch(() => null);
+
+      return cached || networkFetch.then(r => r || new Response('', { status: 503 }));
     })
   );
 });

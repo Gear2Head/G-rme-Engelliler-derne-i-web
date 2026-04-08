@@ -683,13 +683,16 @@
         try {
           let data = await getSiteConfig();
           if (!data) {
-            const res = await fetch('/src/data/site-content.json');
+            console.info('[KGED Admin] Supabase boş, static fallback yükleniyor...');
+            const res = await fetch('/site-content.json');
+            if (!res.ok) throw new Error(`site-content.json yüklenemedi: ${res.status}`);
             data = await res.json();
           }
           siteContent = data;
         } catch (e) {
-          console.error('Veri yükleme hatası', e);
-          showToast('Site verileri yüklenemedi.', 'error');
+          console.error('[KGED Admin] Veri yükleme hatası:', e);
+          showToast('Site verileri yüklenemedi: ' + e.message, 'error');
+          siteContent = { about: {}, contact: {}, board: [], nav: [], hero: {}, mission: { cards: [] } };
         }
       }
 
