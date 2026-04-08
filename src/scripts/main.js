@@ -30,7 +30,7 @@ initToolbar();
 // Vercel Speed Insights + Analytics (TODO 58)
 if (import.meta.env.PROD) {
   import('@vercel/speed-insights').then(({ inject }) => inject()).catch(() => {});
-  import('@vercel/analytics').then(({ inject }) => inject()).catch(() => {});
+  import('@vercel/analytics').then(({ inject }) => inject({ mode: 'production' })).catch(() => {});
 
   // TODO 18: PWA Service Worker registration
   if ('serviceWorker' in navigator) {
