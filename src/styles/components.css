@@ -782,7 +782,7 @@
   z-index: 0;
   opacity: 0.4;
   pointer-events: none;
-  background-image: url('/Logo.png');
+  background-image: url('/logo.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;

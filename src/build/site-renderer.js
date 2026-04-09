@@ -672,25 +672,28 @@ function renderConstitutionContent(content) {
           </div>
           <span style="font-size: 0.75rem; opacity: 0.8;">Hızlandırmak için "İndir" butonunu kullanabilirsiniz</span>
         </div>
-        <div style="position:relative; width:100%; height:600px; background:var(--color-surface);">
-          <iframe 
-            src="${escapeAttr(content.constitution.pdfPath)}#view=FitH" 
-            title="Kırşehir Görme Engelliler Derneği Tüzüğü (PDF)"
+        <div style="position:relative; width:100%; height:700px; background:var(--color-surface); overflow: hidden;">
+          <object 
+            data="${escapeAttr(content.constitution.pdfPath)}#view=FitH" 
+            type="application/pdf"
             width="100%" 
             height="100%" 
             style="border:none; display:block;"
-            loading="lazy"
           >
-            <div style="padding:var(--space-10) var(--space-6); text-align:center; color:var(--color-text-muted);">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="width:64px; height:64px; margin:0 auto 1.5rem; opacity:0.3;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-              <p style="margin-bottom:var(--space-4); font-weight:500;">Tarayıcınız PDF belgesini doğrudan gösteremedi.</p>
-              <p style="font-size:var(--text-sm); margin-bottom:var(--space-6); opacity:0.8;">Belgeyi görüntülemek için indirmeniz veya harici olarak açmanız gerekmektedir.</p>
-              <div style="display:flex; gap:0.75rem; justify-content:center;">
-                <a href="${escapeAttr(content.constitution.pdfPath)}" class="btn btn--primary" download>İndir</a>
-                <a href="${escapeAttr(content.constitution.pdfPath)}" class="btn btn--ghost" target="_blank" rel="noopener noreferrer">Yeni Sekmede Aç</a>
+            <iframe 
+              src="${escapeAttr(content.constitution.pdfPath)}#view=FitH" 
+              title="Dernek Tüzüğü"
+              width="100%" 
+              height="100%" 
+              style="border:none;"
+            >
+              <div style="padding:var(--space-10) var(--space-6); text-align:center; color:var(--color-text-muted);">
+                ${icon('info')}
+                <p style="margin-bottom:var(--space-4); font-weight:500;">Tarayıcınız PDF belgesini doğrudan gösteremedi.</p>
+                <a href="${escapeAttr(content.constitution.pdfPath)}" class="btn btn--primary" download>Belgeyi İndir</a>
               </div>
-            </div>
-          </iframe>
+            </iframe>
+          </object>
         </div>
       </div>`
     : '';
@@ -804,25 +807,7 @@ function renderContactContent(content) {
         <p><strong>${escapeHtml(content.contact.mapPlaceholderTitle || 'Harita yakında burada olacak.')}</strong><br>${escapeHtml(content.contact.mapPlaceholderText || '')}</p>
       </div>`;
 
-  const watermarkHtml = content.site.logoPath
-    ? `<div class="watermark-logo-overlay" style="background-image: url('${escapeAttr(content.site.logoPath)}');"></div>`
-    : '';
-
   return `<section class="page-header" aria-labelledby="page-title">
-    <div class="container page-header__inner">
-      <nav class="breadcrumb" aria-label="Sayfa konumu">
-        <ol class="breadcrumb__list">
-          <li class="breadcrumb__item"><a href="/" class="breadcrumb__link">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
-          <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">İletişim</span></li>
-        </ol>
-      </nav>
-      <h1 class="page-header__title" id="page-title">İletişim</h1>
-      <p class="page-header__lead">${escapeHtml(content.contact.pageLead || 'Sorularınız için aşağıdaki kanallardan bize kolayca ulaşabilirsiniz.')}</p>
-    </div>
-  </section>
-
-  <section class="section contact-main-section" style="position: relative; overflow: hidden;">
-    ${watermarkHtml}
     <div class="container" style="position: relative; z-index: 2;">
       <div class="contact-grid-classic" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: start;">
         <div class="contact-info-col">
@@ -1035,8 +1020,13 @@ function renderBody(pageKey, content) {
   const currentPath = getPagePath(pageKey);
   const includeGlobalChrome = pageKey !== 'notfound';
 
+  const watermarkHtml = content.site.logoPath
+    ? `<div class="watermark-logo-overlay" style="background-image: url('${escapeAttr(content.site.logoPath)}');"></div>`
+    : '';
+
   return `${pageKey === 'index' ? renderLoader(content) : ''}
   ${renderSkipLink()}
+  ${watermarkHtml}
   ${renderHeader(content, currentPath, { showCta: pageKey !== 'notfound' })}
   ${renderMobileNav(content, currentPath, { showCta: pageKey !== 'notfound' })}
   <main id="main-content" tabindex="-1">

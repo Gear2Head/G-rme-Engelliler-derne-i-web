@@ -1080,19 +1080,25 @@ html {
 }
 
 .watermark-logo-overlay {
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(80vw, 600px);
-  height: min(80vw, 600px);
+  width: min(90vw, 800px);
+  height: min(90vw, 800px);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.1; /* Görünürlük artırıldı */
-  z-index: 1;
+  opacity: 0.04;
+  z-index: -1;
   pointer-events: none;
-  filter: grayscale(1) contrast(0.5); /* Daha zarif bir görünüm için */
+  filter: grayscale(1) contrast(0.5);
+}
+
+.contact-form-card h3 svg {
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary-600);
 }
 
 .contact-cards-grid {

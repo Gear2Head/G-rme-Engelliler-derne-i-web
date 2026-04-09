@@ -62,7 +62,7 @@
     },
     {
       "label": "DERNEĞİMİZ",
-      "href": "#",
+      "href": "/hakkimizda",
       "id": "nav-about",
       "children": [
         { "label": "YÖNETİM KURULU", "href": "/hakkimizda#yonetim" },
@@ -87,7 +87,7 @@
     },
     {
       "label": "İLETİŞİM",
-      "href": "#",
+      "href": "/iletisim",
       "id": "nav-contact",
       "children": [
         { "label": "İLETİŞİM BİLGİLERİ", "href": "/iletisim" }

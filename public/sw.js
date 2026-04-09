@@ -83,7 +83,8 @@ self.addEventListener('fetch', (e) => {
       fetch(e.request)
         .then(response => {
           if (response.ok) {
-            caches.open(CACHE_NAME).then(cache => cache.put(e.request, response.clone()));
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(e.request, copy));
           }
           return response;
         })
@@ -104,8 +105,9 @@ self.addEventListener('fetch', (e) => {
       const networkFetch = fetch(e.request)
         .then(response => {
           if (response.ok && response.status === 200) {
+            const copy = response.clone();
             caches.open(CACHE_NAME)
-              .then(cache => cache.put(e.request, response.clone()))
+              .then(cache => cache.put(e.request, copy))
               .catch(() => {});
           }
           return response;
