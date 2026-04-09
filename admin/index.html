@@ -1679,10 +1679,11 @@
           data = await res.json();
         }
         siteContent = data;
+        if (!siteContent.announcements) siteContent.announcements = [];
       } catch (e) {
         console.error('[KGED Admin] Veri yükleme hatası:', e);
         showToast('Site verileri yüklenemedi: ' + e.message, 'error');
-        siteContent = { about: {}, contact: {}, board: [], nav: [], hero: {}, mission: { cards: [] } };
+        siteContent = { about: {}, contact: {}, board: [], nav: [], hero: {}, mission: { cards: [] }, announcements: [] };
       }
     }
 

@@ -134,10 +134,10 @@ function renderThemeBootstrap() {
 function renderNavLinks(items, currentPath, className) {
   return items.map((item) => {
     const href = ensureLeadingSlash(item.href);
-    const isCurrent = (stripTrailingSlash(href) === stripTrailingSlash(currentPath)) || 
-                      (item.children && item.children.some(c => stripTrailingSlash(ensureLeadingSlash(c.href)) === stripTrailingSlash(currentPath)));
+    const isCurrent = (stripTrailingSlash(href) === stripTrailingSlash(currentPath)) ||
+      (item.children && item.children.some(c => stripTrailingSlash(ensureLeadingSlash(c.href)) === stripTrailingSlash(currentPath)));
     const currentAttr = isCurrent ? ' aria-current="page"' : '';
-    
+
     if (item.children && item.children.length > 0) {
       const dropdownHtml = item.children.map(child => {
         const childHref = ensureLeadingSlash(child.href);
@@ -180,7 +180,7 @@ function renderHeader(content, currentPath, options = {}) {
       </div>
       <div class="top-bar__right">
         
-        <a href="/iletisim" class="top-bar__item">İletişim</a>
+        
         ${socialMarkup ? `<div class="top-bar__socials">${socialMarkup}</div>` : ''}
       </div>
     </div>
@@ -804,8 +804,8 @@ function renderContactContent(content) {
         <p><strong>${escapeHtml(content.contact.mapPlaceholderTitle || 'Harita yakında burada olacak.')}</strong><br>${escapeHtml(content.contact.mapPlaceholderText || '')}</p>
       </div>`;
 
-  const watermarkHtml = content.site.logoPath 
-    ? `<div class="watermark-logo-overlay" style="background-image: url('${escapeAttr(content.site.logoPath)}');"></div>` 
+  const watermarkHtml = content.site.logoPath
+    ? `<div class="watermark-logo-overlay" style="background-image: url('${escapeAttr(content.site.logoPath)}');"></div>`
     : '';
 
   return `<section class="page-header" aria-labelledby="page-title">
