@@ -761,10 +761,10 @@ function renderAnnouncementsContent(content) {
         <div class="announcement-card__content">${ann.content}</div>
       </article>
     `).join('')
-    : `<div class="empty-announcements">
-        <div class="empty-announcements__icon">${icon('info')}</div>
-        <p>Şu an için güncel bir duyuru bulunmamaktadır.</p>
-        <p style="font-size: var(--text-sm); color: var(--color-text-faint);">Daha sonra tekrar kontrol edebilirsiniz.</p>
+    : `<div class="empty-announcements-state" style="padding: 6rem 2rem; text-align: center; background: var(--color-primary-50); border: 2px dashed var(--color-primary-100); border-radius: var(--radius-xl); grid-column: 1 / -1;">
+        <div style="font-size: 3.5rem; margin-bottom: 1.5rem; opacity: 0.7;">📢</div>
+        <h3 style="font-size: var(--text-xl); color: var(--color-primary-900); margin-bottom: 0.5rem;">Duyuru sayfamız şimdilik sessiz...</h3>
+        <p style="color: var(--color-text-muted); max-width: 40ch; margin-inline: auto;">Derneğimizden en güncel haberleri ve önemli duyuruları yakında bu alanda bulabileceksiniz.</p>
       </div>`;
 
   return `<section class="page-header" aria-labelledby="page-title">
@@ -808,6 +808,19 @@ function renderContactContent(content) {
       </div>`;
 
   return `<section class="page-header" aria-labelledby="page-title">
+    <div class="container page-header__inner">
+      <nav class="breadcrumb" aria-label="Sayfa konumu">
+        <ol class="breadcrumb__list">
+          <li class="breadcrumb__item"><a href="/" class="breadcrumb__link">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
+          <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">İletişim</span></li>
+        </ol>
+      </nav>
+      <h1 class="page-header__title" id="page-title">İletişim</h1>
+      <p class="page-header__lead">${escapeHtml(content.contact.pageLead || 'Sorularınız için aşağıdaki kanallardan bize kolayca ulaşabilirsiniz.')}</p>
+    </div>
+  </section>
+
+  <section class="section contact-main-section" style="position: relative; overflow: hidden; background: white;">
     <div class="container" style="position: relative; z-index: 2;">
       <div class="contact-grid-classic" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: start;">
         <div class="contact-info-col">
