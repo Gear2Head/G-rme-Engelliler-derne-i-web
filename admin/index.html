@@ -1339,6 +1339,133 @@
   <!-- Toast container -->
   <div id="toast-container"></div>
 
+  <!-- Gallery Picker Modal -->
+  <div id="gallery-picker-modal" class="admin-modal">
+    <div class="admin-modal__card">
+      <div class="admin-modal__header">
+        <h3 class="admin-modal__title">Fotoğraf Seç</h3>
+        <button class="admin-modal__close" onclick="window.closeGalleryPicker()">&times;</button>
+      </div>
+      <div class="admin-modal__body">
+        <div id="gallery-picker-grid" class="picker-grid">
+          <!-- Items will be injected here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Admin Modal & Picker Styles */
+    .admin-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .admin-modal.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    .admin-modal__card {
+      background: #fff;
+      border-radius: 1rem;
+      width: 100%;
+      max-width: 800px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    .admin-modal__header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-modal__title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0;
+    }
+    .admin-modal__close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #64748b;
+      cursor: pointer;
+    }
+    .admin-modal__body {
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    .picker-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+    .picker-item {
+      aspect-ratio: 1;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .picker-item:hover {
+      transform: scale(1.03);
+      border-color: #4f46e5;
+    }
+    .picker-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Admin Mobile Responsiveness */
+    @media (max-width: 1024px) {
+      .admin-layout {
+        flex-direction: column;
+      }
+      .admin-sidebar {
+        width: 100% !important;
+        height: auto !important;
+        position: static !important;
+        padding-bottom: 1rem;
+      }
+      .admin-sidebar .nav-item {
+        margin: 0.25rem 1rem !important;
+      }
+      .admin-main {
+        padding: 1rem !important;
+      }
+      .admin-topbar {
+        padding: 0 1rem !important;
+      }
+      .admin-topbar__logo span {
+        display: none;
+      }
+      .hero-card {
+        padding: 1.5rem !important;
+      }
+      .hero-card h1 {
+        font-size: 1.5rem !important;
+      }
+      .admin-stats {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+
   <!-- Scroll to top -->
   <button id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Yukarı Çık">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1629,15 +1756,24 @@
             </div>
             <div class="panel-card__body">
                <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+                  <!-- Hakkımızda -->
                   <div>
-                    <h4 style="font-size:0.7rem;color:var(--brand-600);text-transform:uppercase;margin-bottom:1rem;border-bottom:1px solid var(--border);">Hakkımızda</h4>
+                    <h4 style="font-size:0.7rem;color:var(--brand-600);text-transform:uppercase;margin-bottom:1rem;border-bottom:1px solid var(--border);">Hakkımızda Sayfası</h4>
                     <div class="field-group"><label class="field-label">Başlık</label><input class="field-input" id="edit-about-title" value="${siteContent.about?.title || ''}" /></div>
-                    <div class="field-group"><label class="field-label">Tanıtım</label><textarea class="field-textarea" id="edit-about-intro">${siteContent.about?.intro || ''}</textarea></div>
-                  </div>
-                  <div>
-                    <h4 style="font-size:0.7rem;color:var(--brand-600);text-transform:uppercase;margin-bottom:1rem;border-bottom:1px solid var(--border);">İletişim</h4>
+                    <div class="field-group"><label class="field-label">Kısa Tanıtım</label><textarea class="field-textarea" id="edit-about-intro" style="height:100px;">${siteContent.about?.intro || ''}</textarea></div>
+                    <h4 style="font-size:0.7rem;color:var(--brand-600);text-transform:uppercase;margin-bottom:1rem;margin-top:2rem;border-bottom:1px solid var(--border);">İletişim</h4>
                     <div class="field-group"><label class="field-label">Telefon</label><input class="field-input" id="edit-contact-phone" value="${siteContent.contact?.phone || ''}" /></div>
                     <div class="field-group"><label class="field-label">E-posta</label><input class="field-input" id="edit-contact-email" value="${siteContent.contact?.email || ''}" /></div>
+                  </div>
+                  <!-- Ana Sayfa & SEO -->
+                  <div>
+                    <h4 style="font-size:0.7rem;color:var(--brand-600);text-transform:uppercase;margin-bottom:1rem;border-bottom:1px solid var(--border);">Açılış (Hero) Bölümü</h4>
+                    <div class="field-group"><label class="field-label">Hero Başlık</label><input class="field-input" id="edit-hero-title" value="${siteContent.hero?.title || ''}" /></div>
+                    <div class="field-group"><label class="field-label">Alt Başlık (Slogan)</label><input class="field-input" id="edit-hero-subtitle" value="${siteContent.hero?.subtitle || ''}" /></div>
+                    <div class="field-group"><label class="field-label">Hero Metin</label><textarea class="field-textarea" id="edit-hero-lead" style="height:80px;">${siteContent.hero?.lead || ''}</textarea></div>
+                    
+                    <h4 style="font-size:0.7rem;color:var(--brand-600);text-transform:uppercase;margin-bottom:1rem;margin-top:2rem;border-bottom:1px solid var(--border);">SEO Ayarları</h4>
+                    <div class="field-group"><label class="field-label">Site Meta Açıklaması</label><textarea class="field-textarea" id="edit-site-desc" style="height:80px;" placeholder="Google aramalarında çıkacak açıklama...">${siteContent.site?.description || ''}</textarea></div>
                   </div>
                </div>
             </div>
@@ -1877,6 +2013,17 @@
           siteContent.contact.email = email;
           siteContent.contact.emailHref = `mailto:${email}`;
         }
+
+        // Hero Fields
+        if (!siteContent.hero) siteContent.hero = {};
+        siteContent.hero.title = document.getElementById('edit-hero-title')?.value?.trim() || siteContent.hero.title;
+        siteContent.hero.subtitle = document.getElementById('edit-hero-subtitle')?.value?.trim() || siteContent.hero.subtitle;
+        siteContent.hero.lead = document.getElementById('edit-hero-lead')?.value?.trim() || siteContent.hero.lead;
+
+        // SEO Fields
+        if (!siteContent.site) siteContent.site = {};
+        siteContent.site.description = document.getElementById('edit-site-desc')?.value?.trim() || siteContent.site.description;
+
 
         await saveSiteConfig(siteContent);
         showToast('Site bilgileri güncellendi.', 'success');

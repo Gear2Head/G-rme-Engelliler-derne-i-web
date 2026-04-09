@@ -201,7 +201,7 @@ svg {
   color: white;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   .top-bar {
     display: none;
   }
@@ -299,34 +299,30 @@ svg {
 }
 
 @media (max-width: 1024px) {
-  .header__nav-left, .header__nav-right {
-    display: none;
+  .header {
+    height: 70px;
   }
   .header__inner {
     justify-content: space-between;
+    padding: 0 var(--space-4);
+  }
+  .header__nav-left, .header__nav-right {
+    display: none;
   }
   .header__logo-center {
     position: static;
     transform: none;
-    padding: 0;
+    padding: 2px;
+    border: 2px solid var(--color-primary-700);
     box-shadow: none;
-    border: none;
-    border-radius: 0;
-  }
-  .header__logo-center:hover {
-    transform: none;
   }
   .header__logo-bg {
-    width: auto;
-    height: 48px;
-    border-radius: 0;
-  }
-  .header__logo-image {
-    width: auto;
-    height: 100%;
+    width: 60px;
+    height: 60px;
   }
   .mobile-only {
     display: flex;
+    align-items: center;
   }
 }
 
@@ -472,7 +468,7 @@ svg {
   transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   .menu-toggle {
     display: flex;
   }
@@ -892,15 +888,15 @@ body.menu-open {
   gap: var(--space-16);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   .hero {
-    padding-block: var(--space-16);
+    padding-block: var(--space-12) var(--space-16);
   }
 
   .hero__inner {
     grid-template-columns: 1fr;
     text-align: center;
-    gap: var(--space-10);
+    gap: var(--space-8);
   }
 }
 
@@ -949,9 +945,11 @@ body.menu-open {
   margin-bottom: var(--space-10);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   .hero__lead {
     max-width: 100%;
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
   }
 }
 
@@ -962,8 +960,14 @@ body.menu-open {
   align-items: center;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   .hero__actions {
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero__actions .btn {
+    width: 100%;
     justify-content: center;
   }
 }
@@ -1455,10 +1459,16 @@ html {
   overflow: hidden;
 }
 
-.empty-announcements-state {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: var(--space-20) 0;
+@media (max-width: 1024px) {
+  .announcements-grid {
+    grid-template-columns: 1fr;
+  }
+  .section-padding {
+    padding-block: var(--space-12);
+  }
+  .container {
+    padding-inline: var(--space-5);
+  }
 }
 
 /* ─── GALLERY EMPTY STATE ────────────────────────────────────────── */

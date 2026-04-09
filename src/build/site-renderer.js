@@ -1195,7 +1195,43 @@ function renderHead(pageKey, content) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   ${renderThemeBootstrap()}
-  ${schemas}`;
+  ${schemas}
+  <script>
+    (function() {
+      // Global Mobile Menu Toggle
+      document.addEventListener('DOMContentLoaded', function() {
+        const toggle = document.getElementById('menu-toggle');
+        const nav = document.getElementById('mobile-nav');
+        if (!toggle || !nav) return;
+
+        toggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', !expanded);
+          nav.classList.toggle('open');
+          document.body.classList.toggle('menu-open');
+        });
+
+        // Close menu on click outside
+        document.addEventListener('click', function(e) {
+          if (nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
+            toggle.setAttribute('aria-expanded', 'false');
+            nav.classList.remove('open');
+            document.body.classList.remove('menu-open');
+          }
+        });
+
+        // Close menu on ESC
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && nav.classList.contains('open')) {
+            toggle.setAttribute('aria-expanded', 'false');
+            nav.classList.remove('open');
+            document.body.classList.remove('menu-open');
+          }
+        });
+      });
+    })();
+  </script>`;
 }
 
 function renderBody(pageKey, content) {
@@ -1219,11 +1255,21 @@ function renderBody(pageKey, content) {
   ${includeGlobalChrome ? renderWhatsAppFloat(content) : ''}
   ${includeGlobalChrome ? renderToolbar() : ''}
   ${includeGlobalChrome && content.contact.phone ? `<div class="mobile-cta-bar" role="complementary" aria-label="Hızlı arama">
-    <a href="${escapeAttr(content.contact.phoneHref || 'tel:' + content.contact.phone)}" aria-label="Hemen ara: ${escapeAttr(content.contact.phone)}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      Bizi Ara — ${escapeHtml(content.contact.phone)}
+    <a href="${escapeAttr(content.contact.phoneHref || 'tel:' + content.contact.phone)}" class="mobile-cta-bar__link">
+      <div class="mobile-cta-bar__icon">${icon('phone')}</div>
+      <div class="mobile-cta-bar__text">Bize Ulaşın: <strong>${escapeHtml(content.contact.phone)}</strong></div>
     </a>
-  </div>` : ''}`;
+  </div>` : ''}
+  <style>
+    @media (max-width: 1024px) {
+      .whatsapp-float { bottom: 85px !important; right: 20px !important; width: 50px !important; height: 50px !important; }
+      .mobile-cta-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--color-primary-600); z-index: 1000; padding: 12px; box-shadow: 0 -4px 20px rgba(0,0,0,0.15); display: block !important; }
+      .mobile-cta-bar__link { display: flex; align-items: center; justify-content: center; gap: 10px; color: white; text-decoration: none; font-size: 0.9rem; }
+      .mobile-cta-bar__icon { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+      .mobile-cta-bar__icon svg { width: 16px; height: 16px; color: white; }
+    }
+    @media (min-width: 1025px) { .mobile-cta-bar { display: none !important; } }
+  </style>`;
 }
 
 export function renderDocumentFragments(pageKey) {
