@@ -248,7 +248,7 @@ function renderHeader(content, currentPath, options = {}) {
         </nav>
 
         <div class="header__actions mobile-only">
-          <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menüyü genişlet/daralt" title="Menü">
+          <button class="menu-toggle" id="menu-toggle" onclick="window.toggleMobileMenu()" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menüyü genişlet/daralt" title="Menü">
             <span class="sr-only">Menü</span>
             ${icon('menuOpen')}
             ${icon('menuClose')}
@@ -1197,33 +1197,34 @@ function renderHead(pageKey, content) {
   ${renderThemeBootstrap()}
   ${schemas}
   <script>
+    window.toggleMobileMenu = function() {
+      const toggle = document.getElementById('menu-toggle');
+      const nav = document.getElementById('mobile-nav');
+      if (!toggle || !nav) return;
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      nav.classList.toggle('open');
+      document.body.classList.toggle('menu-open');
+    };
+
     (function() {
-      // Global Mobile Menu Toggle - Delegation Pattern
+      // Close menu on click outside
       document.addEventListener('click', function(e) {
-        const toggle = e.target.closest('#menu-toggle');
         const nav = document.getElementById('mobile-nav');
-        if (!nav) return;
-
-        // Clicked the toggle button
-        if (toggle) {
-          e.preventDefault();
-          const expanded = toggle.getAttribute('aria-expanded') === 'true';
-          toggle.setAttribute('aria-expanded', !expanded);
-          nav.classList.toggle('open');
-          document.body.classList.toggle('menu-open');
-          return;
-        }
-
-        // Clicked outside nav while open
+        const toggle = document.getElementById('menu-toggle');
+        if (!nav || !toggle) return;
+        
         const isClickInsideNav = e.target.closest('#mobile-nav');
-        if (nav.classList.contains('open') && !isClickInsideNav) {
-          const btn = document.getElementById('menu-toggle');
-          if (btn) btn.setAttribute('aria-expanded', 'false');
+        const isClickToggle = e.target.closest('#menu-toggle');
+        
+        if (nav.classList.contains('open') && !isClickInsideNav && !isClickToggle) {
+          toggle.setAttribute('aria-expanded', 'false');
           nav.classList.remove('open');
           document.body.classList.remove('menu-open');
         }
       });
 
+      // Close menu on Escape key
       document.addEventListener('keydown', function(e) {
         const nav = document.getElementById('mobile-nav');
         if (e.key === 'Escape' && nav && nav.classList.contains('open')) {
