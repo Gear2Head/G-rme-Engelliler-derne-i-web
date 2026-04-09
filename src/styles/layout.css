@@ -202,8 +202,15 @@ svg {
 }
 
 @media (max-width: 1024px) {
-  .top-bar {
-    display: none;
+  .top-bar__left {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .top-bar .container {
+    flex-direction: column;
+    padding: 8px;
   }
 }
 
@@ -306,8 +313,8 @@ svg {
     justify-content: space-between;
     padding: 0 var(--space-4);
   }
-  .header__nav-left, .header__nav-right {
-    display: none;
+  .header__nav-left, .header__nav-right, .nav--desktop {
+    display: none !important;
   }
   .header__logo-center {
     position: static;
@@ -317,8 +324,8 @@ svg {
     box-shadow: none;
   }
   .header__logo-bg {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
   }
   .mobile-only {
     display: flex;
@@ -496,49 +503,34 @@ svg {
   display: block;
 }
 
-/* Mobile Menu */
+/* Mobile Menu Modal */
 .nav--mobile {
-  display: none;
   position: fixed;
-  inset: var(--header-height) 0 0 0;
-  z-index: 700;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
   background: var(--color-bg);
-  padding: var(--space-6);
+  z-index: 750;
+  padding: 120px var(--space-6) 60px;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-4);
   overflow-y: auto;
-  border-top: 1px solid var(--color-border);
-  animation: menuSlideDown 0.2s ease;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex !important;
 }
-
 .nav--mobile.open {
-  display: flex;
+  transform: translateX(0);
 }
-
-@keyframes menuSlideDown {
-  from { 
-    opacity: 0; 
-    transform: translateY(-20px) scale(0.98);
-    filter: blur(4px);
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-}
-
 .nav--mobile .nav__link {
-  padding: var(--space-4);
-  font-size: var(--text-lg);
-  border: 1px solid transparent;
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  text-decoration: none;
 }
-
-.nav--mobile .nav__link:hover,
-.nav--mobile .nav__link[aria-current="page"] {
-  border-color: var(--color-primary-200);
-}
-
 body.menu-open {
   overflow: hidden;
 }
