@@ -1249,25 +1249,7 @@
         <span class="admin-topbar__title">Kırged Admin Dashboard</span>
       </a>
       <div class="admin-topbar__actions">
-        <button id="theme-toggle" class="btn btn--ghost" style="border:none; padding:0.5rem;"
-          title="Karanlık/Aydınlık Mod" aria-label="Temayı değiştir">
-          <svg class="icon-sun" style="display:none;" viewBox="0 0 24 24" width="20" height="20" fill="none"
-            stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5" />
-            <line x1="12" y1="1" x2="12" y2="3" />
-            <line x1="12" y1="21" x2="12" y2="23" />
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-            <line x1="1" y1="12" x2="3" y2="12" />
-            <line x1="21" y1="12" x2="23" y2="12" />
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-          </svg>
-          <svg class="icon-moon" style="display:none;" viewBox="0 0 24 24" width="20" height="20" fill="none"
-            stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-          </svg>
-        </button>
+
         <a href="/" class="admin-btn-site" target="_blank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
@@ -2273,37 +2255,14 @@
       setTimeout(() => { progress.classList.remove('visible'); bar.style.width = '0%'; }, 3000);
     }
 
-    // ─── THEME TOGGLE ─────────────────────────────────────────────
-    const themeBtn = document.getElementById('theme-toggle');
-    const iconSun = themeBtn.querySelector('.icon-sun');
-    const iconMoon = themeBtn.querySelector('.icon-moon');
-
-    function applyTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', theme === 'dark' ? '#0B0E14' : '#4F46E5');
-      if (theme === 'dark') {
-        iconSun.style.display = 'block';
-        iconMoon.style.display = 'none';
-      } else {
-        iconSun.style.display = 'none';
-        iconMoon.style.display = 'block';
-      }
-    }
-
-    themeBtn.addEventListener('click', () => {
-      const curr = document.documentElement.getAttribute('data-theme');
-      const next = curr === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-      localStorage.setItem('kged-theme', next);
-    });
+    // Enforce Light Theme
+    document.documentElement.setAttribute('data-theme', 'light');
 
     // ─── INIT ─────────────────────────────────────────────────────
     document.getElementById('login-form').addEventListener('submit', handleLogin);
     document.getElementById('btn-logout').addEventListener('click', handleLogout);
 
     getSession().then(session => {
-      applyTheme(localStorage.getItem('kged-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
       if (session) showDashboard();
       else showLogin();
     });

@@ -4,10 +4,10 @@
  */
 
 const STORAGE_KEY = 'kged-theme';
-const THEMES = ['light', 'dark', 'high-contrast'];
+const THEMES = ['light', 'high-contrast'];
 
 function getSystemTheme() {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  return 'light'; // Always default to light for system preference
 }
 
 function getStoredTheme() {
@@ -24,7 +24,7 @@ function applyTheme(theme) {
 function updateMetaThemeColor(theme) {
   const meta = document.querySelector('meta[name="theme-color"]');
   if (!meta) return;
-  const colors = { light: '#FFFFFF', dark: '#0F1117', 'high-contrast': '#000000' };
+  const colors = { light: '#FFFFFF', 'high-contrast': '#000000' };
   meta.setAttribute('content', colors[theme] ?? colors.light);
 }
 
@@ -49,13 +49,7 @@ function toggleTheme() {
 
 function initTheme() {
   const stored = getStoredTheme();
-  applyTheme(stored || getSystemTheme());
-
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    if (!getStoredTheme()) {
-      applyTheme(getSystemTheme());
-    }
-  });
+  applyTheme(stored || 'light');
 
   document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
     btn.addEventListener('click', () => {

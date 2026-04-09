@@ -1,7 +1,17 @@
-/**
- * AMAÇ: Header, footer, loader, erişilebilirlik toolbar ve sayfa özgü stiller
- * MANTIK: Global layout bileşenleri; sticky header, mobile menu, toolbar açma/kapama animasyonları
- */
+
+/* ─── GLOBAL SVG ICONS ────────────────────────────────────────────────── */
+svg {
+  width: 1.25em;
+  height: 1.25em;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Specific resets for larger containers */
+.header__logo-image, .header__logo-icon svg {
+  width: auto;
+  height: auto;
+}
 
 /* ─── LOADER ────────────────────────────────────────────────────────── */
 #loader {
