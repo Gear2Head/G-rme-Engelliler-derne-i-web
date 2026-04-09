@@ -44,9 +44,36 @@ async function syncContent() {
       return;
     }
 
+    // Force the "Beautiful" Navigation Structure (Golden Config)
+    data.data.nav = [
+      { id: 'nav-home', label: 'ANASAYFA', href: '/' },
+      {
+        id: 'nav-about',
+        label: 'DERNEĞİMİZ',
+        href: '/hakkimizda',
+        children: [
+          { label: 'YÖNETİM KURULU', href: '/hakkimizda#yonetim' },
+          { label: 'DERNEK TÜZÜĞÜ', href: '/tuzuk' },
+          { label: 'HAKKIMIZDA', href: '/hakkimizda' }
+        ]
+      },
+      { id: 'nav-events', label: 'ETKİNLİKLER', href: '/galeri' },
+      { id: 'nav-multimedia', label: 'MULTİMEDYA', href: '/galeri' },
+      { id: 'nav-announcements', label: 'DUYURULAR', href: '/duyurular' },
+      {
+        id: 'nav-contact',
+        label: 'İLETİŞİM',
+        href: '/iletisim',
+        children: [
+          { label: 'İLETİŞİM BİLGİLERİ', href: '/iletisim' },
+          { label: 'YÖNETİCİ GİRİŞİ', href: '/admin/' }
+        ]
+      }
+    ];
+
     const targetPath = path.resolve(process.cwd(), 'src/data/site-content.json');
     fs.writeFileSync(targetPath, JSON.stringify(data.data, null, 2), 'utf8');
-    
+
     // Also update public fallback
     const publicPath = path.resolve(process.cwd(), 'public/site-content.json');
     fs.writeFileSync(publicPath, JSON.stringify(data.data, null, 2), 'utf8');

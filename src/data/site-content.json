@@ -1,69 +1,14 @@
 {
-  "site": {
-    "name": "Kırşehir Görme Engelliler Derneği",
-    "shortName": "KGED",
-    "slogan": "Işığa Giden Yolda Birlikte",
-    "description": "Kırşehir Görme Engelliler Derneği olarak görme engelli bireylerin topluma eşit katılımını destekliyor, yaşam kalitelerini artırmak için çalışıyor ve haklarını savunuyoruz.",
-    "url": "https://kirshehirgormeengelliler.org.tr",
-    "logoPath": "/logo.png",
-    "logoAlt": "Kırşehir Görme Engelliler Derneği Logosu",
-    "ogImagePath": null,
-    "appleTouchIconPath": null,
-    "locale": "tr_TR",
-    "language": "tr",
-    "foundedYear": 2026,
-    "foundedDate": "2026-02-05",
-    "status": {
-      "hasLogo": true,
-      "hasAddress": true,
-      "hasGeoCoordinates": false,
-      "hasConstitution": true,
-      "hasWhatsApp": false,
-      "hasMapsEmbed": true,
-      "hasGallery": true
-    }
-  },
-  "contact": {
-    "phone": "0541 648 45 70",
-    "phoneHref": "tel:+905416484570",
-    "whatsapp": "0541 648 45 70",
-    "whatsappHref": "https://wa.me/905416484570",
-    "email": "gormeengellilerdernegi@hotmail.com",
-    "emailHref": "mailto:gormeengellilerdernegi@hotmail.com",
-    "pageLead": "Sorularınız için aşağıdaki kanallardan bize kolayca ulaşabilirsiniz.",
-    "mapPlaceholderTitle": "Harita yakında burada olacak.",
-    "mapPlaceholderText": "Adres ve koordinat bilgisi doğrulandığında Google Haritalar görünümü bu alana eklenecektir.",
-    "addressSectionTitle": "Adresimiz",
-    "directionsLabel": "Yol Tarifi Al",
-    "address": {
-      "full": "Neşet Ertaş Kültür Sanat Merkezi, Yenice, 40200 Kırşehir Merkez/Kırşehir",
-      "short": "Neşet Ertaş Kültür Sanat Merkezi",
-      "status": null,
-      "postalCode": "40200",
-      "city": "Kırşehir"
-    },
-    "geo": {
-      "lat": null,
-      "lng": null
-    },
-    "googleMapsUrl": "https://maps.google.com/?q=Neşet+Ertaş+Kültür+Sanat+Merkezi+Kırşehir",
-    "social": {
-      "facebook": "https://www.facebook.com/people/Kir%C5%9Fehir-G%C3%B6rme-Engelliler-derne%C4%9Fi/61588215419537/#",
-      "instagram": "https://www.instagram.com/gormeengellilerdernegi/",
-      "twitter": null,
-      "youtube": null
-    }
-  },
   "nav": [
     {
+      "id": "nav-home",
       "label": "ANASAYFA",
-      "href": "/",
-      "id": "nav-home"
+      "href": "/"
     },
     {
+      "id": "nav-about",
       "label": "DERNEĞİMİZ",
       "href": "/hakkimizda",
-      "id": "nav-about",
       "children": [
         {
           "label": "YÖNETİM KURULU",
@@ -80,86 +25,104 @@
       ]
     },
     {
+      "id": "nav-events",
       "label": "ETKİNLİKLER",
-      "href": "/galeri",
-      "id": "nav-events"
+      "href": "/galeri"
     },
     {
-      "label": "MULTIMEDYA",
-      "href": "/galeri",
-      "id": "nav-multimedia"
+      "id": "nav-multimedia",
+      "label": "MULTİMEDYA",
+      "href": "/galeri"
     },
     {
+      "id": "nav-announcements",
       "label": "DUYURULAR",
-      "href": "/duyurular",
-      "id": "nav-announcements"
+      "href": "/duyurular"
     },
     {
+      "id": "nav-contact",
       "label": "İLETİŞİM",
       "href": "/iletisim",
-      "id": "nav-contact",
       "children": [
         {
           "label": "İLETİŞİM BİLGİLERİ",
           "href": "/iletisim"
+        },
+        {
+          "label": "YÖNETİCİ GİRİŞİ",
+          "href": "/admin/"
         }
       ]
     }
   ],
-  "announcements": [],
-  "hero": {
-    "title": "Kırşehir Görme Engelliler Derneği",
-    "subtitle": "Işığa Giden Yolda Birlikte",
-    "locationLabel": "Kırşehir, Türkiye",
-    "lead": "Görme engelli bireylerin topluma eşit, onurlu ve bağımsız katılımı için çalışıyor; haklarını savunuyor, fırsatlar yaratıyor ve umut taşıyoruz.",
-    "cta": {
-      "primary": {
-        "label": "Bize Ulaşın",
-        "href": "/iletisim"
-      },
-      "secondary": {
-        "label": "Hakkımızda",
-        "href": "/hakkimizda"
-      }
+  "seo": {
+    "index": {
+      "title": "Kırşehir Görme Engelliler Derneği | Resmi Web Sitesi",
+      "canonical": "/",
+      "description": "Kırşehir Görme Engelliler Derneği — 5 Şubat 2026'da kurulan, görme engelli bireylerin topluma eşit katılımı için çalışan hak temelli sivil toplum kuruluşu."
+    },
+    "tuzuk": {
+      "title": "Dernek Tüzüğü | Kırşehir Görme Engelliler Derneği",
+      "canonical": "/tuzuk",
+      "description": "Kırşehir Görme Engelliler Derneği tüzüğüne ulaşın. Derneğin resmi kuruluş belgesi ve yönetim esasları."
+    },
+    "galeri": {
+      "title": "Galeri & Aktiviteler | Kırşehir Görme Engelliler Derneği",
+      "canonical": "/galeri",
+      "description": "Kırşehir Görme Engelliler Derneği etkinlikleri, toplantıları ve faaliyetlerinden fotoğraf galerisi."
+    },
+    "iletisim": {
+      "title": "İletişim | Kırşehir Görme Engelliler Derneği",
+      "canonical": "/iletisim",
+      "description": "Kırşehir Görme Engelliler Derneği ile iletişime geçin. Telefon: 0541 648 45 70 | E-posta: gormeengellilerdernegi@hotmail.com"
+    },
+    "hakkimizda": {
+      "title": "Hakkımızda | Kırşehir Görme Engelliler Derneği",
+      "canonical": "/hakkimizda",
+      "description": "5 Şubat 2026'da Kırşehir'de kurulan Kırşehir Görme Engelliler Derneği hakkında bilgi alın. Misyonumuz, vizyonumuz, amaçlarımız ve faaliyetlerimiz."
     }
   },
-  "mission": {
-    "title": "Amacımız",
-    "lead": "Görme engelli bireylerin her alanda eşit fırsatlara sahip olduğu bir toplum için çalışıyoruz.",
-    "cards": [
-      {
-        "icon": "heart",
-        "title": "Destek ve Dayanışma",
-        "text": "Görme engelli bireylere ve ailelerine sosyal, psikolojik ve pratik destek sunuyor; birlikte güçleniyoruz."
+  "hero": {
+    "cta": {
+      "primary": {
+        "href": "/iletisim",
+        "label": "Bize Ulaşın"
       },
-      {
-        "icon": "book",
-        "title": "Eğitim ve Farkındalık",
-        "text": "Toplumda görme engeline yönelik farkındalığı artırıyor, eğitim imkânlarını genişletiyor ve bilgiye erişimi kolaylaştırıyoruz."
-      },
-      {
-        "icon": "scale",
-        "title": "Hak Savunuculuğu",
-        "text": "Görme engelli bireylerin yasal haklarını koruyuyor, kamu kurumları ve sivil toplumla işbirliği yaparak politika değişikliği için çalışıyoruz."
+      "secondary": {
+        "href": "/hakkimizda",
+        "label": "Hakkımızda"
       }
-    ]
+    },
+    "lead": "Görme engelli bireylerin topluma eşit, onurlu ve bağımsız katılımı için çalışıyor; haklarını savunuyor, fırsatlar yaratıyor ve umut taşıyoruz.",
+    "title": "Kırşehir Görme Engelliler Derneği",
+    "subtitle": "Işığa Giden Yolda Birlikte",
+    "locationLabel": "Kırşehir, Türkiye"
+  },
+  "site": {
+    "url": "https://kirshehirgormeengelliler.org.tr",
+    "name": "Kırşehir Görme Engelliler Derneği",
+    "locale": "tr_TR",
+    "slogan": "Işığa Giden Yolda Birlikte",
+    "status": {
+      "hasLogo": true,
+      "hasAddress": true,
+      "hasGallery": true,
+      "hasWhatsApp": false,
+      "hasMapsEmbed": true,
+      "hasConstitution": true,
+      "hasGeoCoordinates": false
+    },
+    "logoAlt": "Kırşehir Görme Engelliler Derneği Logosu",
+    "language": "tr",
+    "logoPath": "/logo.png",
+    "shortName": "KGED",
+    "description": "Kırşehir Görme Engelliler Derneği olarak görme engelli bireylerin topluma eşit katılımını destekliyor, yaşam kalitelerini artırmak için çalışıyor ve haklarını savunuyoruz.",
+    "foundedDate": "2026-02-05",
+    "foundedYear": 2026,
+    "ogImagePath": null,
+    "appleTouchIconPath": null
   },
   "about": {
-    "title": "Hakkımızda",
-    "pageLead": "5 Şubat 2026'dan bu yana görme engelli bireylerin yanında, her zaman.",
-    "introHeading": "Biz Kimiz?",
-    "goalsHeading": "Amaçlarımız",
-    "goalsLead": "Görme engelli bireylere yönelik aşağıdaki hedefler doğrultusunda faaliyet göstermekteyiz:",
-    "boardHeading": "Yönetim Kurulu",
-    "ctaTitle": "Bizimle İletişime Geçin",
-    "ctaLead": "Sorularınız, önerileriniz veya iş birliği teklifleriniz için bize ulaşın.",
-    "ctaPrimaryLabel": "İletişim Sayfası",
-    "ctaSecondaryLabel": null,
-    "intro": "Kırşehir Görme Engelliler Derneği, 5 Şubat 2026 tarihinde Kırşehir ilinde kurulmuş; görme engelli bireylerin topluma tam ve eşit katılımını sağlamak amacıyla faaliyete geçmiş, hak temelli bir sivil toplum kuruluşudur.",
-    "description": "Derneğimiz, Kırşehir ilinde yaşayan görme engelli bireylerin karşılaştığı zorluklara çözüm üretmek, haklarını savunmak ve yaşam kalitelerini artırmak için faaliyetlerini sürdürmektedir. Üyelerimiz, gönüllülerimiz ve destekçilerimizle birlikte daha erişilebilir ve kapsayıcı bir Kırşehir için çalışıyoruz.",
-    "foundingStatus": "5 Şubat 2026 tarihinde Kırşehir ilinde kurulmuş olan hak temelli bir sivil toplum kuruluşudur.",
-    "foundingDate": "5 Şubat 2026",
-    "foundingCity": "Kırşehir",
     "goals": [
       "Görme engelli bireylerin eğitime erişimini kolaylaştırmak",
       "İstihdam olanaklarını artırmak ve mesleki rehabilitasyonu desteklemek",
@@ -169,7 +132,22 @@
       "Sosyal ve kültürel etkinliklerle kapsayıcı bir toplum oluşturmak",
       "Kamu kurumları ve diğer STK'larla işbirliği geliştirmek"
     ],
-    "boardStatus": "Yönetim kurulu bilgileri aşağıda yayınlanmıştır."
+    "intro": "Kırşehir Görme Engelliler Derneği, 5 Şubat 2026 tarihinde Kırşehir ilinde kurulmuş; görme engelli bireylerin topluma tam ve eşit katılımını sağlamak amacıyla faaliyete geçmiş, hak temelli bir sivil toplum kuruluşudur.",
+    "title": "Hakkımızda",
+    "ctaLead": "Sorularınız, önerileriniz veya iş birliği teklifleriniz için bize ulaşın.",
+    "ctaTitle": "Bizimle İletişime Geçin",
+    "pageLead": "5 Şubat 2026'dan bu yana görme engelli bireylerin yanında, her zaman.",
+    "goalsLead": "Görme engelli bireylere yönelik aşağıdaki hedefler doğrultusunda faaliyet göstermekteyiz:",
+    "boardStatus": "Yönetim kurulu bilgileri aşağıda yayınlanmıştır.",
+    "description": "Derneğimiz, Kırşehir ilinde yaşayan görme engelli bireylerin karşılaştığı zorluklara çözüm üretmek, haklarını savunmak ve yaşam kalitelerini artırmak için faaliyetlerini sürdürmektedir. Üyelerimiz, gönüllülerimiz ve destekçilerimizle birlikte daha erişilebilir ve kapsayıcı bir Kırşehir için çalışıyoruz.",
+    "boardHeading": "Yönetim Kurulu",
+    "foundingCity": "Kırşehir",
+    "foundingDate": "5 Şubat 2026",
+    "goalsHeading": "Amaçlarımız",
+    "introHeading": "Biz Kimiz?",
+    "foundingStatus": "5 Şubat 2026 tarihinde Kırşehir ilinde kurulmuş olan hak temelli bir sivil toplum kuruluşudur.",
+    "ctaPrimaryLabel": "İletişim Sayfası",
+    "ctaSecondaryLabel": null
   },
   "board": [
     {
@@ -201,72 +179,72 @@
       "role": "Geçici Yönetim Kurulu Üyesi"
     }
   ],
-  "constitution": {
-    "title": "Dernek Tüzüğü",
-    "pageLead": "Kırşehir Görme Engelliler Derneği'nin resmi kuruluş belgesi ve yönetim esasları.",
-    "sectionTitle": "Tüzük Belgesi",
-    "statusStrong": "Tüzük belgesi dijital ortama aktarılmıştır.",
-    "infoBanner": "Kırşehir Görme Engelliler Derneği resmi tüzüğünü aşağıdan inceleyebilir veya PDF formatında indirebilirsiniz.",
-    "infoTitle": "Tüzük Nedir?",
-    "conversionNote": "Tüzük belgemiz Microsoft Word formatında (.doc) mevcuttur. Yakında PDF olarak yayınlanacaktır.",
-    "infoParagraphs": [
-      "Dernek tüzüğü; derneğin kuruluş amacını, faaliyet alanlarını, üyelik koşullarını, yönetim yapısını ve mali esaslarını belirleyen temel belgedir. 5253 sayılı Dernekler Kanunu kapsamında hazırlanır.",
-      "Tüzüğümüz yayınlandığında şu konuları kapsayacaktır: Derneğin adı ve merkezi, amaç ve faaliyet alanı, üyelik şartları, yönetim ve denetim kurulu yapısı, genel kurul esasları, mali hükümler ve fesih prosedürü."
-    ],
-    "ctaTitle": "Tüzük Hakkında Bilgi Alın",
-    "ctaLead": "Tüzüğümüz hakkında sorularınız için bize ulaşın.",
-    "ctaPrimaryLabel": "İletişime Geç",
-    "ctaSecondaryLabel": null,
-    "status": "Tüzük belgemiz dijital ortama aktarılma aşamasındadır. En kısa sürede bu sayfadan PDF olarak indirilebilecektir.",
-    "lastUpdated": null,
-    "pdfPath": "/tuzuk.pdf"
+  "footer": {
+    "description": "5 Şubat 2026'dan bu yana görme engelli bireylerin topluma eşit katılımı için çalışan hak temelli sivil toplum kuruluşu."
+  },
+  "contact": {
+    "geo": {
+      "lat": null,
+      "lng": null
+    },
+    "email": "gormeengellilerdernegi@hotmail.com",
+    "phone": "0541 648 45 70",
+    "social": {
+      "twitter": null,
+      "youtube": null,
+      "facebook": "https://www.facebook.com/people/Kir%C5%9Fehir-G%C3%B6rme-Engelliler-derne%C4%9Fi/61588215419537/#",
+      "instagram": "https://www.instagram.com/gormeengellilerdernegi/"
+    },
+    "address": {
+      "city": "Kırşehir",
+      "full": "Neşet Ertaş Kültür Sanat Merkezi, Yenice, 40200 Kırşehir Merkez/Kırşehir",
+      "short": "Neşet Ertaş Kültür Sanat Merkezi",
+      "status": null,
+      "postalCode": "40200"
+    },
+    "pageLead": "Sorularınız için aşağıdaki kanallardan bize kolayca ulaşabilirsiniz.",
+    "whatsapp": "0541 648 45 70",
+    "emailHref": "mailto:gormeengellilerdernegi@hotmail.com",
+    "phoneHref": "tel:+90541 648 45 70",
+    "whatsappHref": "https://wa.me/905416484570",
+    "googleMapsUrl": "https://maps.google.com/?q=Neşet+Ertaş+Kültür+Sanat+Merkezi+Kırşehir",
+    "directionsLabel": "Yol Tarifi Al",
+    "mapPlaceholderText": "Adres ve koordinat bilgisi doğrulandığında Google Haritalar görünümü bu alana eklenecektir.",
+    "addressSectionTitle": "Adresimiz",
+    "mapPlaceholderTitle": "Harita yakında burada olacak."
   },
   "gallery": {
     "title": "Galeri & Aktiviteler",
     "pageLead": "Derneğimizin etkinlikleri, toplantıları ve faaliyetlerinden kareler.",
-    "emptyMessage": "Henüz galeri görseli eklenmemiştir. Yakında aktivitelerimizden kareler burada yer alacaktır.",
     "categories": {
-      "etkinlik": "Etkinlik",
-      "toplanti": "Toplantı",
+      "diger": "Diğer",
       "egitim": "Eğitim",
       "ziyaret": "Ziyaret",
-      "diger": "Diğer"
-    }
+      "etkinlik": "Etkinlik",
+      "toplanti": "Toplantı"
+    },
+    "emptyMessage": "Henüz galeri görseli eklenmemiştir. Yakında aktivitelerimizden kareler burada yer alacaktır."
   },
-  "seo": {
-    "index": {
-      "title": "Kırşehir Görme Engelliler Derneği | Resmi Web Sitesi",
-      "description": "Kırşehir Görme Engelliler Derneği — 5 Şubat 2026'da kurulan, görme engelli bireylerin topluma eşit katılımı için çalışan hak temelli sivil toplum kuruluşu.",
-      "canonical": "/"
-    },
-    "hakkimizda": {
-      "title": "Hakkımızda | Kırşehir Görme Engelliler Derneği",
-      "description": "5 Şubat 2026'da Kırşehir'de kurulan Kırşehir Görme Engelliler Derneği hakkında bilgi alın. Misyonumuz, vizyonumuz, amaçlarımız ve faaliyetlerimiz.",
-      "canonical": "/hakkimizda"
-    },
-    "galeri": {
-      "title": "Galeri & Aktiviteler | Kırşehir Görme Engelliler Derneği",
-      "description": "Kırşehir Görme Engelliler Derneği etkinlikleri, toplantıları ve faaliyetlerinden fotoğraf galerisi.",
-      "canonical": "/galeri"
-    },
-    "tuzuk": {
-      "title": "Dernek Tüzüğü | Kırşehir Görme Engelliler Derneği",
-      "description": "Kırşehir Görme Engelliler Derneği tüzüğüne ulaşın. Derneğin resmi kuruluş belgesi ve yönetim esasları.",
-      "canonical": "/tuzuk"
-    },
-    "duyurular": {
-      "title": "Duyurular | Kırşehir Görme Engelliler Derneği",
-      "description": "Kırşehir Görme Engelliler Derneği resmi duyuruları, haberleri ve güncel paylaşımları.",
-      "canonical": "/duyurular"
-    },
-    "iletisim": {
-      "title": "İletişim | Kırşehir Görme Engelliler Derneği",
-      "description": "Kırşehir Görme Engelliler Derneği ile iletişime geçin. Telefon: 0541 648 45 70 | E-posta: gormeengellilerdernegi@hotmail.com",
-      "canonical": "/iletisim"
-    }
-  },
-  "footer": {
-    "description": "5 Şubat 2026'dan bu yana görme engelli bireylerin topluma eşit katılımı için çalışan hak temelli sivil toplum kuruluşu."
+  "mission": {
+    "lead": "Görme engelli bireylerin her alanda eşit fırsatlara sahip olduğu bir toplum için çalışıyoruz.",
+    "cards": [
+      {
+        "icon": "heart",
+        "text": "Görme engelli bireylere ve ailelerine sosyal, psikolojik ve pratik destek sunuyor; birlikte güçleniyoruz.",
+        "title": "Destek ve Dayanışma"
+      },
+      {
+        "icon": "book",
+        "text": "Toplumda görme engeline yönelik farkındalığı artırıyor, eğitim imkânlarını genişletiyor ve bilgiye erişimi kolaylaştırıyoruz.",
+        "title": "Eğitim ve Farkındalık"
+      },
+      {
+        "icon": "scale",
+        "text": "Görme engelli bireylerin yasal haklarını koruyuyor, kamu kurumları ve sivil toplumla işbirliği yaparak politika değişikliği için çalışıyoruz.",
+        "title": "Hak Savunuculuğu"
+      }
+    ],
+    "title": "Amacımız"
   },
   "toolbar": {
     "fontSizes": [
@@ -276,5 +254,27 @@
       175,
       200
     ]
-  }
+  },
+  "constitution": {
+    "title": "Dernek Tüzüğü",
+    "status": "Tüzük belgemiz dijital ortama aktarılma aşamasındadır. En kısa sürede bu sayfadan PDF olarak indirilebilecektir.",
+    "ctaLead": "Tüzüğümüz hakkında sorularınız için bize ulaşın.",
+    "pdfPath": "/tuzuk.pdf",
+    "ctaTitle": "Tüzük Hakkında Bilgi Alın",
+    "pageLead": "Kırşehir Görme Engelliler Derneği'nin resmi kuruluş belgesi ve yönetim esasları.",
+    "infoTitle": "Tüzük Nedir?",
+    "infoBanner": "Kırşehir Görme Engelliler Derneği resmi tüzüğünü aşağıdan inceleyebilir veya PDF formatında indirebilirsiniz.",
+    "lastUpdated": null,
+    "sectionTitle": "Tüzük Belgesi",
+    "statusStrong": "Tüzük belgesi dijital ortama aktarılmıştır.",
+    "conversionNote": "Tüzük belgemiz Microsoft Word formatında (.doc) mevcuttur. Yakında PDF olarak yayınlanacaktır.",
+    "infoParagraphs": [
+      "Dernek tüzüğü; derneğin kuruluş amacını, faaliyet alanlarını, üyelik koşullarını, yönetim yapısını ve mali esaslarını belirleyen temel belgedir. 5253 sayılı Dernekler Kanunu kapsamında hazırlanır.",
+      "Tüzüğümüz yayınlandığında şu konuları kapsayacaktır: Derneğin adı ve merkezi, amaç ve faaliyet alanı, üyelik şartları, yönetim ve denetim kurulu yapısı, genel kurul esasları, mali hükümler ve fesih prosedürü."
+    ],
+    "ctaPrimaryLabel": "İletişime Geç",
+    "ctaSecondaryLabel": null
+  },
+  "_last_updated": "2026-04-09T18:22:59.949+00:00",
+  "announcements": []
 }

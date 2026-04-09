@@ -204,7 +204,7 @@ function renderNavLinks(items, currentPath, className) {
 
 function renderHeader(content, currentPath, options = {}) {
   const logoMarkup = content.site.status.hasLogo && content.site.logoPath
-    ? `<img src="${escapeAttr(content.site.logoPath)}" alt="${escapeAttr(content.site.logoAlt || `${content.site.name} logosu`)}" class="header__logo-image" aria-hidden="true" />`
+    ? `<img src="${escapeAttr(content.site.logoPath)}" alt="Kırşehir Görme Engelliler Derneği Logosu" class="header__logo-image" aria-hidden="true" />`
     : `<div class="header__logo-icon" aria-hidden="true">${icon('eye')}</div>`;
 
   const socialLinks = Object.entries(content.contact.social || {}).filter(([k, v]) => Boolean(v));
@@ -213,14 +213,12 @@ function renderHeader(content, currentPath, options = {}) {
     : '';
 
   const topBarHtml = `<div class="top-bar">
-    <div class="container" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
       <div class="top-bar__left">
         <div class="top-bar__item">${icon('phone')} <a href="${escapeAttr(content.contact.phoneHref)}">${escapeHtml(content.contact.phone)}</a></div>
         <div class="top-bar__item">${icon('mail')} <a href="${escapeAttr(content.contact.emailHref)}">${escapeHtml(content.contact.email)}</a></div>
       </div>
       <div class="top-bar__right">
-        
-        
         ${socialMarkup ? `<div class="top-bar__socials">${socialMarkup}</div>` : ''}
       </div>
     </div>
@@ -1195,6 +1193,7 @@ function renderHead(pageKey, content) {
   <link rel="manifest" href="/site.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   ${renderThemeBootstrap()}
   ${schemas}`;
 }

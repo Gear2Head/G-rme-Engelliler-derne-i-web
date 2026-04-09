@@ -2,28 +2,57 @@
   "nav": [
     {
       "id": "nav-home",
-      "href": "/",
-      "label": "Ana Sayfa"
+      "label": "ANASAYFA",
+      "href": "/"
     },
     {
       "id": "nav-about",
+      "label": "DERNEĞİMİZ",
       "href": "/hakkimizda",
-      "label": "Hakkımızda"
+      "children": [
+        {
+          "label": "YÖNETİM KURULU",
+          "href": "/hakkimizda#yonetim"
+        },
+        {
+          "label": "DERNEK TÜZÜĞÜ",
+          "href": "/tuzuk"
+        },
+        {
+          "label": "HAKKIMIZDA",
+          "href": "/hakkimizda"
+        }
+      ]
     },
     {
-      "id": "nav-gallery",
-      "href": "/galeri",
-      "label": "Galeri"
+      "id": "nav-events",
+      "label": "ETKİNLİKLER",
+      "href": "/galeri"
     },
     {
-      "id": "nav-constitution",
-      "href": "/tuzuk",
-      "label": "Tüzük"
+      "id": "nav-multimedia",
+      "label": "MULTİMEDYA",
+      "href": "/galeri"
+    },
+    {
+      "id": "nav-announcements",
+      "label": "DUYURULAR",
+      "href": "/duyurular"
     },
     {
       "id": "nav-contact",
+      "label": "İLETİŞİM",
       "href": "/iletisim",
-      "label": "İletişim"
+      "children": [
+        {
+          "label": "İLETİŞİM BİLGİLERİ",
+          "href": "/iletisim"
+        },
+        {
+          "label": "YÖNETİCİ GİRİŞİ",
+          "href": "/admin"
+        }
+      ]
     }
   ],
   "seo": {
