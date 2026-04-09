@@ -26,5 +26,8 @@
   ],
   "redirects": [
     { "source": "/anasayfa", "destination": "/", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/duyurular/:slug", "destination": "/duyurular/detay.html" }
   ]
 }

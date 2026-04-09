@@ -5,14 +5,16 @@ import { generateSitemapPlugin } from './src/build/generate-sitemap.js';
 import fs from 'fs';
 
 function resolvePageKey(context) {
-  const rawPath = context?.originalUrl || context?.url || context?.path || context?.filename || '/';
+  const original = context?.originalUrl || context?.url || '/';
+  const rawPath = context?.filename || original;
   let normalized = String(rawPath).replace(/\\/g, '/').split('?')[0];
 
   if (normalized.endsWith('/404.html') || normalized === '/404.html') return 'notfound';
   
   // Announcement detail check
-  if (normalized.includes('/duyurular/') && !normalized.endsWith('/duyurular/') && !normalized.endsWith('/index.html')) {
-    let slug = normalized.replace('/duyurular/', '').replace('index.html', '').replace(/\//g, '');
+  const checkUrl = String(original).split('?')[0];
+  if (checkUrl.startsWith('/duyurular/') && checkUrl !== '/duyurular/' && !checkUrl.endsWith('/index.html') && !checkUrl.endsWith('detay.html')) {
+    let slug = checkUrl.replace('/duyurular/', '').replace(/\//g, '');
     if (slug && slug !== 'index') {
       return `announcement:${slug}`;
     }
@@ -65,6 +67,21 @@ function siteContentPlugin() {
   };
 }
 
+function devRewritePlugin() {
+  return {
+    name: 'dev-rewrite-plugin',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        // Rewrite /duyurular/:slug to /duyurular/detay.html for local dev
+        if (req.url.startsWith('/duyurular/') && req.url !== '/duyurular/' && !req.url.includes('.')) {
+          req.url = '/duyurular/detay.html';
+        }
+        next();
+      });
+    }
+  };
+}
+
 const announcements = getAnnouncementsInfo();
 const announcementInputs = {};
 announcements.forEach(ann => {
@@ -75,7 +92,7 @@ export default defineConfig({
   root: '.',
   base: '/',
   publicDir: 'public',
-  plugins: [siteContentPlugin(), generateSitemapPlugin()],
+  plugins: [devRewritePlugin(), siteContentPlugin(), generateSitemapPlugin()],
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
