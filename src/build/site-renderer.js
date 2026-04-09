@@ -1201,37 +1201,40 @@ function renderHead(pageKey, content) {
       const toggle = document.getElementById('menu-toggle');
       const nav = document.getElementById('mobile-nav');
       if (!toggle || !nav) return;
-      const expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!expanded));
-      nav.classList.toggle('open');
-      document.body.classList.toggle('menu-open');
+      
+      const isOpen = nav.classList.contains('open');
+      if (isOpen) {
+        toggle.setAttribute('aria-expanded', 'false');
+        nav.classList.remove('open');
+        document.body.classList.remove('menu-open');
+      } else {
+        toggle.setAttribute('aria-expanded', 'true');
+        nav.classList.add('open');
+        document.body.classList.add('menu-open');
+      }
     };
 
     (function() {
-      // Close menu on click outside
+      // Close menu on click outside - handle with capture to be first
       document.addEventListener('click', function(e) {
         const nav = document.getElementById('mobile-nav');
-        const toggle = document.getElementById('menu-toggle');
-        if (!nav || !toggle) return;
+        if (!nav || !nav.classList.contains('open')) return;
         
         const isClickInsideNav = e.target.closest('#mobile-nav');
         const isClickToggle = e.target.closest('#menu-toggle');
         
-        if (nav.classList.contains('open') && !isClickInsideNav && !isClickToggle) {
-          toggle.setAttribute('aria-expanded', 'false');
-          nav.classList.remove('open');
-          document.body.classList.remove('menu-open');
+        if (!isClickInsideNav && !isClickToggle) {
+          window.toggleMobileMenu();
         }
-      });
+      }, true);
 
       // Close menu on Escape key
       document.addEventListener('keydown', function(e) {
-        const nav = document.getElementById('mobile-nav');
-        if (e.key === 'Escape' && nav && nav.classList.contains('open')) {
-          const btn = document.getElementById('menu-toggle');
-          if (btn) btn.setAttribute('aria-expanded', 'false');
-          nav.classList.remove('open');
-          document.body.classList.remove('menu-open');
+        if (e.key === 'Escape') {
+          const nav = document.getElementById('mobile-nav');
+          if (nav && nav.classList.contains('open')) {
+            window.toggleMobileMenu();
+          }
         }
       });
     })();
