@@ -248,7 +248,7 @@ function renderHeader(content, currentPath, options = {}) {
         </nav>
 
         <div class="header__actions mobile-only">
-          <button class="menu-toggle" id="menu-toggle" onclick="window.toggleMobileMenu()" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menüyü genişlet/daralt" title="Menü">
+          <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menüyü genişlet/daralt" title="Menü">
             <span class="sr-only">Menü</span>
             ${icon('menuOpen')}
             ${icon('menuClose')}
@@ -446,7 +446,7 @@ function renderIndexContent(content) {
       </div>
     </div>`;
 
-  return `<section class="hero" aria-labelledby="hero-heading" style="background: linear-gradient(rgba(10, 27, 53, 0.75), rgba(10, 27, 53, 0.95)), url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat; text-align: center; padding-block: 8rem;">
+  return `<section class="hero" aria-labelledby="hero-heading" style="background: linear-gradient(rgba(10, 27, 53, 0.75), rgba(10, 27, 53, 0.95)), url('/assets/images/hero-bg.jpg') center/cover no-repeat; text-align: center; padding-block: 8rem;">
     <div class="container hero__inner" style="grid-template-columns: 1fr;">
       <div class="hero__content" style="max-width: 900px; margin-inline: auto;">
         <div class="hero__badge" aria-hidden="true" style="margin-inline:auto; background:rgba(232, 184, 75, 0.15); border-color:#e8b84b; color:#e8b84b; padding: 0.5rem 1rem;">${icon('map')}${escapeHtml(locationLabel)}</div>
@@ -1195,50 +1195,7 @@ function renderHead(pageKey, content) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   ${renderThemeBootstrap()}
-  ${schemas}
-  <script>
-    window.toggleMobileMenu = function() {
-      const toggle = document.getElementById('menu-toggle');
-      const nav = document.getElementById('mobile-nav');
-      if (!toggle || !nav) return;
-      
-      const isOpen = nav.classList.contains('open');
-      if (isOpen) {
-        toggle.setAttribute('aria-expanded', 'false');
-        nav.classList.remove('open');
-        document.body.classList.remove('menu-open');
-      } else {
-        toggle.setAttribute('aria-expanded', 'true');
-        nav.classList.add('open');
-        document.body.classList.add('menu-open');
-      }
-    };
-
-    (function() {
-      // Close menu on click outside - handle with capture to be first
-      document.addEventListener('click', function(e) {
-        const nav = document.getElementById('mobile-nav');
-        if (!nav || !nav.classList.contains('open')) return;
-        
-        const isClickInsideNav = e.target.closest('#mobile-nav');
-        const isClickToggle = e.target.closest('#menu-toggle');
-        
-        if (!isClickInsideNav && !isClickToggle) {
-          window.toggleMobileMenu();
-        }
-      }, true);
-
-      // Close menu on Escape key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          const nav = document.getElementById('mobile-nav');
-          if (nav && nav.classList.contains('open')) {
-            window.toggleMobileMenu();
-          }
-        }
-      });
-    })();
-  </script>`;
+  ${schemas}`;
 }
 
 function renderBody(pageKey, content) {

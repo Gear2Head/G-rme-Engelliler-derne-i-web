@@ -866,12 +866,7 @@ body.menu-open {
   position: relative;
   overflow: hidden;
   padding-block: var(--space-24);
-  background: linear-gradient(135deg, #1E1B4B 0%, #3730a3 50%, #1a0a3d 100%); /* fallback for Safari <16.2 */
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--color-primary-950) 95%, transparent) 0%,
-    color-mix(in srgb, var(--color-primary-800) 90%, transparent) 50%,
-    color-mix(in srgb, #1a0a3d 95%, transparent) 100%
-  );
+  background: linear-gradient(rgba(10, 27, 53, 0.75), rgba(10, 27, 53, 0.95)), url('/assets/images/hero-bg.jpg') center/cover no-repeat;
 }
 
 .hero::before {
