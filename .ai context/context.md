@@ -1,30 +1,24 @@
 ## Project Snapshot
-Stack: HTML, CSS, JavaScript (Vite SSG with custom site-renderer.js)
-Active module: Global Layout & Styles
+Stack: HTML, CSS, JavaScript (Vite SSG)
+Active module: Global Layout & Header & Contact Page
 Architecture pattern: Static Site generation with tokens.css/layout.css/site-renderer.js
 
 ## Completed in This Session
 [x] Plan structure mapped
-[x] Update .ai context/context.md
-[x] Update src/styles/tokens.css (Primary #1a3c6e, Accent #e8b84b, corporate scale)
-[x] Update src/styles/layout.css (Top Bar, Header spacing, Footer layout)
-[x] Update src/build/site-renderer.js renderHeader()
-[x] Update src/build/site-renderer.js renderIndexContent()
-[x] Update src/build/site-renderer.js renderFooter() 
-[x] Split nav links and center logo
-[x] Add missing Social icons rendering
-[x] Clean page-header gradient
-[x] Remove foundingBadge
+[x] Update src/data/site-content.json (Nested nav structure)
+[x] Update src/build/site-renderer.js renderNavLinks() (Dropdown support)
+[x] Update src/build/site-renderer.js renderHeader() (Dropdown support)
+[x] Update src/build/site-renderer.js renderContactContent() (4-card grid redesign)
+[x] Update src/build/site-renderer.js (Added icons: chevronDown, chevronRight, chat)
+[x] Update src/styles/layout.css (Dropdown styles, contact card styles, watermark support)
 [x] Verify build with npm run build
 
 ## Current Task
-[ ] Awaiting new user instruction / task.
+[ ] Awaiting feedback from the user.
 
 ## Key Contracts (do not break these)
-renderHeader(content, currentPath, options) → Returns HTML
-renderIndexContent(content) → Returns HTML
-renderFooter(content, options) → Returns HTML
-CSS variables in tokens.css dictate global theming
+renderNavLinks(items, currentPath, className) -> Returns nested HTML for dropdowns
+renderContactContent(content) -> Uses .contact-cards-grid and .watermark-logo
 
 ## Open Decisions / Assumptions
-ASSUME: Site data comes from data/site-content.json, so HTML must adapt without breaking data structure because content is static.
+ASSUME: Hover-based dropdowns are preferred for desktop as per the visual reference. Mobile menu remains a simplified slide-down.

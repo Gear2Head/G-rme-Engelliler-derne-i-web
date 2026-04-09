@@ -365,7 +365,83 @@
   background: var(--color-surface);
 }
 
-/* Mobile hamburger */
+/* ─── DROPDOWN NAV ───────────────────────────────────────────────────── */
+.nav__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav__dropdown-icon {
+  display: inline-flex;
+  font-size: 0.8em;
+  margin-left: 0.25rem;
+  transition: transform var(--transition-fast);
+  color: var(--color-text-muted);
+}
+
+.nav__item--has-dropdown:hover .nav__dropdown-icon {
+  transform: rotate(180deg);
+  color: var(--color-primary-600);
+}
+
+.nav__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  padding-top: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-normal);
+  z-index: 1000;
+  min-width: 220px;
+}
+
+.nav__item--has-dropdown:hover .nav__dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nav__dropdown-inner {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  padding: 0.5rem;
+}
+
+.nav__dropdown-link {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.nav__dropdown-link:hover {
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  padding-left: 1.5rem;
+}
+
+.nav__dropdown-link[aria-current="page"] {
+  background: var(--color-primary-600);
+  color: #fff;
+}
+
+/* Desktop Nav Wrapper */
+.nav--desktop {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
 .menu-toggle {
   display: none;
   width: 44px;
@@ -998,34 +1074,109 @@ html {
 }
 
 /* ─── CONTACT PAGE ──────────────────────────────────────────────────── */
-.contact-grid {
+/* ─── CONTACT CARDS & WATERMARK ────────────────────────────────────────── */
+.contact-section-grid {
+  padding-block: var(--space-20);
+}
+
+.watermark-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.04;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.contact-cards-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--space-8);
-  align-items: start;
 }
 
-@media (max-width: 767px) {
-  .contact-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.map-placeholder {
-  background: var(--color-bg-alt);
-  border: 2px dashed var(--color-border);
+.contact-card {
+  background: #fff;
+  padding: var(--space-8);
   border-radius: var(--radius-xl);
-  padding: var(--space-12);
-  text-align: center;
-  color: var(--color-text-muted);
+  box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid var(--color-border-subtle);
 }
 
-.map-placeholder svg {
-  width: 48px;
-  height: 48px;
-  color: var(--color-text-faint);
-  margin-inline: auto;
-  margin-bottom: var(--space-4);
+.contact-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+  border-color: var(--color-primary-200);
+}
+
+.contact-card__icon {
+  width: 56px;
+  height: 56px;
+  background: var(--color-primary-50);
+  color: var(--color-primary-600);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-6);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.contact-card:hover .contact-card__icon {
+  background: var(--color-primary-600);
+  color: #fff;
+}
+
+.contact-card__icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.contact-card__title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  margin-bottom: var(--space-3);
+  color: var(--color-text);
+  font-family: var(--font-heading);
+}
+
+.contact-card__text {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-6);
+  flex-grow: 1;
+}
+
+.contact-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-bold);
+  color: var(--color-primary-600);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  letter-spacing: 0.05em;
+  transition: color var(--transition-fast), gap var(--transition-fast);
+}
+
+.contact-card__cta:hover {
+  color: var(--color-primary-800);
+  gap: var(--space-3);
+}
+
+.contact-card__cta svg {
+  width: 16px;
+  height: 16px;
 }
 
 .map-placeholder p {

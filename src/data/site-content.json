@@ -67,8 +67,7 @@
       "children": [
         { "label": "YÖNETİM KURULU", "href": "/hakkimizda#yonetim" },
         { "label": "DERNEK TÜZÜĞÜ", "href": "/tuzuk" },
-        { "label": "HAKKIMIZDA", "href": "/hakkimizda" },
-        { "label": "ÜYE LİSTESİ", "href": "/hakkimizda#uyeler" }
+        { "label": "HAKKIMIZDA", "href": "/hakkimizda" }
       ]
     },
     {
@@ -91,8 +90,7 @@
       "href": "#",
       "id": "nav-contact",
       "children": [
-        { "label": "İLETİŞİM BİLGİLERİ", "href": "/iletisim" },
-        { "label": "HESAP NUMARALARI", "href": "/hesap-numaralari" }
+        { "label": "İLETİŞİM BİLGİLERİ", "href": "/iletisim" }
       ]
     }
   ],

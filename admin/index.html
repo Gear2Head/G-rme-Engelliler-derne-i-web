@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr" data-theme="light">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,35 +8,81 @@
   <title>Kırged Admin Dashboard - KGED</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+    rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     :root {
-      --brand-50: #EEF2FF; --brand-100: #E0E7FF; --brand-200: #C7D2FE;
-      --brand-500: #6366F1; --brand-600: #4F46E5; --brand-700: #4338CA;
-      --brand-800: #3730A3; --brand-950: #1E1B4B;
-      --accent-500: #F97316; --accent-600: #EA580C;
-      --success: #10B981; --danger: #EF4444; --warning: #F59E0B;
-      --surface: #F8FAFC; --card: #FFFFFF; --border: #E2E8F0;
-      --text: #1E293B; --text-muted: #64748B; --text-faint: #94A3B8;
-      --radius: 1.25rem; --radius-sm: 0.75rem; --radius-xs: 0.5rem;
+      --brand-50: #EEF2FF;
+      --brand-100: #E0E7FF;
+      --brand-200: #C7D2FE;
+      --brand-500: #6366F1;
+      --brand-600: #4F46E5;
+      --brand-700: #4338CA;
+      --brand-800: #3730A3;
+      --brand-950: #1E1B4B;
+      --accent-500: #F97316;
+      --accent-600: #EA580C;
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+      --surface: #F8FAFC;
+      --card: #FFFFFF;
+      --border: #E2E8F0;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --text-faint: #94A3B8;
+      --radius: 1.25rem;
+      --radius-sm: 0.75rem;
+      --radius-xs: 0.5rem;
       --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --glass: rgba(255, 255, 255, 0.7); --glass-border: rgba(255, 255, 255, 0.4);
-    }
-    html[data-theme="dark"] {
-      --surface: #0B0E14; --card: #151921; --border: #242B38;
-      --text: #F1F5F9; --text-muted: #94A3B8; --text-faint: #64748B;
-      --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4);
-      --glass: rgba(21, 25, 33, 0.75); --glass-border: rgba(255, 255, 255, 0.08);
-      --brand-50: #171E2E; --brand-100: #1E293B;
+      --glass: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.4);
     }
 
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+    html[data-theme="dark"] {
+      --surface: #0B0E14;
+      --card: #151921;
+      --border: #242B38;
+      --text: #F1F5F9;
+      --text-muted: #94A3B8;
+      --text-faint: #64748B;
+      --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+      --glass: rgba(21, 25, 33, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --brand-50: #171E2E;
+      --brand-100: #1E293B;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-faint);
+    }
 
     body {
       font-family: 'Inter', system-ui, sans-serif;
@@ -47,250 +94,1101 @@
 
     /* ─── LOGIN ─── */
     .login-page {
-      min-height: 100dvh; display: flex; align-items: center;
-      justify-content: center; padding: 1.5rem;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
       background:
-        radial-gradient(ellipse 80% 60% at 30% 20%, rgba(99,102,241,0.1) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 70%, rgba(249,115,22,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse 80% 60% at 30% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 70%, rgba(249, 115, 22, 0.06) 0%, transparent 50%),
         var(--surface);
     }
-    .login-card { width: 100%; max-width: 420px; background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; animation: fadeIn 0.6s ease-out; }
-    .login-header { background: linear-gradient(135deg, var(--brand-950) 0%, #000 100%); padding: 3rem 2rem 2.5rem; text-align: center; position: relative; overflow: hidden; }
-    .login-header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 120%, var(--brand-600) 0%, transparent 70%); opacity: 0.4; }
-    .login-header__icon { width: 64px; height: 64px; margin: 0 auto 1.25rem; background: rgba(99,102,241,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; backdrop-filter: blur(4px); }
-    .login-header__icon svg { width: 32px; height: 32px; color: #fff; }
-    .login-header__title { font-family: 'Outfit', system-ui, sans-serif; font-size: 1.75rem; font-weight: 800; color: #fff; position: relative; z-index: 1; letter-spacing: -0.02em; }
-    .login-header__sub { font-size: 0.9rem; color: rgba(255,255,255,0.6); position: relative; z-index: 1; }
-    .login-body { padding: 2.5rem 2.25rem; }
-    .form-input { width: 100%; height: 52px; padding: 0 1.25rem; font-family: inherit; font-size: 1rem; color: var(--text); background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: var(--radius-sm); outline: none; transition: all 0.2s; }
-    .form-input:focus { border-color: var(--brand-500); background: var(--card); box-shadow: 0 0 0 4px rgba(99,102,241,0.1); }
-    .login-btn { width: 100%; height: 54px; background: var(--brand-600); color: #fff; font-weight: 700; border-radius: var(--radius-sm); border: none; cursor: pointer; transition: all 0.3s; margin-top: 1rem; box-shadow: 0 10px 15px -3px rgba(79,70,229,0.3); }
-    .login-btn:hover { background: var(--brand-700); transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(79,70,229,0.4); }
-    .login-btn:active { transform: translateY(0); }
-    .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .login-btn svg { width: 20px; height: 20px; }
-    .login-footer { text-align: center; padding: 0 2rem 1.5rem; font-size: 0.8rem; color: var(--text-faint); }
-    .login-footer a { color: var(--brand-600); text-decoration: none; font-weight: 500; }
-    .login-footer a:hover { text-decoration: underline; }
-    .lockout-msg.visible { display: block; }
-    .form-error { display: none; align-items: center; gap: 0.75rem; margin-top: 1.25rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-sm); color: #EF4444; font-size: 0.9rem; font-weight: 500; }
-    .form-error.visible { display: flex; }
-    .form-error svg { width: 18px; height: 18px; flex-shrink: 0; }
-    .login-btn svg { width: 22px; height: 22px; }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .login-header {
+      background: linear-gradient(135deg, var(--brand-950) 0%, #000 100%);
+      padding: 3rem 2rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 120%, var(--brand-600) 0%, transparent 70%);
+      opacity: 0.4;
+    }
+
+    .login-header__icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1.25rem;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(4px);
+    }
+
+    .login-header__icon svg {
+      width: 32px;
+      height: 32px;
+      color: #fff;
+    }
+
+    .login-header__title {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .login-header__sub {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-body {
+      padding: 2.5rem 2.25rem;
+    }
+
+    .form-input {
+      width: 100%;
+      height: 52px;
+      padding: 0 1.25rem;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--brand-500);
+      background: var(--card);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      height: 54px;
+      background: var(--brand-600);
+      color: #fff;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+    }
+
+    .login-btn:hover {
+      background: var(--brand-700);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.4);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .login-footer {
+      text-align: center;
+      padding: 0 2rem 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-faint);
+    }
+
+    .login-footer a {
+      color: var(--brand-600);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .login-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .lockout-msg.visible {
+      display: block;
+    }
+
+    .form-error {
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      padding: 1rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: var(--radius-sm);
+      color: #EF4444;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .form-error.visible {
+      display: flex;
+    }
+
+    .form-error svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .login-btn svg {
+      width: 22px;
+      height: 22px;
+    }
 
     /* ─── ADMIN APP ─── */
-    .admin-app { display: none; opacity: 0; }
-    .admin-app.visible { display: block; animation: fadeIn 0.5s ease-out forwards; }
+    .admin-app {
+      display: none;
+      opacity: 0;
+    }
+
+    .admin-app.visible {
+      display: block;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
 
     /* ─── TOPBAR ─── */
     .admin-topbar {
       background: var(--glass);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--glass-border);
-      height: 72px; display: flex; align-items: center;
-      justify-content: space-between; padding: 0 2rem;
-      position: sticky; top: 0; z-index: 100;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
       box-shadow: var(--shadow);
     }
-    .admin-topbar__brand { display: flex; align-items: center; gap: 0.875rem; text-decoration: none; }
+
+    .admin-topbar__brand {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      text-decoration: none;
+    }
+
     .admin-topbar__logo {
-      width: 40px; height: 40px;
+      width: 40px;
+      height: 40px;
       background: linear-gradient(135deg, var(--brand-600), var(--brand-700));
-      border-radius: 10px; display: flex; align-items: center; justify-content: center;
-      color: #fff; box-shadow: 0 8px 20px -6px rgba(79,70,229,0.5);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 8px 20px -6px rgba(79, 70, 229, 0.5);
     }
-    .admin-topbar__logo svg { width: 24px; height: 24px; }
-    .admin-topbar__title { font-family: 'Outfit', system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
-    .admin-topbar__actions { display: flex; align-items: center; gap: 0.75rem; }
-    
+
+    .admin-topbar__logo svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .admin-topbar__title {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .admin-topbar__actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
     .admin-btn-site {
-      display: flex; align-items: center; gap: 0.5rem; height: 40px; padding: 0 1.25rem;
-      background: var(--brand-500); border: none; border-radius: 99px;
-      color: #fff; font-size: 0.85rem; font-weight: 600; text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      height: 40px;
+      padding: 0 1.25rem;
+      background: var(--brand-500);
+      border: none;
+      border-radius: 99px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(99,102,241,0.25);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
     }
-    .admin-btn-site:hover { background: var(--brand-600); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(99,102,241,0.4); }
-    
+
+    .admin-btn-site:hover {
+      background: var(--brand-600);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    }
+
     .admin-btn-logout {
-      width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;
-      background: var(--glass); border: 1px solid var(--glass-border); border-radius: 50%;
-      color: var(--text-muted); cursor: pointer; transition: all 0.3s;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.3s;
     }
-    .admin-btn-logout:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.1); transform: rotate(15deg); }
+
+    .admin-btn-logout:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+      transform: rotate(15deg);
+    }
 
     /* ─── CONTENT LAYOUT ─── */
-    .admin-layout { display: flex; min-height: calc(100vh - 72px); }
-    .admin-sidebar { width: 280px; background: var(--glass); border-right: 1px solid var(--glass-border); padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; position: sticky; top: 72px; height: calc(100vh - 72px); }
-    .admin-main { flex: 1; padding: 2rem; max-width: 1200px; margin: 0 auto; width: 100%; }
-    
-    .nav-item { display: flex; align-items: center; gap: 0.875rem; padding: 0.875rem 1.25rem; border-radius: var(--radius-sm); color: var(--text-muted); text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: all 0.2s; }
-    .nav-item:hover { background: var(--brand-50); color: var(--brand-600); }
-    .nav-item.active { background: var(--brand-600); color: #fff; box-shadow: 0 4px 12px rgba(79,70,229,0.2); }
-    .nav-item svg { width: 20px; height: 20px; }
-
-    .fade-in { animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* ─── WELCOME / STATS ─── */
-    .admin-welcome { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem; box-shadow: var(--shadow); margin-bottom: 2rem; }
-    .admin-welcome__top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
-    .admin-welcome h1 { font-family: 'Outfit', system-ui, sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--text); }
-    .admin-welcome p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; max-width: 60ch; }
-    .admin-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; }
-    .admin-stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; text-align: center; border-top: 3px solid var(--brand-600); transition: all 200ms; }
-    .admin-stat:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
-    .admin-stat__icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .admin-stat__value { font-family: 'Outfit', system-ui, sans-serif; font-size: 2rem; font-weight: 700; color: var(--brand-600); }
-    .admin-stat__label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.25rem; }
-
-    /* ─── SECTION CARDS ─── */
-    .admin-sections { display: flex; flex-direction: column; gap: 1.5rem; }
-
-    .panel-card {
-      background: var(--glass); backdrop-filter: blur(8px);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius); box-shadow: var(--shadow);
-      overflow: hidden; animation: fadeIn 0.4s ease-out backwards;
-      transition: box-shadow 0.3s;
+    .admin-layout {
+      display: flex;
+      min-height: calc(100vh - 72px);
     }
-    .panel-card:hover { box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
-    .panel-card__header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.5rem 2rem; border-bottom: 1px solid var(--glass-border);
-      background: rgba(255,255,255,0.02);
-    }
-    .panel-card__title {
-      display: flex; align-items: center; gap: 0.625rem;
-      font-family: 'Outfit', system-ui, sans-serif;
-      font-size: 1.05rem; font-weight: 700; color: var(--text);
-    }
-    .panel-card__title svg { width: 20px; height: 20px; color: var(--brand-500); flex-shrink: 0; }
-    .panel-card__body { padding: 1.75rem; position: relative; }
-    .panel-card { animation: fadeIn 0.4s ease-out backwards; }
-    .panel-card:nth-child(1) { animation-delay: 0.1s; }
-    .panel-card:nth-child(2) { animation-delay: 0.2s; }
-    .panel-card:nth-child(3) { animation-delay: 0.3s; }
 
-    /* ─── FORM ELEMENTS (Dashboard) ─── */
-    .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
-    .field-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-    .field-input, .field-textarea, .field-select {
-      width: 100%; padding: 0.75rem 1rem;
-      font-family: inherit; font-size: 0.95rem; color: var(--text);
-      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); outline: none;
+    .admin-sidebar {
+      width: 280px;
+      background: var(--glass);
+      border-right: 1px solid var(--glass-border);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: sticky;
+      top: 72px;
+      height: calc(100vh - 72px);
+    }
+
+    .admin-main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      padding: 0.875rem 1.25rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
       transition: all 0.2s;
     }
-    .field-input::placeholder { color: var(--text-faint); }
-    .field-input:focus, .field-textarea:focus, .field-select:focus {
-      border-color: var(--brand-500); background: var(--card);
-      box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+
+    .nav-item:hover {
+      background: var(--brand-50);
+      color: var(--brand-600);
     }
-    .field-select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem; padding-right: 2.5rem; }
-    .field-select option { background: var(--card); color: var(--text); }
-    .field-textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
+
+    .nav-item.active {
+      background: var(--brand-600);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ─── WELCOME / STATS ─── */
+    .admin-welcome {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .admin-welcome__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .admin-welcome h1 {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .admin-welcome p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 60ch;
+    }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .admin-stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      text-align: center;
+      border-top: 3px solid var(--brand-600);
+      transition: all 200ms;
+    }
+
+    .admin-stat:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+
+    .admin-stat__icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-stat__value {
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--brand-600);
+    }
+
+    .admin-stat__label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+
+    /* ─── SECTION CARDS ─── */
+    .admin-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .panel-card {
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: fadeIn 0.4s ease-out backwards;
+      transition: box-shadow 0.3s;
+    }
+
+    .panel-card:hover {
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+
+    .panel-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .panel-card__title {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      font-family: 'Outfit', system-ui, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .panel-card__title svg {
+      width: 20px;
+      height: 20px;
+      color: var(--brand-500);
+      flex-shrink: 0;
+    }
+
+    .panel-card__body {
+      padding: 1.75rem;
+      position: relative;
+    }
+
+    .panel-card {
+      animation: fadeIn 0.4s ease-out backwards;
+    }
+
+    .panel-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .panel-card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .panel-card:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    /* ─── FORM ELEMENTS (Dashboard) ─── */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .field-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .field-input,
+    .field-textarea,
+    .field-select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .field-input::placeholder {
+      color: var(--text-faint);
+    }
+
+    .field-input:focus,
+    .field-textarea:focus,
+    .field-select:focus {
+      border-color: var(--brand-500);
+      background: var(--card);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+
+    .field-select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1rem;
+      padding-right: 2.5rem;
+    }
+
+    .field-select option {
+      background: var(--card);
+      color: var(--text);
+    }
+
+    .field-textarea {
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.5;
+    }
 
     /* ─── BUTTONS ─── */
-    .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.625rem 1.25rem; border: none; border-radius: var(--radius-sm); font-family: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 150ms; white-space: nowrap; }
-    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
-    .btn--primary { background: var(--brand-600); color: #fff; box-shadow: 0 2px 8px rgba(79,70,229,0.25); }
-    .btn--primary:hover:not(:disabled) { background: var(--brand-700); box-shadow: 0 4px 12px rgba(79,70,229,0.35); transform: translateY(-1px); }
-    .btn--danger { background: #FEF2F2; color: var(--danger); border: 1px solid #FECACA; }
-    .btn--danger:hover:not(:disabled) { background: #FEE2E2; }
-    .btn--ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
-    .btn--ghost:hover:not(:disabled) { background: var(--surface); color: var(--text); }
-    .btn--dashed { background: transparent; color: var(--brand-600); border: 2px dashed var(--brand-300, #a5b4fc); width: 100%; justify-content: center; padding: 0.75rem; }
-    .btn--dashed:hover { background: var(--brand-50); }
-    .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.625rem 1.25rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms;
+      white-space: nowrap;
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn--primary {
+      background: var(--brand-600);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn--primary:hover:not(:disabled) {
+      background: var(--brand-700);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn--danger {
+      background: #FEF2F2;
+      color: var(--danger);
+      border: 1px solid #FECACA;
+    }
+
+    .btn--danger:hover:not(:disabled) {
+      background: #FEE2E2;
+    }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn--ghost:hover:not(:disabled) {
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .btn--dashed {
+      background: transparent;
+      color: var(--brand-600);
+      border: 2px dashed var(--brand-300, #a5b4fc);
+      width: 100%;
+      justify-content: center;
+      padding: 0.75rem;
+    }
+
+    .btn--dashed:hover {
+      background: var(--brand-50);
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
 
     /* ─── DROPZONE ─── */
     .dropzone {
-      border: 2px dashed var(--border); border-radius: var(--radius-sm);
-      padding: 2rem 1rem; text-align: center; cursor: pointer;
-      transition: all 200ms; background: var(--surface);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-sm);
+      padding: 2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 200ms;
+      background: var(--surface);
     }
-    .dropzone:hover, .dropzone.dragover {
-      border-color: var(--brand-400, #818cf8); background: var(--brand-50);
+
+    .dropzone:hover,
+    .dropzone.dragover {
+      border-color: var(--brand-400, #818cf8);
+      background: var(--brand-50);
     }
-    .dropzone__icon { width: 44px; height: 44px; margin: 0 auto 0.75rem; color: var(--text-faint); }
-    .dropzone__text { font-size: 0.875rem; color: var(--text-muted); }
-    .dropzone__text strong { color: var(--brand-600); }
-    .dropzone__sub { font-size: 0.75rem; color: var(--text-faint); margin-top: 0.25rem; }
-    #upload-file-real { display: none; }
+
+    .dropzone__icon {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 0.75rem;
+      color: var(--text-faint);
+    }
+
+    .dropzone__text {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .dropzone__text strong {
+      color: var(--brand-600);
+    }
+
+    .dropzone__sub {
+      font-size: 0.75rem;
+      color: var(--text-faint);
+      margin-top: 0.25rem;
+    }
+
+    #upload-file-real {
+      display: none;
+    }
 
     /* ─── UPLOAD PREVIEW GRID ─── */
-    .upload-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; margin-top: 1rem; }
-    .upload-preview-item { position: relative; border-radius: var(--radius-xs); overflow: hidden; aspect-ratio: 1; }
-    .upload-preview-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .upload-preview-remove { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; line-height: 1; }
+    .upload-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .upload-preview-item {
+      position: relative;
+      border-radius: var(--radius-xs);
+      overflow: hidden;
+      aspect-ratio: 1;
+    }
+
+    .upload-preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .upload-preview-remove {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 20px;
+      height: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      line-height: 1;
+    }
 
     /* ─── GALLERY LIST ─── */
-    .gallery-list { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; max-height: 420px; overflow-y: auto; }
-    .gallery-list__item { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 0.875rem; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); transition: background 150ms; }
-    .gallery-list__item:last-child { border-bottom: none; }
-    .gallery-list__item:hover { background: var(--surface); }
-    .gallery-album-group { margin-bottom: 2rem; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--surface); animation: fadeIn 0.4s ease-out backwards; }
-    .gallery-album-header { background: var(--brand-50); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-    .gallery-album-title { font-size: 0.9rem; font-weight: 700; color: var(--brand-800); margin: 0; }
-    .gallery-list__thumb { width: 56px; height: 56px; border-radius: var(--radius-xs); object-fit: cover; background: var(--surface); display: block; }
-    .gallery-list__info p { margin: 0; }
-    .gallery-list__caption { font-size: 0.875rem; font-weight: 600; color: var(--text); }
-    .gallery-list__meta { font-size: 0.75rem; color: var(--text-faint); margin-top: 0.125rem; }
-    .gallery-list__badge { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 600; background: var(--brand-100); color: var(--brand-700); margin-left: 0.375rem; }
+    .gallery-list {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    .gallery-list__item {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      align-items: center;
+      gap: 0.875rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      transition: background 150ms;
+    }
+
+    .gallery-list__item:last-child {
+      border-bottom: none;
+    }
+
+    .gallery-list__item:hover {
+      background: var(--surface);
+    }
+
+    .gallery-album-group {
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--surface);
+      animation: fadeIn 0.4s ease-out backwards;
+    }
+
+    .gallery-album-header {
+      background: var(--brand-50);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .gallery-album-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--brand-800);
+      margin: 0;
+    }
+
+    .gallery-list__thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-xs);
+      object-fit: cover;
+      background: var(--surface);
+      display: block;
+    }
+
+    .gallery-list__info p {
+      margin: 0;
+    }
+
+    .gallery-list__caption {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .gallery-list__meta {
+      font-size: 0.75rem;
+      color: var(--text-faint);
+      margin-top: 0.125rem;
+    }
+
+    .gallery-list__badge {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 99px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: var(--brand-100);
+      color: var(--brand-700);
+      margin-left: 0.375rem;
+    }
 
     /* ─── BOARD EDITOR ─── */
-    .board-row { display: grid; grid-template-columns: auto 1fr 1fr auto; align-items: center; gap: 0.5rem; padding: 0.625rem 0.75rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); transition: transform 0.2s, box-shadow 0.2s; }
-    .board-row.dragging { opacity: 0.5; background: var(--brand-50); box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: scale(1.02); }
-    .board-row.drag-over { border-top: 2px dashed var(--brand-500); }
-    .board-row__drag-handle { cursor: grab; padding: 0 0.5rem; color: var(--text-faint); display: flex; align-items: center; justify-content: center; }
-    .board-row__drag-handle:active { cursor: grabbing; }
-    .board-rows-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
-    .board-row input { border: 1.5px solid var(--border); padding: 0.45rem 0.7rem; border-radius: var(--radius-xs); font-size: 0.875rem; font-family: inherit; background: var(--card); color: var(--text); width: 100%; outline: none; transition: border-color 150ms; }
-    .board-row input:focus { border-color: var(--brand-500); }
-    .board-row__del { background: none; border: none; color: var(--text-faint); cursor: pointer; width: 28px; height: 28px; border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 150ms; font-size: 1rem; }
-    .board-row__del:hover { background: #FEE2E2; color: var(--danger); }
+    .board-row {
+      display: grid;
+      grid-template-columns: auto 1fr 1fr auto;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .board-row.dragging {
+      opacity: 0.5;
+      background: var(--brand-50);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: scale(1.02);
+    }
+
+    .board-row.drag-over {
+      border-top: 2px dashed var(--brand-500);
+    }
+
+    .board-row__drag-handle {
+      cursor: grab;
+      padding: 0 0.5rem;
+      color: var(--text-faint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .board-row__drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .board-rows-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .board-row input {
+      border: 1.5px solid var(--border);
+      padding: 0.45rem 0.7rem;
+      border-radius: var(--radius-xs);
+      font-size: 0.875rem;
+      font-family: inherit;
+      background: var(--card);
+      color: var(--text);
+      width: 100%;
+      outline: none;
+      transition: border-color 150ms;
+    }
+
+    .board-row input:focus {
+      border-color: var(--brand-500);
+    }
+
+    .board-row__del {
+      background: none;
+      border: none;
+      color: var(--text-faint);
+      cursor: pointer;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 150ms;
+      font-size: 1rem;
+    }
+
+    .board-row__del:hover {
+      background: #FEE2E2;
+      color: var(--danger);
+    }
 
     /* ─── UPLOAD PROGRESS & QUOTA ─── */
-    .upload-progress { margin-top: 1rem; display: none; }
-    .upload-progress.visible { display: block; }
-    .upload-progress__bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 0.5rem; }
-    .upload-progress__bar-fill { height: 100%; background: linear-gradient(90deg, var(--brand-500), var(--brand-600)); border-radius: 3px; transition: width 250ms ease; }
-    .upload-progress__text { font-size: 0.8rem; color: var(--text-muted); }
+    .upload-progress {
+      margin-top: 1rem;
+      display: none;
+    }
 
-    .quota-container { margin-top: 1rem; background: var(--surface); border: 1px solid var(--border); padding: 1rem; border-radius: var(--radius-sm); }
-    .quota-header { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted); }
-    .quota-bar-track { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
-    .quota-bar-fill { height: 100%; background: linear-gradient(90deg, var(--success), var(--warning)); border-radius: 4px; transition: width 500ms ease; }
-    .quota-bar-fill.danger { background: var(--danger); }
-    .quota-footer { text-align: right; font-size: 0.75rem; color: var(--text-faint); margin-top: 0.25rem; }
+    .upload-progress.visible {
+      display: block;
+    }
+
+    .upload-progress__bar-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-progress__bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand-500), var(--brand-600));
+      border-radius: 3px;
+      transition: width 250ms ease;
+    }
+
+    .upload-progress__text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .quota-container {
+      margin-top: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .quota-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    .quota-bar-track {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .quota-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--success), var(--warning));
+      border-radius: 4px;
+      transition: width 500ms ease;
+    }
+
+    .quota-bar-fill.danger {
+      background: var(--danger);
+    }
+
+    .quota-footer {
+      text-align: right;
+      font-size: 0.75rem;
+      color: var(--text-faint);
+      margin-top: 0.25rem;
+    }
 
     /* ─── TOAST ─── */
-    #toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.5rem; }
-    .toast { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1.25rem; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); color: var(--text); font-size: 0.875rem; font-weight: 500; min-width: 280px; max-width: 360px; animation: toastIn 250ms ease; }
-    .toast--success { border-left: 4px solid var(--success); }
-    .toast--error { border-left: 4px solid var(--danger); }
-    .toast--info { border-left: 4px solid var(--brand-500); }
-    @keyframes toastIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    #toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1.25rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-lg);
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 500;
+      min-width: 280px;
+      max-width: 360px;
+      animation: toastIn 250ms ease;
+    }
+
+    .toast--success {
+      border-left: 4px solid var(--success);
+    }
+
+    .toast--error {
+      border-left: 4px solid var(--danger);
+    }
+
+    .toast--info {
+      border-left: 4px solid var(--brand-500);
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     /* ─── SCROLL TO TOP ─── */
-    #scroll-top-btn { position: fixed; bottom: 1.5rem; left: 1.5rem; width: 40px; height: 40px; background: var(--card); border: 1px solid var(--border); border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--shadow); opacity: 0; transition: opacity 200ms; z-index: 999; }
-    #scroll-top-btn.visible { display: flex; opacity: 1; }
-    #scroll-top-btn svg { width: 18px; height: 18px; color: var(--text-muted); }
+    #scroll-top-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 1.5rem;
+      width: 40px;
+      height: 40px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transition: opacity 200ms;
+      z-index: 999;
+    }
+
+    #scroll-top-btn.visible {
+      display: flex;
+      opacity: 1;
+    }
+
+    #scroll-top-btn svg {
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+    }
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 640px) {
-      .login-body { padding: 1.5rem; }
-      .admin-content { padding: 1rem; }
-      .admin-topbar { padding: 0 1rem; }
-      .admin-stats { grid-template-columns: 1fr 1fr; }
-      .board-row { grid-template-columns: 1fr auto; }
-      .board-row input:first-child { grid-column: 1 / -2; }
-      .panel-card__body { padding: 1.25rem; }
-      .admin-welcome { padding: 1.5rem; }
+      .login-body {
+        padding: 1.5rem;
+      }
+
+      .admin-content {
+        padding: 1rem;
+      }
+
+      .admin-topbar {
+        padding: 0 1rem;
+      }
+
+      .admin-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .board-row {
+        grid-template-columns: 1fr auto;
+      }
+
+      .board-row input:first-child {
+        grid-column: 1 / -2;
+      }
+
+      .panel-card__body {
+        padding: 1.25rem;
+      }
+
+      .admin-welcome {
+        padding: 1.5rem;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- ═══════════════════════════════════════════ LOGIN ═══ -->
@@ -308,18 +1206,27 @@
         <form id="login-form" autocomplete="off" novalidate>
           <div class="form-group">
             <label class="form-label" for="admin-email">E-posta Adresi</label>
-            <input class="form-input" type="email" id="admin-email" name="email" autocomplete="email" required placeholder="admin@kged.tr" />
+            <input class="form-input" type="email" id="admin-email" name="email" autocomplete="email" required
+              placeholder="admin@kged.tr" />
           </div>
           <div class="form-group">
             <label class="form-label" for="admin-password">Şifre</label>
-            <input class="form-input" type="password" id="admin-password" name="password" autocomplete="current-password" required placeholder="••••••••" />
+            <input class="form-input" type="password" id="admin-password" name="password"
+              autocomplete="current-password" required placeholder="••••••••" />
           </div>
           <div class="form-error" id="login-error">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v4M12 16h.01" />
+            </svg>
             <span id="login-error-text">Kullanıcı adı veya şifre hatalı.</span>
           </div>
           <button class="login-btn" type="submit" id="login-submit">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
             Giriş Yap
           </button>
         </form>
@@ -340,16 +1247,40 @@
         <span class="admin-topbar__title">Kırged Admin Dashboard</span>
       </a>
       <div class="admin-topbar__actions">
-        <button id="theme-toggle" class="btn btn--ghost" style="border:none; padding:0.5rem;" title="Karanlık/Aydınlık Mod" aria-label="Temayı değiştir">
-          <svg class="icon-sun" style="display:none;" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-          <svg class="icon-moon" style="display:none;" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <button id="theme-toggle" class="btn btn--ghost" style="border:none; padding:0.5rem;"
+          title="Karanlık/Aydınlık Mod" aria-label="Temayı değiştir">
+          <svg class="icon-sun" style="display:none;" viewBox="0 0 24 24" width="20" height="20" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg class="icon-moon" style="display:none;" viewBox="0 0 24 24" width="20" height="20" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
         </button>
         <a href="/" class="admin-btn-site" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
           Siteyi Gör
         </a>
         <button class="admin-btn-logout" id="btn-logout">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
           Çıkış
         </button>
       </div>
@@ -357,23 +1288,40 @@
     <div class="admin-layout">
       <aside class="admin-sidebar">
         <a href="#" class="nav-item active" onclick="window.switchTab('dashboard', this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+          </svg>
           Dashboard
         </a>
         <a href="#" class="nav-item" onclick="window.switchTab('gallery', this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <polyline points="21 15 16 10 5 21" />
+          </svg>
           Galeri Yönetimi
         </a>
         <a href="#" class="nav-item" onclick="window.switchTab('site', this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
           Site Bilgileri
         </a>
         <a href="#" class="nav-item" onclick="window.switchTab('board', this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
           Yönetim Kurulu
         </a>
       </aside>
-      
+
       <main class="admin-main">
         <div id="admin-view-dashboard" class="admin-view active">
           <!-- Dynamic Dashboard Content -->
@@ -390,149 +1338,151 @@
 
   <!-- Scroll to top -->
   <button id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Yukarı Çık">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="18 15 12 9 6 15" />
+    </svg>
   </button>
 
-    <!-- Supabase Admin Panel Script -->
-    <script type="module">
-      import { login, logout, getSession } from '../src/supabase/auth.js';
-      import { uploadGalleryImage, addGalleryItem, getGalleryItems, deleteGalleryItem, deleteAlbum } from '../src/supabase/gallery.js';
-      import { getSiteConfig, saveSiteConfig } from '../src/supabase/site_config.js';
+  <!-- Supabase Admin Panel Script -->
+  <script type="module">
+    import { login, logout, getSession } from '../src/supabase/auth.js';
+    import { uploadGalleryImage, addGalleryItem, getGalleryItems, deleteGalleryItem, deleteAlbum } from '../src/supabase/gallery.js';
+    import { getSiteConfig, saveSiteConfig } from '../src/supabase/site_config.js';
 
-      // ─── CONSTANTS ───────────────────────────────────────────────
-      const LOCKOUT_KEY = 'kged_admin_lockout';
-      const MAX_ATTEMPTS = 5;
-      const LOCKOUT_DURATION_MS = 30000;
-      const MAX_FILES = 10;
-      const MAX_IMG_DIM = 1200;
-      const IMG_QUALITY = 0.72;
+    // ─── CONSTANTS ───────────────────────────────────────────────
+    const LOCKOUT_KEY = 'kged_admin_lockout';
+    const MAX_ATTEMPTS = 5;
+    const LOCKOUT_DURATION_MS = 30000;
+    const MAX_FILES = 10;
+    const MAX_IMG_DIM = 1200;
+    const IMG_QUALITY = 0.72;
 
-      let siteContent = null;
-      let pendingFiles = []; // files staged for upload
+    let siteContent = null;
+    let pendingFiles = []; // files staged for upload
 
-      // ─── TOAST ───────────────────────────────────────────────────
-      function showToast(msg, type = 'info', duration = 3500) {
-        const icons = { success: '✅', error: '❌', info: 'ℹ️' };
-        const el = document.createElement('div');
-        el.className = `toast toast--${type}`;
-        el.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${msg}</span>`;
-        document.getElementById('toast-container').appendChild(el);
-        setTimeout(() => el.remove(), duration);
-      }
+    // ─── TOAST ───────────────────────────────────────────────────
+    function showToast(msg, type = 'info', duration = 3500) {
+      const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+      const el = document.createElement('div');
+      el.className = `toast toast--${type}`;
+      el.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${msg}</span>`;
+      document.getElementById('toast-container').appendChild(el);
+      setTimeout(() => el.remove(), duration);
+    }
 
-      // ─── SCROLL TO TOP ────────────────────────────────────────────
-      window.addEventListener('scroll', () => {
-        const btn = document.getElementById('scroll-top-btn');
-        if (btn) btn.classList.toggle('visible', window.scrollY > 300);
-      });
+    // ─── SCROLL TO TOP ────────────────────────────────────────────
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('scroll-top-btn');
+      if (btn) btn.classList.toggle('visible', window.scrollY > 300);
+    });
 
-      // ─── IMAGE COMPRESSION ────────────────────────────────────────
-      function compressImage(file) {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-              let { width, height } = img;
-              if (width > MAX_IMG_DIM || height > MAX_IMG_DIM) {
-                if (width > height) { height = Math.round(height * MAX_IMG_DIM / width); width = MAX_IMG_DIM; }
-                else { width = Math.round(width * MAX_IMG_DIM / height); height = MAX_IMG_DIM; }
-              }
-              const canvas = document.createElement('canvas');
-              canvas.width = width; canvas.height = height;
-              canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-              canvas.toBlob(
-                (blob) => resolve(blob || file),
-                'image/jpeg', IMG_QUALITY
-              );
-            };
-            img.src = e.target.result;
+    // ─── IMAGE COMPRESSION ────────────────────────────────────────
+    function compressImage(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let { width, height } = img;
+            if (width > MAX_IMG_DIM || height > MAX_IMG_DIM) {
+              if (width > height) { height = Math.round(height * MAX_IMG_DIM / width); width = MAX_IMG_DIM; }
+              else { width = Math.round(width * MAX_IMG_DIM / height); height = MAX_IMG_DIM; }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width; canvas.height = height;
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            canvas.toBlob(
+              (blob) => resolve(blob || file),
+              'image/jpeg', IMG_QUALITY
+            );
           };
-          reader.readAsDataURL(file);
-        });
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ─── LOCKOUT ─────────────────────────────────────────────────
+    function getLockout() {
+      try { return JSON.parse(localStorage.getItem(LOCKOUT_KEY)) || { attempts: 0, until: 0 }; }
+      catch { return { attempts: 0, until: 0 }; }
+    }
+    function setLockout(data) { localStorage.setItem(LOCKOUT_KEY, JSON.stringify(data)); }
+
+    // ─── AUTH ─────────────────────────────────────────────────────
+    function showLogin() {
+      document.getElementById('login-page').style.display = '';
+      document.getElementById('admin-app').classList.remove('visible');
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const errorEl = document.getElementById('login-error');
+      const errorText = document.getElementById('login-error-text');
+      errorEl.classList.remove('visible');
+      const btn = document.getElementById('login-submit');
+      btn.disabled = true;
+      const lockout = getLockout();
+      if (Date.now() < lockout.until) {
+        errorText.textContent = `Kilitlendiniz. ${Math.ceil((lockout.until - Date.now()) / 1000)}s bekleyin.`;
+        errorEl.classList.add('visible'); btn.disabled = false; return;
       }
-
-      // ─── LOCKOUT ─────────────────────────────────────────────────
-      function getLockout() {
-        try { return JSON.parse(localStorage.getItem(LOCKOUT_KEY)) || { attempts: 0, until: 0 }; }
-        catch { return { attempts: 0, until: 0 }; }
-      }
-      function setLockout(data) { localStorage.setItem(LOCKOUT_KEY, JSON.stringify(data)); }
-
-      // ─── AUTH ─────────────────────────────────────────────────────
-      function showLogin() {
-        document.getElementById('login-page').style.display = '';
-        document.getElementById('admin-app').classList.remove('visible');
-      }
-
-      async function handleLogin(e) {
-        e.preventDefault();
-        const errorEl = document.getElementById('login-error');
-        const errorText = document.getElementById('login-error-text');
-        errorEl.classList.remove('visible');
-        const btn = document.getElementById('login-submit');
-        btn.disabled = true;
-        const lockout = getLockout();
-        if (Date.now() < lockout.until) {
-          errorText.textContent = `Kilitlendiniz. ${Math.ceil((lockout.until - Date.now()) / 1000)}s bekleyin.`;
-          errorEl.classList.add('visible'); btn.disabled = false; return;
-        }
-        const email = document.getElementById('admin-email').value.trim();
-        const password = document.getElementById('admin-password').value.trim();
-        try {
-          await login(email, password);
-          setLockout({ attempts: 0, until: 0 });
-          showDashboard();
-        } catch (error) {
-          lockout.attempts++;
-          if (lockout.attempts >= MAX_ATTEMPTS) {
-            lockout.until = Date.now() + LOCKOUT_DURATION_MS;
-            errorText.textContent = `Çok fazla hatalı deneme. ${LOCKOUT_DURATION_MS / 1000}s bekleyin.`;
-          } else {
-            errorText.textContent = error.message.includes('Invalid login') ? 'E-posta veya şifre hatalı.' : error.message;
-          }
-          setLockout(lockout);
-          errorEl.classList.add('visible');
-        } finally { btn.disabled = false; }
-      }
-
-      async function handleLogout() { await logout(); window.location.reload(); }
-
-      // ─── LOAD SITE CONTENT ────────────────────────────────────────
-      // ─── NAVIGATION ──────────────────────────────────────────────
-      window.switchTab = async (tab, el) => {
-        // Update nav UI
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        if (el) el.classList.add('active');
-
-        const dashView = document.getElementById('admin-view-dashboard');
-        const sectionsView = document.getElementById('admin-view-sections');
-        const root = document.getElementById('admin-sections-root');
-
-        dashView.style.display = 'none';
-        sectionsView.style.display = 'none';
-        root.innerHTML = ''; // Clear previous
-
-        if (tab === 'dashboard') {
-          dashView.style.display = 'block';
-          dashView.classList.add('fade-in');
-          renderDashboardHome();
+      const email = document.getElementById('admin-email').value.trim();
+      const password = document.getElementById('admin-password').value.trim();
+      try {
+        await login(email, password);
+        setLockout({ attempts: 0, until: 0 });
+        showDashboard();
+      } catch (error) {
+        lockout.attempts++;
+        if (lockout.attempts >= MAX_ATTEMPTS) {
+          lockout.until = Date.now() + LOCKOUT_DURATION_MS;
+          errorText.textContent = `Çok fazla hatalı deneme. ${LOCKOUT_DURATION_MS / 1000}s bekleyin.`;
         } else {
-          sectionsView.style.display = 'block';
-          sectionsView.classList.add('fade-in');
-          
-          if (!siteContent) {
-            root.innerHTML = '<div style="padding:2rem;text-align:center;">Veriler yükleniyor...</div>';
-            await loadSiteContent();
-          }
-          
-          renderSectionView(tab);
+          errorText.textContent = error.message.includes('Invalid login') ? 'E-posta veya şifre hatalı.' : error.message;
         }
-      };
+        setLockout(lockout);
+        errorEl.classList.add('visible');
+      } finally { btn.disabled = false; }
+    }
 
-      function renderDashboardHome() {
-        const dash = document.getElementById('admin-view-dashboard');
-        dash.innerHTML = `
+    async function handleLogout() { await logout(); window.location.reload(); }
+
+    // ─── LOAD SITE CONTENT ────────────────────────────────────────
+    // ─── NAVIGATION ──────────────────────────────────────────────
+    window.switchTab = async (tab, el) => {
+      // Update nav UI
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      if (el) el.classList.add('active');
+
+      const dashView = document.getElementById('admin-view-dashboard');
+      const sectionsView = document.getElementById('admin-view-sections');
+      const root = document.getElementById('admin-sections-root');
+
+      dashView.style.display = 'none';
+      sectionsView.style.display = 'none';
+      root.innerHTML = ''; // Clear previous
+
+      if (tab === 'dashboard') {
+        dashView.style.display = 'block';
+        dashView.classList.add('fade-in');
+        renderDashboardHome();
+      } else {
+        sectionsView.style.display = 'block';
+        sectionsView.classList.add('fade-in');
+
+        if (!siteContent) {
+          root.innerHTML = '<div style="padding:2rem;text-align:center;">Veriler yükleniyor...</div>';
+          await loadSiteContent();
+        }
+
+        renderSectionView(tab);
+      }
+    };
+
+    function renderDashboardHome() {
+      const dash = document.getElementById('admin-view-dashboard');
+      dash.innerHTML = `
           <div class="admin-welcome fade-in">
             <div class="admin-welcome__top">
               <div>
@@ -567,28 +1517,28 @@
             </div>
           </div>
         `;
-      }
+    }
 
-      function renderSectionView(type) {
-        if (!siteContent) return;
-        const root = document.getElementById('admin-sections-root');
-        
-        if (type === 'gallery') {
-          root.innerHTML = renderGalleryUI();
-          loadGalleryManagement();
-          setTimeout(setupDropzone, 100);
-        } else if (type === 'site') {
-          root.innerHTML = renderSiteInfoUI();
-          document.getElementById('btn-save-config').addEventListener('click', handleSaveConfig);
-        } else if (type === 'board') {
-          root.innerHTML = renderBoardUI();
-          window.renderBoardRows();
-        }
-      }
+    function renderSectionView(type) {
+      if (!siteContent) return;
+      const root = document.getElementById('admin-sections-root');
 
-      // ─── UI TEMPLATES ──────────────────────────────────────────
-      function renderGalleryUI() {
-        return `
+      if (type === 'gallery') {
+        root.innerHTML = renderGalleryUI();
+        loadGalleryManagement();
+        setTimeout(setupDropzone, 100);
+      } else if (type === 'site') {
+        root.innerHTML = renderSiteInfoUI();
+        document.getElementById('btn-save-config').addEventListener('click', handleSaveConfig);
+      } else if (type === 'board') {
+        root.innerHTML = renderBoardUI();
+        window.renderBoardRows();
+      }
+    }
+
+    // ─── UI TEMPLATES ──────────────────────────────────────────
+    function renderGalleryUI() {
+      return `
           <div class="panel-card fade-in">
             <div class="panel-card__header">
               <div class="panel-card__title">
@@ -641,10 +1591,10 @@
             </div>
           </div>
         `;
-      }
+    }
 
-      function renderSiteInfoUI() {
-        return `
+    function renderSiteInfoUI() {
+      return `
           <div class="panel-card fade-in">
             <div class="panel-card__header">
               <div class="panel-card__title">Site Bilgileri</div>
@@ -666,10 +1616,10 @@
             </div>
           </div>
         `;
-      }
+    }
 
-      function renderBoardUI() {
-        return `
+    function renderBoardUI() {
+      return `
           <div class="panel-card fade-in">
             <div class="panel-card__header"><div class="panel-card__title">Yönetim Kurulu</div></div>
             <div class="panel-card__body">
@@ -678,78 +1628,78 @@
             </div>
           </div>
         `;
-      }
+    }
 
-      async function loadSiteContent() {
-        try {
-          let data = await getSiteConfig();
-          if (!data) {
-            console.info('[KGED Admin] Supabase boş, static fallback yükleniyor...');
-            const res = await fetch('/site-content.json');
-            if (!res.ok) throw new Error(`site-content.json yüklenemedi: ${res.status}`);
-            data = await res.json();
-          }
-          siteContent = data;
-        } catch (e) {
-          console.error('[KGED Admin] Veri yükleme hatası:', e);
-          showToast('Site verileri yüklenemedi: ' + e.message, 'error');
-          siteContent = { about: {}, contact: {}, board: [], nav: [], hero: {}, mission: { cards: [] } };
+    async function loadSiteContent() {
+      try {
+        let data = await getSiteConfig();
+        if (!data) {
+          console.info('[KGED Admin] Supabase boş, static fallback yükleniyor...');
+          const res = await fetch('/site-content.json');
+          if (!res.ok) throw new Error(`site-content.json yüklenemedi: ${res.status}`);
+          data = await res.json();
         }
+        siteContent = data;
+      } catch (e) {
+        console.error('[KGED Admin] Veri yükleme hatası:', e);
+        showToast('Site verileri yüklenemedi: ' + e.message, 'error');
+        siteContent = { about: {}, contact: {}, board: [], nav: [], hero: {}, mission: { cards: [] } };
       }
+    }
 
-      async function showDashboard() {
-        document.getElementById('login-page').style.display = 'none';
-        document.getElementById('admin-app').style.display = 'block';
-        document.getElementById('admin-app').classList.add('visible');
-        await loadSiteContent();
-        window.switchTab('dashboard', document.querySelector('.nav-item'));
-      }
+    async function showDashboard() {
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('admin-app').style.display = 'block';
+      document.getElementById('admin-app').classList.add('visible');
+      await loadSiteContent();
+      window.switchTab('dashboard', document.querySelector('.nav-item'));
+    }
 
-      // ─── GALLERY MANAGEMENT ───────────────────────────────────────
-      let adminGalleryItems = [];
+    // ─── GALLERY MANAGEMENT ───────────────────────────────────────
+    let adminGalleryItems = [];
 
-      async function loadGalleryManagement() {
-        const galleryList = document.getElementById('gallery-manager-list');
-        if (!galleryList) return;
-        galleryList.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted);">Yükleniyor...</div>';
+    async function loadGalleryManagement() {
+      const galleryList = document.getElementById('gallery-manager-list');
+      if (!galleryList) return;
+      galleryList.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted);">Yükleniyor...</div>';
+      try {
+        adminGalleryItems = await getGalleryItems();
+        const galleryCount = adminGalleryItems.length;
+        const statEl = document.getElementById('stat-gallery');
+        if (statEl) statEl.textContent = galleryCount;
+        const statBigEl = document.getElementById('stat-gallery-big');
+        if (statBigEl) statBigEl.textContent = galleryCount;
+
         try {
-          adminGalleryItems = await getGalleryItems();
-          const galleryCount = adminGalleryItems.length;
-          const statEl = document.getElementById('stat-gallery');
-          if (statEl) statEl.textContent = galleryCount;
-          const statBigEl = document.getElementById('stat-gallery-big');
-          if (statBigEl) statBigEl.textContent = galleryCount;
-          
-          try {
-            const { getStorageQuota } = await import('/src/supabase/gallery.js');
-            const quota = await getStorageQuota();
-            const fill = document.getElementById('quota-fill');
-            const pText = document.getElementById('quota-text');
-            const qBig = document.getElementById('stat-quota-big');
+          const { getStorageQuota } = await import('/src/supabase/gallery.js');
+          const quota = await getStorageQuota();
+          const fill = document.getElementById('quota-fill');
+          const pText = document.getElementById('quota-text');
+          const qBig = document.getElementById('stat-quota-big');
 
-            if (fill && pText) {
-              fill.style.width = `${quota.percentUsed}%`;
-              pText.textContent = `${(quota.totalBytes / (1024 * 1024)).toFixed(1)} MB / 50 MB`;
-              if (qBig) qBig.textContent = `${quota.percentUsed}%`;
-              
-              if (quota.percentUsed > 85) fill.classList.add('danger');
-              else fill.classList.remove('danger');
-            }
-          } catch (e) {
-            console.warn('Quota fetch error:', e);
+          if (fill && pText) {
+            fill.style.width = `${quota.percentUsed}%`;
+            pText.textContent = `${(quota.totalBytes / (1024 * 1024)).toFixed(1)} MB / 50 MB`;
+            if (qBig) qBig.textContent = `${quota.percentUsed}%`;
+
+            if (quota.percentUsed > 85) fill.classList.add('danger');
+            else fill.classList.remove('danger');
           }
-
-          renderAdminGalleryList(adminGalleryItems);
         } catch (e) {
-          galleryList.innerHTML = '<div style="padding:1rem;color:var(--danger);">Liste yüklenemedi.</div>';
+          console.warn('Quota fetch error:', e);
         }
-      }
 
-      function renderAdminGalleryList(items) {
-        const galleryList = document.getElementById('gallery-manager-list');
-        if (!galleryList) return;
-        if (items.length === 0) {
-          galleryList.innerHTML = `
+        renderAdminGalleryList(adminGalleryItems);
+      } catch (e) {
+        galleryList.innerHTML = '<div style="padding:1rem;color:var(--danger);">Liste yüklenemedi.</div>';
+      }
+    }
+
+    function renderAdminGalleryList(items) {
+      const galleryList = document.getElementById('gallery-manager-list');
+      if (!galleryList) return;
+      if (items.length === 0) {
+        galleryList.innerHTML = `
             <div style="padding:4rem 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem;">
               <div style="width:64px;height:64px;border-radius:50%;background:var(--brand-50);color:var(--brand-300);display:flex;align-items:center;justify-content:center;margin-bottom:0.5rem;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -758,21 +1708,21 @@
               <p style="font-size:0.875rem;color:var(--text-faint);margin:0;max-width:240px;">Yukarıdaki alanı kullanarak ilk görsellerinizi yüklemeye başlayabilirsiniz.</p>
             </div>
           `;
-          return;
-        }
+        return;
+      }
 
-        // Group by album_id
-        const albums = {};
-        items.forEach(item => {
-          const aid = item.album_id || 'Genel (Albüm Dışı)';
-          if (!albums[aid]) albums[aid] = [];
-          albums[aid].push(item);
-        });
+      // Group by album_id
+      const albums = {};
+      items.forEach(item => {
+        const aid = item.album_id || 'Genel (Albüm Dışı)';
+        if (!albums[aid]) albums[aid] = [];
+        albums[aid].push(item);
+      });
 
-        let html = '';
-        Object.entries(albums).forEach(([albumId, albumItems]) => {
-          const isRealAlbum = albumId !== 'Genel (Albüm Dışı)';
-          html += `
+      let html = '';
+      Object.entries(albums).forEach(([albumId, albumItems]) => {
+        const isRealAlbum = albumId !== 'Genel (Albüm Dışı)';
+        html += `
             <div class="gallery-album-group">
               <div class="gallery-album-header">
                 <h4 class="gallery-album-title">📁 ${albumId} (${albumItems.length} Görsel)</h4>
@@ -795,179 +1745,179 @@
               </div>
             </div>
           `;
-        });
+      });
 
-        galleryList.innerHTML = html;
+      galleryList.innerHTML = html;
+    }
+
+    window.filterAdminGalleryList = (query) => {
+      const q = (query || '').toLowerCase().trim();
+      if (!q) {
+        renderAdminGalleryList(adminGalleryItems);
+        return;
       }
+      const filtered = adminGalleryItems.filter(item => {
+        const cap = (item.caption || '').toLowerCase();
+        const cat = (item.category || '').toLowerCase();
+        const alb = (item.album_id || '').toLowerCase();
+        return cap.includes(q) || cat.includes(q) || alb.includes(q);
+      });
+      renderAdminGalleryList(filtered);
+    };
 
-      window.filterAdminGalleryList = (query) => {
-        const q = (query || '').toLowerCase().trim();
-        if (!q) {
-          renderAdminGalleryList(adminGalleryItems);
-          return;
-        }
-        const filtered = adminGalleryItems.filter(item => {
-          const cap = (item.caption || '').toLowerCase();
-          const cat = (item.category || '').toLowerCase();
-          const alb = (item.album_id || '').toLowerCase();
-          return cap.includes(q) || cat.includes(q) || alb.includes(q);
-        });
-        renderAdminGalleryList(filtered);
-      };
-
-      window.handleDeleteGallery = async (id, url) => {
-        if (!confirm('Bu görseli kalıcı olarak silmek istediğinize emin misiniz?\\n\\nBu işlem geri alınamaz.')) return;
-        const btn = event.currentTarget;
-        const oldText = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = 'Siliniyor...';
+    window.handleDeleteGallery = async (id, url) => {
+      if (!confirm('Bu görseli kalıcı olarak silmek istediğinize emin misiniz?\\n\\nBu işlem geri alınamaz.')) return;
+      const btn = event.currentTarget;
+      const oldText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = 'Siliniyor...';
+      try {
+        let path = null;
         try {
-          let path = null;
-          try {
-            const urlObj = new URL(url);
-            const parts = urlObj.pathname.split('/storage/v1/object/public/gallery/');
-            if (parts.length > 1) path = decodeURIComponent(parts[1]);
-          } catch {}
-          await deleteGalleryItem(id, path);
-          showToast('Görsel başarıyla silindi.', 'success');
-          loadGalleryManagement();
-        } catch (e) {
-          showToast('Silme hatası: ' + (e.message || 'Bilinmeyen hata'), 'error');
-          btn.disabled = false;
-          btn.innerHTML = oldText;
-        }
-      };
-
-      window.handleDeleteAlbum = async (albumId) => {
-        if (!confirm(`'${albumId}' albümündeki TÜM görselleri silmek istediğinize emin misiniz? Bu işlem geri alınamaz!`)) return;
-        const btn = event.target;
-        const oldText = btn.textContent;
-        btn.disabled = true;
-        btn.textContent = 'Siliniyor...';
-        try {
-          await deleteAlbum(albumId);
-          showToast(`'${albumId}' albümü başarıyla silindi.`, 'success');
-          loadGalleryManagement();
-        } catch (e) {
-          showToast('Albüm silme hatası: ' + e.message, 'error');
-          btn.disabled = false;
-          btn.textContent = oldText;
-        }
-      };
-
-      // ─── HANDLERS ────────────────────────────────────────────────
-      window.handleSaveConfig = async () => {
-        if (!siteContent) return;
-        const btn = document.getElementById('btn-save-config');
-        const oldText = btn.textContent;
-        btn.disabled = true;
-        btn.textContent = 'Kaydediliyor...';
-
-        try {
-          siteContent.about.title = document.getElementById('edit-about-title')?.value?.trim() || siteContent.about.title;
-          siteContent.about.intro = document.getElementById('edit-about-intro')?.value?.trim() || siteContent.about.intro;
-          
-          const phone = document.getElementById('edit-contact-phone')?.value?.trim();
-          if (phone) {
-            siteContent.contact.phone = phone;
-            const digits = phone.replace(/\\D/g, '');
-            siteContent.contact.phoneHref = digits.startsWith('0')
-              ? `tel:+90${digits.slice(1)}`
-              : `tel:+${digits}`;
-          }
-
-          const email = document.getElementById('edit-contact-email')?.value?.trim();
-          if (email) {
-            siteContent.contact.email = email;
-            siteContent.contact.emailHref = `mailto:${email}`;
-          }
-
-          await saveSiteConfig(siteContent);
-          showToast('Site bilgileri güncellendi.', 'success');
-        } catch (e) {
-          showToast('Hata: ' + e.message, 'error');
-        } finally {
-          btn.disabled = false;
-          btn.textContent = oldText;
-        }
-      };
-
-      window.handleSaveBoard = async () => {
-        if (!siteContent) return;
-        const btn = document.getElementById('btn-save-board');
-        const oldText = btn.textContent;
-        btn.disabled = true;
-        btn.textContent = 'Kaydediliyor...';
-        try {
-          await saveSiteConfig(siteContent);
-          showToast('Yönetim kurulu güncellendi.', 'success');
-        } catch (e) {
-          showToast('Hata: ' + e.message, 'error');
-        } finally {
-          btn.disabled = false;
-          btn.textContent = oldText;
-        }
-      };
-
-      // ─── DROPZONE ─────────────────────────────────────────────────
-      function setupDropzone() {
-        const zone = document.getElementById('upload-dropzone');
-        const realInput = document.getElementById('upload-file-real');
-        if (!zone || !realInput) return;
-
-        zone.addEventListener('click', () => realInput.click());
-        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
-        zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-        zone.addEventListener('drop', (e) => {
-          e.preventDefault(); zone.classList.remove('dragover');
-          addFilesToQueue(Array.from(e.dataTransfer.files));
-        });
-        realInput.addEventListener('change', () => addFilesToQueue(Array.from(realInput.files)));
+          const urlObj = new URL(url);
+          const parts = urlObj.pathname.split('/storage/v1/object/public/gallery/');
+          if (parts.length > 1) path = decodeURIComponent(parts[1]);
+        } catch { }
+        await deleteGalleryItem(id, path);
+        showToast('Görsel başarıyla silindi.', 'success');
+        loadGalleryManagement();
+      } catch (e) {
+        showToast('Silme hatası: ' + (e.message || 'Bilinmeyen hata'), 'error');
+        btn.disabled = false;
+        btn.innerHTML = oldText;
       }
+    };
 
-      function addFilesToQueue(files) {
-        const imageFiles = files.filter(f => f.type.startsWith('image/'));
-        const remaining = MAX_FILES - pendingFiles.length;
-        
-        const existingKeys = new Set(pendingFiles.map(f => `${f.name}_${f.size}`));
-        const uniqueNew = imageFiles.filter(f => !existingKeys.has(`${f.name}_${f.size}`));
-        const duplicateCount = imageFiles.length - uniqueNew.length;
-        
-        if (duplicateCount > 0) showToast(`${duplicateCount} tekrarlanan görsel atlandı.`, 'info');
-        if (remaining <= 0) { showToast(`Maksimum ${MAX_FILES} görsel yükleyebilirsiniz.`, 'error'); return; }
-        
-        const toAdd = uniqueNew.slice(0, remaining);
-        if (uniqueNew.length > remaining) showToast(`${uniqueNew.length - remaining} görsel limit nedeniyle eklenmedi.`, 'info');
-        
-        pendingFiles.push(...toAdd);
-        renderPreview();
-        
-        const realInput = document.getElementById('upload-file-real');
-        if(realInput) realInput.value = '';
+    window.handleDeleteAlbum = async (albumId) => {
+      if (!confirm(`'${albumId}' albümündeki TÜM görselleri silmek istediğinize emin misiniz? Bu işlem geri alınamaz!`)) return;
+      const btn = event.target;
+      const oldText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Siliniyor...';
+      try {
+        await deleteAlbum(albumId);
+        showToast(`'${albumId}' albümü başarıyla silindi.`, 'success');
+        loadGalleryManagement();
+      } catch (e) {
+        showToast('Albüm silme hatası: ' + e.message, 'error');
+        btn.disabled = false;
+        btn.textContent = oldText;
       }
+    };
 
-      function renderPreview() {
-        const grid = document.getElementById('upload-preview-grid');
-        if (!grid) return;
-        grid.innerHTML = pendingFiles.map((f, i) => {
-          const url = URL.createObjectURL(f);
-          return `<div class="upload-preview-item">
+    // ─── HANDLERS ────────────────────────────────────────────────
+    window.handleSaveConfig = async () => {
+      if (!siteContent) return;
+      const btn = document.getElementById('btn-save-config');
+      const oldText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Kaydediliyor...';
+
+      try {
+        siteContent.about.title = document.getElementById('edit-about-title')?.value?.trim() || siteContent.about.title;
+        siteContent.about.intro = document.getElementById('edit-about-intro')?.value?.trim() || siteContent.about.intro;
+
+        const phone = document.getElementById('edit-contact-phone')?.value?.trim();
+        if (phone) {
+          siteContent.contact.phone = phone;
+          const digits = phone.replace(/\\D/g, '');
+          siteContent.contact.phoneHref = digits.startsWith('0')
+            ? `tel:+90${digits.slice(1)}`
+            : `tel:+${digits}`;
+        }
+
+        const email = document.getElementById('edit-contact-email')?.value?.trim();
+        if (email) {
+          siteContent.contact.email = email;
+          siteContent.contact.emailHref = `mailto:${email}`;
+        }
+
+        await saveSiteConfig(siteContent);
+        showToast('Site bilgileri güncellendi.', 'success');
+      } catch (e) {
+        showToast('Hata: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = oldText;
+      }
+    };
+
+    window.handleSaveBoard = async () => {
+      if (!siteContent) return;
+      const btn = document.getElementById('btn-save-board');
+      const oldText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Kaydediliyor...';
+      try {
+        await saveSiteConfig(siteContent);
+        showToast('Yönetim kurulu güncellendi.', 'success');
+      } catch (e) {
+        showToast('Hata: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = oldText;
+      }
+    };
+
+    // ─── DROPZONE ─────────────────────────────────────────────────
+    function setupDropzone() {
+      const zone = document.getElementById('upload-dropzone');
+      const realInput = document.getElementById('upload-file-real');
+      if (!zone || !realInput) return;
+
+      zone.addEventListener('click', () => realInput.click());
+      zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault(); zone.classList.remove('dragover');
+        addFilesToQueue(Array.from(e.dataTransfer.files));
+      });
+      realInput.addEventListener('change', () => addFilesToQueue(Array.from(realInput.files)));
+    }
+
+    function addFilesToQueue(files) {
+      const imageFiles = files.filter(f => f.type.startsWith('image/'));
+      const remaining = MAX_FILES - pendingFiles.length;
+
+      const existingKeys = new Set(pendingFiles.map(f => `${f.name}_${f.size}`));
+      const uniqueNew = imageFiles.filter(f => !existingKeys.has(`${f.name}_${f.size}`));
+      const duplicateCount = imageFiles.length - uniqueNew.length;
+
+      if (duplicateCount > 0) showToast(`${duplicateCount} tekrarlanan görsel atlandı.`, 'info');
+      if (remaining <= 0) { showToast(`Maksimum ${MAX_FILES} görsel yükleyebilirsiniz.`, 'error'); return; }
+
+      const toAdd = uniqueNew.slice(0, remaining);
+      if (uniqueNew.length > remaining) showToast(`${uniqueNew.length - remaining} görsel limit nedeniyle eklenmedi.`, 'info');
+
+      pendingFiles.push(...toAdd);
+      renderPreview();
+
+      const realInput = document.getElementById('upload-file-real');
+      if (realInput) realInput.value = '';
+    }
+
+    function renderPreview() {
+      const grid = document.getElementById('upload-preview-grid');
+      if (!grid) return;
+      grid.innerHTML = pendingFiles.map((f, i) => {
+        const url = URL.createObjectURL(f);
+        return `<div class="upload-preview-item">
             <img src="${url}" alt="${f.name}" />
             <button class="upload-preview-remove" onclick="window.removePreview(${i})">×</button>
           </div>`;
-        }).join('');
-      }
+      }).join('');
+    }
 
-      window.removePreview = (idx) => { pendingFiles.splice(idx, 1); renderPreview(); };
+    window.removePreview = (idx) => { pendingFiles.splice(idx, 1); renderPreview(); };
 
-      // ─── BOARD MEMBERS ────────────────────────────────────────────
-      let draggedBoardIdx = null;
+    // ─── BOARD MEMBERS ────────────────────────────────────────────
+    let draggedBoardIdx = null;
 
-      window.renderBoardRows = () => {
-        const list = document.getElementById('board-editor-list');
-        if (!list) return;
-        if (!siteContent.board) siteContent.board = [];
-        list.innerHTML = siteContent.board.map((m, idx) => `
+    window.renderBoardRows = () => {
+      const list = document.getElementById('board-editor-list');
+      if (!list) return;
+      if (!siteContent.board) siteContent.board = [];
+      list.innerHTML = siteContent.board.map((m, idx) => `
           <div class="board-row" draggable="true" data-idx="${idx}">
             <div class="board-row__drag-handle" title="Sürükle bırak ile taşı">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>
@@ -978,138 +1928,140 @@
           </div>
         `).join('');
 
-        // Attach drag events
-        const rows = list.querySelectorAll('.board-row');
-        rows.forEach(row => {
-          row.addEventListener('dragstart', (e) => {
-            draggedBoardIdx = parseInt(row.dataset.idx);
-            row.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-          });
-          row.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            row.classList.add('drag-over');
-          });
-          row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
-          row.addEventListener('drop', (e) => {
-            e.preventDefault();
-            row.classList.remove('drag-over');
-            const targetIdx = parseInt(row.dataset.idx);
-            if (draggedBoardIdx !== null && draggedBoardIdx !== targetIdx) {
-              const movingItem = siteContent.board.splice(draggedBoardIdx, 1)[0];
-              siteContent.board.splice(targetIdx, 0, movingItem);
-              window.renderBoardRows(); // re-render
-            }
-          });
-          row.addEventListener('dragend', () => {
-            row.classList.remove('dragging');
-            draggedBoardIdx = null;
-          });
+      // Attach drag events
+      const rows = list.querySelectorAll('.board-row');
+      rows.forEach(row => {
+        row.addEventListener('dragstart', (e) => {
+          draggedBoardIdx = parseInt(row.dataset.idx);
+          row.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
         });
-      };
-
-      window.updateBoardMember = (idx, field, val) => {
-        if (!siteContent.board) siteContent.board = [];
-        if (siteContent.board[idx]) siteContent.board[idx][field] = val;
-      };
-      window.removeBoardMember = (idx) => { siteContent.board.splice(idx, 1); window.renderBoardRows(); };
-      window.addBoardMember = () => {
-        if (!siteContent.board) siteContent.board = [];
-        siteContent.board.push({ name: '', role: '' });
-        window.renderBoardRows();
-      };
-
-      // ─── IMAGE UPLOAD ─────────────────────────────────────────────
-      window.handleImageAdd = async () => {
-        if (pendingFiles.length === 0) { showToast('Lütfen en az bir görsel seçin.', 'info'); return; }
-
-        const captionInput = document.getElementById('upload-caption');
-        const altInput = document.getElementById('upload-alt');
-        const categoryInput = document.getElementById('upload-category');
-        const albumInput = document.getElementById('upload-album');
-        const progress = document.getElementById('upload-progress');
-        const bar = document.getElementById('upload-bar');
-        const statusText = document.getElementById('upload-status-text');
-        const btn = document.getElementById('btn-upload');
-
-        progress.classList.add('visible');
-        btn.disabled = true;
-
-        let successCount = 0, failCount = 0;
-        const total = pendingFiles.length;
-
-        for (let i = 0; i < pendingFiles.length; i++) {
-          const file = pendingFiles[i];
-          statusText.textContent = `Sıkıştırılıyor ve yükleniyor: ${file.name} (${i + 1}/${total})`;
-          bar.style.width = `${Math.round(((i) / total) * 100)}%`;
-          try {
-            const compressed = await compressImage(file);
-            const ext = file.name.split('.').pop() || 'jpg';
-            const path = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
-            const publicUrl = await uploadGalleryImage(compressed, path);
-            await addGalleryItem({
-              url: publicUrl,
-              caption: captionInput.value || file.name.replace(/\.[^.]+$/, ''),
-              alt_text: altInput.value || captionInput.value || file.name.replace(/\.[^.]+$/, ''),
-              category: categoryInput.value || 'etkinlik',
-              album_id: albumInput.value.trim() || null,
-              order: 0,
-            });
-            successCount++;
-          } catch (error) {
-            console.error('Yükleme hatası:', error);
-            failCount++;
-            showToast(`Yükleme hatası (${file.name}): ${error.message || error.code || 'Bilinmeyen hata'}`, 'error');
+        row.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          row.classList.add('drag-over');
+        });
+        row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+        row.addEventListener('drop', (e) => {
+          e.preventDefault();
+          row.classList.remove('drag-over');
+          const targetIdx = parseInt(row.dataset.idx);
+          if (draggedBoardIdx !== null && draggedBoardIdx !== targetIdx) {
+            const movingItem = siteContent.board.splice(draggedBoardIdx, 1)[0];
+            siteContent.board.splice(targetIdx, 0, movingItem);
+            window.renderBoardRows(); // re-render
           }
+        });
+        row.addEventListener('dragend', () => {
+          row.classList.remove('dragging');
+          draggedBoardIdx = null;
+        });
+      });
+    };
+
+    window.updateBoardMember = (idx, field, val) => {
+      if (!siteContent.board) siteContent.board = [];
+      if (siteContent.board[idx]) siteContent.board[idx][field] = val;
+    };
+    window.removeBoardMember = (idx) => { siteContent.board.splice(idx, 1); window.renderBoardRows(); };
+    window.addBoardMember = () => {
+      if (!siteContent.board) siteContent.board = [];
+      siteContent.board.push({ name: '', role: '' });
+      window.renderBoardRows();
+    };
+
+    // ─── IMAGE UPLOAD ─────────────────────────────────────────────
+    window.handleImageAdd = async () => {
+      if (pendingFiles.length === 0) { showToast('Lütfen en az bir görsel seçin.', 'info'); return; }
+
+      const captionInput = document.getElementById('upload-caption');
+      const altInput = document.getElementById('upload-alt');
+      const categoryInput = document.getElementById('upload-category');
+      const albumInput = document.getElementById('upload-album');
+      const progress = document.getElementById('upload-progress');
+      const bar = document.getElementById('upload-bar');
+      const statusText = document.getElementById('upload-status-text');
+      const btn = document.getElementById('btn-upload');
+
+      progress.classList.add('visible');
+      btn.disabled = true;
+
+      let successCount = 0, failCount = 0;
+      const total = pendingFiles.length;
+
+      for (let i = 0; i < pendingFiles.length; i++) {
+        const file = pendingFiles[i];
+        statusText.textContent = `Sıkıştırılıyor ve yükleniyor: ${file.name} (${i + 1}/${total})`;
+        bar.style.width = `${Math.round(((i) / total) * 100)}%`;
+        try {
+          const compressed = await compressImage(file);
+          const ext = file.name.split('.').pop() || 'jpg';
+          const path = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
+          const publicUrl = await uploadGalleryImage(compressed, path);
+          await addGalleryItem({
+            url: publicUrl,
+            caption: captionInput.value || file.name.replace(/\.[^.]+$/, ''),
+            alt_text: altInput.value || captionInput.value || file.name.replace(/\.[^.]+$/, ''),
+            category: categoryInput.value || 'etkinlik',
+            album_id: albumInput.value.trim() || null,
+            order: 0,
+          });
+          successCount++;
+        } catch (error) {
+          console.error('Yükleme hatası:', error);
+          failCount++;
+          showToast(`Yükleme hatası (${file.name}): ${error.message || error.code || 'Bilinmeyen hata'}`, 'error');
         }
-
-        bar.style.width = '100%';
-        statusText.textContent = `✅ Tamamlandı: ${successCount} başarılı${failCount ? `, ${failCount} hatalı` : ''}.`;
-        showToast(`${successCount} görsel yüklendi${failCount ? `, ${failCount} hata` : ''}.`, failCount ? 'error' : 'success');
-
-        pendingFiles = [];
-        captionInput.value = '';
-        altInput.value = '';
-        albumInput.value = '';
-        renderPreview();
-        loadGalleryManagement();
-        btn.disabled = false;
-        setTimeout(() => { progress.classList.remove('visible'); bar.style.width = '0%'; }, 3000);
       }
 
-      // ─── THEME TOGGLE ─────────────────────────────────────────────
-      const themeBtn = document.getElementById('theme-toggle');
-      const iconSun = themeBtn.querySelector('.icon-sun');
-      const iconMoon = themeBtn.querySelector('.icon-moon');
+      bar.style.width = '100%';
+      statusText.textContent = `✅ Tamamlandı: ${successCount} başarılı${failCount ? `, ${failCount} hatalı` : ''}.`;
+      showToast(`${successCount} görsel yüklendi${failCount ? `, ${failCount} hata` : ''}.`, failCount ? 'error' : 'success');
 
-      function applyTheme(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0B0E14' : '#4F46E5');
-        if (theme === 'dark') {
-          iconSun.style.display = 'block';
-          iconMoon.style.display = 'none';
-        } else {
-          iconSun.style.display = 'none';
-          iconMoon.style.display = 'block';
-        }
+      pendingFiles = [];
+      captionInput.value = '';
+      altInput.value = '';
+      albumInput.value = '';
+      renderPreview();
+      loadGalleryManagement();
+      btn.disabled = false;
+      setTimeout(() => { progress.classList.remove('visible'); bar.style.width = '0%'; }, 3000);
+    }
+
+    // ─── THEME TOGGLE ─────────────────────────────────────────────
+    const themeBtn = document.getElementById('theme-toggle');
+    const iconSun = themeBtn.querySelector('.icon-sun');
+    const iconMoon = themeBtn.querySelector('.icon-moon');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', theme === 'dark' ? '#0B0E14' : '#4F46E5');
+      if (theme === 'dark') {
+        iconSun.style.display = 'block';
+        iconMoon.style.display = 'none';
+      } else {
+        iconSun.style.display = 'none';
+        iconMoon.style.display = 'block';
       }
+    }
 
-      themeBtn.addEventListener('click', () => {
-        const curr = document.documentElement.getAttribute('data-theme');
-        const next = curr === 'dark' ? 'light' : 'dark';
-        applyTheme(next);
-        localStorage.setItem('kged-theme', next);
-      });
+    themeBtn.addEventListener('click', () => {
+      const curr = document.documentElement.getAttribute('data-theme');
+      const next = curr === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('kged-theme', next);
+    });
 
-      // ─── INIT ─────────────────────────────────────────────────────
-      document.getElementById('login-form').addEventListener('submit', handleLogin);
-      document.getElementById('btn-logout').addEventListener('click', handleLogout);
+    // ─── INIT ─────────────────────────────────────────────────────
+    document.getElementById('login-form').addEventListener('submit', handleLogin);
+    document.getElementById('btn-logout').addEventListener('click', handleLogout);
 
-      getSession().then(session => {
-        applyTheme(localStorage.getItem('kged-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
-        if (session) showDashboard();
-        else showLogin();
-      });
-    </script></body>
+    getSession().then(session => {
+      applyTheme(localStorage.getItem('kged-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+      if (session) showDashboard();
+      else showLogin();
+    });
+  </script>
+</body>
+
 </html>
