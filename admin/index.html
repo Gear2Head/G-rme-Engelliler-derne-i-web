@@ -1679,11 +1679,10 @@
           data = await res.json();
         }
         siteContent = data;
-        if (!siteContent.announcements) siteContent.announcements = [];
       } catch (e) {
         console.error('[KGED Admin] Veri yükleme hatası:', e);
         showToast('Site verileri yüklenemedi: ' + e.message, 'error');
-        siteContent = { about: {}, contact: {}, board: [], nav: [], hero: {}, mission: { cards: [] }, announcements: [] };
+        siteContent = { about: {}, contact: {}, board: [], nav: [], hero: {}, mission: { cards: [] } };
       }
     }
 
@@ -2014,7 +2013,7 @@
       const list = document.getElementById('announcements-editor-list');
       if (!list) return;
       if (!siteContent.announcements) siteContent.announcements = [];
-      
+
       list.innerHTML = siteContent.announcements.map((ann, idx) => `
         <div class="panel-card" style="padding:1.25rem; border:1px solid var(--border); box-shadow:none; background:var(--surface);">
           <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
@@ -2175,5 +2174,6 @@
     });
   </script>
 </body>
+
 
 </html>
