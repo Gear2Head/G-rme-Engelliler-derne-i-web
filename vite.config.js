@@ -2,12 +2,22 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import { renderDocumentFragments } from './src/build/site-renderer.js';
 import { generateSitemapPlugin } from './src/build/generate-sitemap.js';
+import fs from 'fs';
 
 function resolvePageKey(context) {
   const rawPath = context?.originalUrl || context?.url || context?.path || context?.filename || '/';
-  const normalized = String(rawPath).replace(/\\/g, '/').split('?')[0];
+  let normalized = String(rawPath).replace(/\\/g, '/').split('?')[0];
 
   if (normalized.endsWith('/404.html') || normalized === '/404.html') return 'notfound';
+  
+  // Announcement detail check
+  if (normalized.includes('/duyurular/') && !normalized.endsWith('/duyurular/') && !normalized.endsWith('/index.html')) {
+    let slug = normalized.replace('/duyurular/', '').replace('index.html', '').replace(/\//g, '');
+    if (slug && slug !== 'index') {
+      return `announcement:${slug}`;
+    }
+  }
+
   if (normalized.includes('/hakkimizda')) return 'hakkimizda';
   if (normalized.includes('/galeri')) return 'galeri';
   if (normalized.includes('/tuzuk')) return 'tuzuk';
@@ -15,6 +25,32 @@ function resolvePageKey(context) {
   if (normalized.includes('/iletisim')) return 'iletisim';
 
   return 'index';
+}
+
+function slugify(text) {
+  if (!text) return '';
+  const trMap = { 'ç': 'c', 'Ç': 'C', 'ğ': 'g', 'Ğ': 'G', 'ş': 's', 'Ş': 'S', 'ü': 'u', 'Ü': 'U', 'ı': 'i', 'İ': 'I', 'ö': 'o', 'Ö': 'O' };
+  return text.toString().toLowerCase()
+    .replace(/[çÇğĞşŞüÜıİöÖ]/g, m => trMap[m])
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+}
+
+function getAnnouncementsInfo() {
+  const dataPath = resolve(__dirname, 'src/data/site-content.json');
+  try {
+    const content = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+    return (content.announcements || []).map(ann => ({
+      slug: slugify(ann.title),
+      title: ann.title
+    }));
+  } catch (e) {
+    console.warn('[Vite Config] Announcement load failed:', e.message);
+    return [];
+  }
 }
 
 function siteContentPlugin() {
@@ -28,6 +64,12 @@ function siteContentPlugin() {
     },
   };
 }
+
+const announcements = getAnnouncementsInfo();
+const announcementInputs = {};
+announcements.forEach(ann => {
+  announcementInputs[`duyurular/${ann.slug}/index`] = resolve(__dirname, 'duyurular/detay.html');
+});
 
 export default defineConfig({
   root: '.',
@@ -50,7 +92,13 @@ export default defineConfig({
         iletisim: resolve(__dirname, 'iletisim/index.html'),
         notfound: resolve(__dirname, '404.html'),
         admin: resolve(__dirname, 'admin/index.html'),
+        ...announcementInputs
       },
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`
+      }
     },
   },
   server: {

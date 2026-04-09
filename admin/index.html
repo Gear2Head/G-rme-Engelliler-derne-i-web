@@ -25,45 +25,47 @@
     }
 
     :root {
-      --brand-50: #EEF2FF;
-      --brand-100: #E0E7FF;
-      --brand-200: #C7D2FE;
-      --brand-500: #6366F1;
-      --brand-600: #4F46E5;
-      --brand-700: #4338CA;
-      --brand-800: #3730A3;
-      --brand-950: #1E1B4B;
-      --accent-500: #F97316;
-      --accent-600: #EA580C;
-      --success: #10B981;
-      --danger: #EF4444;
-      --warning: #F59E0B;
-      --surface: #F8FAFC;
-      --card: #FFFFFF;
-      --border: #E2E8F0;
-      --text: #1E293B;
-      --text-muted: #64748B;
-      --text-faint: #94A3B8;
-      --radius: 1.25rem;
+      --brand-50: #f0f4ff;
+      --brand-100: #e0e7ff;
+      --brand-200: #c7d2fe;
+      --brand-500: #6366f1;
+      --brand-600: #4f46e5;
+      --brand-700: #4338ca;
+      --brand-800: #3730a3;
+      --brand-950: #1e1b4b;
+      --accent-500: #f97316;
+      --accent-600: #ea580c;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --surface: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --border-faint: #f1f5f9;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --text-faint: #94a3b8;
+      --radius: 1rem;
       --radius-sm: 0.75rem;
       --radius-xs: 0.5rem;
-      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      --glass: rgba(255, 255, 255, 0.7);
-      --glass-border: rgba(255, 255, 255, 0.4);
+      --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     }
 
     html[data-theme="dark"] {
-      --surface: #0B0E14;
-      --card: #151921;
-      --border: #242B38;
-      --text: #F1F5F9;
-      --text-muted: #94A3B8;
-      --text-faint: #64748B;
+      --surface: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --border-faint: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-faint: #64748b;
       --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4);
-      --glass: rgba(21, 25, 33, 0.75);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --brand-50: #171E2E;
-      --brand-100: #1E293B;
+      --brand-50: #1e1b4b;
+      --brand-100: #312e81;
+      --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 100%);
     }
 
     ::-webkit-scrollbar {
@@ -1287,14 +1289,29 @@
     </div>
     <div class="admin-layout">
       <aside class="admin-sidebar">
+        <div style="padding: 1.5rem 1.25rem; margin-bottom: 1rem;">
+          <h2
+            style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-faint); margin: 0;">
+            Yönetim Paneli</h2>
+        </div>
         <a href="#" class="nav-item active" onclick="window.switchTab('dashboard', this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="7" height="7" />
-            <rect x="14" y="3" width="7" height="7" />
-            <rect x="14" y="14" width="7" height="7" />
-            <rect x="3" y="14" width="7" height="7" />
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
-          Dashboard
+          Hemen Başla
+        </a>
+        <div
+          style="margin: 1rem 1.25rem 0.5rem; font-size: 0.7rem; font-weight: 700; color: var(--text-faint); text-transform: uppercase;">
+          İçerik Yönetimi</div>
+        <a href="#" class="nav-item" onclick="window.switchTab('announcements', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2z" />
+            <polyline points="14 4 14 8 19 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+          </svg>
+          Duyuru Paylaş
         </a>
         <a href="#" class="nav-item" onclick="window.switchTab('gallery', this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1302,15 +1319,11 @@
             <circle cx="8.5" cy="8.5" r="1.5" />
             <polyline points="21 15 16 10 5 21" />
           </svg>
-          Galeri Yönetimi
+          Fotoğraflar (Galeri)
         </a>
-        <a href="#" class="nav-item" onclick="window.switchTab('site', this)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-          </svg>
-          Site Bilgileri
-        </a>
+        <div
+          style="margin: 1rem 1.25rem 0.5rem; font-size: 0.7rem; font-weight: 700; color: var(--text-faint); text-transform: uppercase;">
+          Ayarlar</div>
         <a href="#" class="nav-item" onclick="window.switchTab('board', this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -1320,15 +1333,13 @@
           </svg>
           Yönetim Kurulu
         </a>
-        <a href="#" class="nav-item" onclick="window.switchTab('announcements', this)">
+        <a href="#" class="nav-item" onclick="window.switchTab('site', this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2z" />
-            <polyline points="14 4 14 8 19 8" />
-            <line x1="16" y1="13" x2="8" y2="13" />
-            <line x1="16" y1="17" x2="8" y2="17" />
-            <polyline points="10 9 9 9 8 9" />
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
           </svg>
-          Duyuru Yönetimi
+          Genel Site Bilgileri
         </a>
       </aside>
 
@@ -1494,44 +1505,54 @@
       const dash = document.getElementById('admin-view-dashboard');
       dash.innerHTML = `
           <div class="admin-welcome fade-in">
-            <div class="admin-welcome__top">
-              <div>
-                <h1 style="font-family:'Outfit'; font-size: 2rem; margin-bottom: 0.5rem;">Hoş Geldiniz 👋</h1>
-                <p>Kırged Admin Dashboard — tüm sistem kontrolleri parmaklarınızın ucunda.</p>
+            <div style="background: var(--brand-600); color: white; padding: 2.5rem; border-radius: var(--radius-lg); margin-bottom: 2rem; position: relative; overflow: hidden; box-shadow: var(--shadow-lg);">
+              <div style="position: relative; z-index: 1;">
+                <h1 style="font-family:'Outfit'; font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 800;">Merhaba Sayın Yönetici 👋</h1>
+                <p style="opacity: 2.0; font-size: 1.1rem; max-width: 600px;">Dernek web sitesinin yönetim paneline hoş geldiniz. Buradan duyuru paylaşabilir, galerinizi düzenleyebilir ve site bilgilerini kolayca güncelleyebilirsiniz.</p>
+              </div>
+              <div style="position: absolute; right: -20px; bottom: -20px; opacity: 0.1; transform: rotate(-15deg);">
+                 <svg width="240" height="240" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
               </div>
             </div>
             
-            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1rem;">
-              <div class="panel-card" style="padding: 1.5rem; cursor: pointer;" onclick="window.switchTab('gallery', document.querySelectorAll('.nav-item')[1])">
-                <div style="display:flex; align-items:center; gap: 1rem;">
-                  <div style="width:50px; height:50px; background:rgba(99,102,241,0.1); color:var(--brand-600); border-radius:12px; display:flex; align-items:center; justify-content:center;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <h2 style="font-size: 1.25rem; margin-bottom: 1.5rem; font-family: 'Outfit'; display: flex; align-items: center; gap: 0.75rem;">
+               <div style="width:12px; height:12px; background:var(--brand-500); border-radius:3px;"></div>
+               Ne Yapmak İstersiniz?
+            </h2>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+              <div class="panel-card" style="padding: 1.5rem; cursor: pointer; border: 2px solid transparent; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--brand-200)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='transparent';this.style.transform='translateY(0)'" onclick="window.switchTab('announcements', document.querySelectorAll('.nav-item')[1])">
+                <div style="display:flex; align-items:center; gap: 1.25rem;">
+                  <div style="width:64px; height:64px; background:rgba(99,102,241,0.1); color:var(--brand-600); border-radius:16px; display:flex; align-items:center; justify-content:center; flex-shrink: 0;">
+                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2z"/><polyline points="14 4 14 8 19 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                   </div>
                   <div>
-                    <h4 style="margin:0; font-size:1.1rem;">Galeriye Git</h4>
-                    <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">Görsel ve albümleri yönetin</p>
+                    <h4 style="margin:0 0 0.25rem; font-size:1.2rem; font-family:'Outfit';">Duyuru Yayınla</h4>
+                    <p style="margin:0; font-size:0.9rem; color:var(--text-muted); line-height: 1.4;">Yeni bir haber veya önemli bir duyuru paylaşın.</p>
                   </div>
                 </div>
               </div>
-              <div class="panel-card" style="padding: 1.5rem; cursor: pointer;" onclick="window.switchTab('site', document.querySelectorAll('.nav-item')[2])">
-                <div style="display:flex; align-items:center; gap: 1rem;">
-                  <div style="width:50px; height:50px; background:rgba(16,185,129,0.1); color:var(--success); border-radius:12px; display:flex; align-items:center; justify-content:center;">
-                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+
+              <div class="panel-card" style="padding: 1.5rem; cursor: pointer; border: 2px solid transparent; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--brand-200)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='transparent';this.style.transform='translateY(0)'" onclick="window.switchTab('gallery', document.querySelectorAll('.nav-item')[2])">
+                <div style="display:flex; align-items:center; gap: 1.25rem;">
+                  <div style="width:64px; height:64px; background:rgba(16,185,129,0.1); color:var(--success); border-radius:16px; display:flex; align-items:center; justify-content:center; flex-shrink: 0;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                   </div>
                   <div>
-                    <h4 style="margin:0; font-size:1.1rem;">Siteyi Düzenle</h4>
-                    <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">İletişim ve Hakkımızda bilgileri</p>
+                    <h4 style="margin:0 0 0.25rem; font-size:1.2rem; font-family:'Outfit';">Fotoğraf Ekle</h4>
+                    <p style="margin:0; font-size:0.9rem; color:var(--text-muted); line-height: 1.4;">Etkinlik fotoğraflarını galeriye yükleyin.</p>
                   </div>
                 </div>
               </div>
-              <div class="panel-card" style="padding: 1.5rem; cursor: pointer;" onclick="window.switchTab('announcements', document.querySelectorAll('.nav-item')[4])">
-                <div style="display:flex; align-items:center; gap: 1rem;">
-                  <div style="width:50px; height:50px; background:rgba(245,158,11,0.1); color:var(--warning); border-radius:12px; display:flex; align-items:center; justify-content:center;">
-                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2z"/><polyline points="14 4 14 8 19 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+
+              <div class="panel-card" style="padding: 1.5rem; cursor: pointer; border: 2px solid transparent; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--brand-200)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='transparent';this.style.transform='translateY(0)'" onclick="window.switchTab('site', document.querySelectorAll('.nav-item')[4])">
+                <div style="display:flex; align-items:center; gap: 1.25rem;">
+                  <div style="width:64px; height:64px; background:rgba(249,115,22,0.1); color:var(--accent-600); border-radius:16px; display:flex; align-items:center; justify-content:center; flex-shrink: 0;">
+                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
                   </div>
                   <div>
-                    <h4 style="margin:0; font-size:1.1rem;">Duyuruları Yönet</h4>
-                    <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">Güncel haberler ve duyurular</p>
+                    <h4 style="margin:0 0 0.25rem; font-size:1.2rem; font-family:'Outfit';">Bilgileri Güncelle</h4>
+                    <p style="margin:0; font-size:0.9rem; color:var(--text-muted); line-height: 1.4;">İletişim, adres ve dernek bilgilerini değiştirin.</p>
                   </div>
                 </div>
               </div>
@@ -1663,7 +1684,10 @@
             </div>
             <div class="panel-card__body">
               <div id="announcements-editor-list" style="display:flex; flex-direction:column; gap:1.5rem; margin-bottom:1.5rem;"></div>
-              <button class="btn btn--dashed" onclick="window.addAnnouncement()">+ Yeni Duyuru Ekle</button>
+              <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+                <button class="btn btn--dashed" style="flex:1;" onclick="window.addAnnouncement()">+ Yeni Duyuru Ekle</button>
+                <button class="btn btn--primary" style="flex:0 0 auto;" onclick="window.saveAnnouncements()">Kaydet</button>
+              </div>
             </div>
           </div>
         `;
@@ -2010,37 +2034,145 @@
     };
 
     // ─── ANNOUNCEMENT MANAGEMENT ──────────────────────────────────
+    let activeAnnouncementIdx = null;
+
+    function slugify(text) {
+      if (!text) return '';
+      const trMap = { 'ç': 'c', 'Ç': 'C', 'ğ': 'g', 'Ğ': 'G', 'ş': 's', 'Ş': 'S', 'ü': 'u', 'Ü': 'U', 'ı': 'i', 'İ': 'I', 'ö': 'o', 'Ö': 'O' };
+      return text.toString().toLowerCase()
+        .replace(/[çÇğĞşŞüÜıİöÖ]/g, m => trMap[m])
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
+    }
+
+    window.openGalleryPicker = (idx) => {
+      activeAnnouncementIdx = idx;
+      const modal = document.getElementById('gallery-picker-modal');
+      const grid = document.getElementById('gallery-picker-grid');
+      grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem;">Yükleniyor...</div>';
+      modal.classList.add('visible');
+
+      if (typeof adminGalleryItems === 'undefined' || adminGalleryItems.length === 0) {
+        getGalleryItems().then(items => {
+          window.adminGalleryItems = items;
+          renderPickerItems(items);
+        });
+      } else {
+        renderPickerItems(adminGalleryItems);
+      }
+    };
+
+    function renderPickerItems(items) {
+      const grid = document.getElementById('gallery-picker-grid');
+      if (!items || items.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem;">Galeride hiç fotoğraf yok. Lütfen önce Fotoğraflar bölümünden yükleme yapın.</div>';
+        return;
+      }
+      grid.innerHTML = items.map(item => `
+        <div class="picker-item" onclick="window.selectGalleryImage('${item.url}')">
+          <img src="${item.url}" alt="${item.caption || ''}" />
+        </div>
+      `).join('');
+    }
+
+    window.selectGalleryImage = (url) => {
+      if (activeAnnouncementIdx !== null) {
+        window.updateAnnouncement(activeAnnouncementIdx, 'image', url);
+        window.renderAnnouncementRows();
+      }
+      window.closeGalleryPicker();
+    };
+
+    window.closeGalleryPicker = () => {
+      const modal = document.getElementById('gallery-picker-modal');
+      modal.classList.remove('visible');
+      activeAnnouncementIdx = null;
+    };
+
     window.renderAnnouncementRows = () => {
       const list = document.getElementById('announcements-editor-list');
       if (!list) return;
       if (!siteContent.announcements) siteContent.announcements = [];
 
       list.innerHTML = siteContent.announcements.map((ann, idx) => `
-        <div class="panel-card" style="padding:1.25rem; border:1px solid var(--border); box-shadow:none; background:var(--surface);">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
-            <div style="font-weight:700; color:var(--brand-600);">Duyuru #${idx + 1}</div>
-            <button class="btn btn--danger btn--sm" style="padding:0.25rem 0.5rem;" onclick="window.removeAnnouncement(${idx})">Sil</button>
+        <div class="panel-card announcement-drag-item" 
+             draggable="true" 
+             data-idx="${idx}"
+             style="padding:1.5rem; border:1px solid var(--border); box-shadow:var(--shadow-sm); background:var(--card); position:relative; overflow:hidden; cursor:default;">
+          
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem;">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <div style="cursor:grab; color:var(--text-faint);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+              </div>
+              <div>
+                <h3 style="font-family:'Outfit'; font-size:1.1rem; margin:0 0 0.15rem;">Duyuru #${idx + 1}</h3>
+                <span style="font-size:0.7rem; color:var(--text-faint); font-weight:700; text-transform:uppercase;">${ann.category || 'Genel'}</span>
+              </div>
+            </div>
+            <button class="btn btn--danger btn--sm" style="border-radius:var(--radius-xs); padding:0.25rem 0.6rem;" onclick="window.removeAnnouncement(${idx})">Sil</button>
           </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
-             <div class="field-group">
-                <label class="field-label">Başlık</label>
-                <input class="field-input" type="text" value="${ann.title || ''}" onchange="window.updateAnnouncement(${idx}, 'title', this.value)" />
+
+          <div style="display:grid; grid-template-columns: 220px 1fr; gap:1.5rem;">
+             <div>
+                <div style="width:100%; aspect-ratio:16/9; background:var(--border-faint); border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--border); margin-bottom:0.75rem; position:relative;">
+                   ${ann.image ? `<img src="${ann.image}" style="width:100%; height:100%; object-fit:cover;" />` : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:var(--text-faint); font-size:0.7rem; text-align:center; padding:1rem;">Görsel Yok</div>`}
+                </div>
+                <button class="btn btn--ghost btn--sm" style="justify-content:center; width:100%; font-size:0.8rem;" onclick="window.openGalleryPicker(${idx})">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:4px;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  Görsel Seç
+                </button>
              </div>
-             <div class="field-group">
-                <label class="field-label">Tarih</label>
-                <input class="field-input" type="date" value="${ann.date || ''}" onchange="window.updateAnnouncement(${idx}, 'date', this.value)" />
+
+             <div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:0.75rem;">
+                   <div class="field-group">
+                      <label class="field-label">Başlık</label>
+                      <input class="field-input" type="text" placeholder="Duyuru başlığı..." value="${ann.title || ''}" onchange="window.updateAnnouncement(${idx}, 'title', this.value)" />
+                   </div>
+                   <div class="field-group">
+                      <label class="field-label">Tarih</label>
+                      <input class="field-input" type="date" value="${ann.date || ''}" onchange="window.updateAnnouncement(${idx}, 'date', this.value)" />
+                   </div>
+                </div>
+                <div class="field-group">
+                   <label class="field-label">Duyuru Detayı</label>
+                   <textarea class="field-textarea" style="height:100px; resize:vertical; font-size:0.9rem;" placeholder="İçerik..." onchange="window.updateAnnouncement(${idx}, 'content', this.value)">${ann.content || ''}</textarea>
+                </div>
              </div>
           </div>
-          <div class="field-group">
-             <label class="field-label">Kategori</label>
-             <input class="field-input" type="text" placeholder="Örn: Genel, Etkinlik, Önemli" value="${ann.category || ''}" onchange="window.updateAnnouncement(${idx}, 'category', this.value)" />
-          </div>
-          <div class="field-group" style="margin-top:1rem;">
-             <label class="field-label">İçerik (HTML Desteklenir)</label>
-             <textarea class="field-textarea" onchange="window.updateAnnouncement(${idx}, 'content', this.value)">${ann.content || ''}</textarea>
+          
+          <div style="margin-top:1.25rem; padding-top:0.75rem; border-top:1px dashed var(--border); display:flex; justify-content:space-between; align-items:center;">
+             <div style="display:flex; align-items:center; gap:0.5rem;">
+                <span class="status-badge" style="background:#dcfce7; color:#166534; font-size:0.7rem; padding:0.1rem 0.6rem; border-radius:100px; font-weight:700;">YAYINDA</span>
+                <span style="font-size:0.75rem; color:var(--text-faint);">Önizleme: /duyurular/${slugify(ann.title || '')}</span>
+             </div>
+             <a href="/duyurular" target="_blank" style="font-size:0.8rem; color:var(--brand-600); text-decoration:none; font-weight:600;">Siteye Git →</a>
           </div>
         </div>
       `).join('');
+
+      // Add drag-drop events
+      let draggedIdx = null;
+      document.querySelectorAll('.announcement-drag-item').forEach(row => {
+        row.addEventListener('dragstart', () => { draggedIdx = parseInt(row.dataset.idx); row.classList.add('dragging'); });
+        row.addEventListener('dragover', (e) => { e.preventDefault(); row.classList.add('drag-over'); });
+        row.addEventListener('dragleave', () => { row.classList.remove('drag-over'); });
+        row.addEventListener('drop', (e) => {
+          e.preventDefault();
+          row.classList.remove('drag-over');
+          const targetIdx = parseInt(row.dataset.idx);
+          if (draggedIdx !== null && draggedIdx !== targetIdx) {
+            const moving = siteContent.announcements.splice(draggedIdx, 1)[0];
+            siteContent.announcements.splice(targetIdx, 0, moving);
+            window.renderAnnouncementRows();
+          }
+        });
+        row.addEventListener('dragend', () => { row.classList.remove('dragging'); draggedIdx = null; });
+      });
     };
 
     window.updateAnnouncement = (idx, field, val) => {
@@ -2054,6 +2186,7 @@
         title: 'Yeni Duyuru',
         date: new Date().toISOString().split('T')[0],
         category: 'Genel',
+        image: '',
         content: '<p>Duyuru içeriği buraya gelecek...</p>'
       });
       window.renderAnnouncementRows();
@@ -2063,6 +2196,7 @@
       if (!confirm('Bu duyuruyu silmek istediğinize emin misiniz?')) return;
       siteContent.announcements.splice(idx, 1);
       window.renderAnnouncementRows();
+      showToast('Duyuru silindi. Kaydetmeyi unutmayın!', 'info', 5000);
     };
 
     window.saveAnnouncements = async () => {

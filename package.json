@@ -1,10 +1,12 @@
 {
   "name": "kirshehir-gorme-engelliler-dernegi",
   "version": "1.0.0",
+  "type": "module",
   "description": "Kırşehir Görme Engelliler Derneği Resmi Web Sitesi",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "sync": "node src/build/sync-content.js",
+    "build": "node src/build/sync-content.js && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
