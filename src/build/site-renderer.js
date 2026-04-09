@@ -1198,37 +1198,40 @@ function renderHead(pageKey, content) {
   ${schemas}
   <script>
     (function() {
-      // Global Mobile Menu Toggle
-      document.addEventListener('DOMContentLoaded', function() {
-        const toggle = document.getElementById('menu-toggle');
+      // Global Mobile Menu Toggle - Delegation Pattern
+      document.addEventListener('click', function(e) {
+        const toggle = e.target.closest('#menu-toggle');
         const nav = document.getElementById('mobile-nav');
-        if (!toggle || !nav) return;
+        if (!nav) return;
 
-        toggle.addEventListener('click', function(e) {
-          e.stopPropagation();
+        // Clicked the toggle button
+        if (toggle) {
+          e.preventDefault();
           const expanded = toggle.getAttribute('aria-expanded') === 'true';
           toggle.setAttribute('aria-expanded', !expanded);
           nav.classList.toggle('open');
           document.body.classList.toggle('menu-open');
-        });
+          return;
+        }
 
-        // Close menu on click outside
-        document.addEventListener('click', function(e) {
-          if (nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
-            toggle.setAttribute('aria-expanded', 'false');
-            nav.classList.remove('open');
-            document.body.classList.remove('menu-open');
-          }
-        });
+        // Clicked outside nav while open
+        const isClickInsideNav = e.target.closest('#mobile-nav');
+        if (nav.classList.contains('open') && !isClickInsideNav) {
+          const btn = document.getElementById('menu-toggle');
+          if (btn) btn.setAttribute('aria-expanded', 'false');
+          nav.classList.remove('open');
+          document.body.classList.remove('menu-open');
+        }
+      });
 
-        // Close menu on ESC
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape' && nav.classList.contains('open')) {
-            toggle.setAttribute('aria-expanded', 'false');
-            nav.classList.remove('open');
-            document.body.classList.remove('menu-open');
-          }
-        });
+      document.addEventListener('keydown', function(e) {
+        const nav = document.getElementById('mobile-nav');
+        if (e.key === 'Escape' && nav && nav.classList.contains('open')) {
+          const btn = document.getElementById('menu-toggle');
+          if (btn) btn.setAttribute('aria-expanded', 'false');
+          nav.classList.remove('open');
+          document.body.classList.remove('menu-open');
+        }
       });
     })();
   </script>`;

@@ -463,8 +463,8 @@ svg {
 }
 .menu-toggle {
   display: none;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   align-items: center;
   justify-content: center;
   background: none;
@@ -473,6 +473,8 @@ svg {
   color: var(--color-text);
   cursor: pointer;
   transition: background var(--transition-fast), border-color var(--transition-fast);
+  z-index: 1500;
+  position: relative;
 }
 
 @media (max-width: 1024px) {
@@ -882,7 +884,7 @@ body.menu-open {
 
 @media (max-width: 1024px) {
   .hero {
-    padding-block: var(--space-12) var(--space-16);
+    padding-block: var(--space-16) var(--space-20);
   }
 
   .hero__inner {
