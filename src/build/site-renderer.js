@@ -621,7 +621,13 @@ function renderGalleryContent(content) {
         <button class="gallery-filter-btn active" onclick="filterGallery(this, 'all')">Tümü</button>
         ${categoryFilters}
       </div>
-      <div class="gallery-page-grid" id="gallery-page-grid" aria-live="polite"></div>
+      <div class="gallery-page-grid" id="gallery-page-grid" aria-live="polite">
+        <div class="gallery-empty-state" style="grid-column: 1 / -1; padding: 4rem 2rem; text-align: center; color: var(--color-text-muted);">
+          <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;">🍃</div>
+          <p style="font-size: var(--text-lg); font-weight: 500;">Galeri boş ise şimdilik etraf sakin...</p>
+          <p style="font-size: var(--text-sm); opacity: 0.8; margin-top: 0.5rem;">Etkinliklerimizi yakında burada bulabilirsiniz.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -739,49 +745,67 @@ function renderConstitutionContent(content) {
   </section>`;
 }
 
-function renderContactContent(content) {
-  const cards = [
-    {
-      title: 'Telefon Görüşmesi',
-      icon: 'phone',
-      text: 'Mesai saatleri içerisinde bizimle doğrudan telefon aracılığıyla iletişime geçebilirsiniz.',
-      cta: 'HEMEN ARA',
-      href: content.contact.phoneHref
-    },
-    {
-      title: 'Yerinde Ziyaret',
-      icon: 'map',
-      text: 'Kırşehir merkezdeki dernek ofisimize uğrayarak çalışmalarımızla ilgili birebir bilgi alabilirsiniz.',
-      cta: 'KONUMU BUL',
-      href: content.contact.googleMapsUrl
-    },
-    {
-      title: 'İletişim Formu',
-      icon: 'chat',
-      text: 'Kapsamlı sorularınız, bağış konuları veya kurumsal iş birlikleri için iletişim sayfamızı kullanabilirsiniz.',
-      cta: 'SAYFAYA GİT',
-      href: '#contact-form-section'
-    },
-    {
-      title: 'E-posta Gönderimi',
-      icon: 'mail',
-      text: 'Resmi yazışmalar veya belge aktarımı için kurumsal e-posta adresimiz üzerinden bize ulaşabilirsiniz.',
-      cta: 'MAİL AT',
-      href: content.contact.emailHref
-    }
-  ];
+function renderAnnouncementsContent(content) {
+  const announcements = content.announcements || [];
+  const announcementsHtml = announcements.length > 0
+    ? announcements.map(ann => `
+      <article class="announcement-card">
+        <div class="announcement-card__meta">
+          <time datetime="${ann.date}">${new Date(ann.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}</time>
+          ${ann.category ? `<span class="announcement-card__tag">${escapeHtml(ann.category)}</span>` : ''}
+        </div>
+        <h2 class="announcement-card__title">${escapeHtml(ann.title)}</h2>
+        <div class="announcement-card__content">${ann.content}</div>
+      </article>
+    `).join('')
+    : `<div class="empty-announcements">
+        <div class="empty-announcements__icon">${icon('info')}</div>
+        <p>Şu an için güncel bir duyuru bulunmamaktadır.</p>
+        <p style="font-size: var(--text-sm); color: var(--color-text-faint);">Daha sonra tekrar kontrol edebilirsiniz.</p>
+      </div>`;
 
-  const cardsHtml = cards.map(card => `
-    <article class="contact-card">
-      <div class="contact-card__icon">${icon(card.icon)}</div>
-      <h3 class="contact-card__title">${escapeHtml(card.title)}</h3>
-      <p class="contact-card__text">${escapeHtml(card.text)}</p>
-      <a href="${escapeAttr(card.href)}" class="contact-card__cta">${escapeHtml(card.cta)} ${icon('chevronRight') || '→'}</a>
-    </article>
-  `).join('');
+  return `<section class="page-header" aria-labelledby="page-title">
+    <div class="container page-header__inner">
+      <nav class="breadcrumb" aria-label="Sayfa konumu">
+        <ol class="breadcrumb__list">
+          <li class="breadcrumb__item"><a href="/" class="breadcrumb__link">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
+          <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">Duyurular</span></li>
+        </ol>
+      </nav>
+      <h1 class="page-header__title" id="page-title">Duyurular & Haberler</h1>
+      <p class="page-header__lead">Derneğimizden en güncel haberler ve duyurular.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="announcements-heading">
+    <div class="container">
+      <div class="announcements-grid">
+        ${announcementsHtml}
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderContactContent(content) {
+  const hasMap = Boolean(content.site.status.hasMapsEmbed);
+  const mapQuery = (content.contact.geo?.lat && content.contact.geo?.lng)
+    ? `${content.contact.geo.lat},${content.contact.geo.lng}`
+    : content.contact.address?.full;
+  const mapEmbedSrc = (hasMap && mapQuery)
+    ? `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&z=15&output=embed`
+    : null;
+
+  const mapMarkup = hasMap
+    ? `<div class="contact-map-wrapper" style="overflow:hidden; border-radius:var(--radius-xl); border:1px solid var(--color-border); position:relative; min-height:450px;">
+        <iframe src="${escapeAttr(mapEmbedSrc)}" title="${escapeAttr(`${content.site.name} Konumu`)}" referrerpolicy="no-referrer-when-downgrade" style="width:100%; height:450px; border:0; display:block;"></iframe>
+      </div>`
+    : `<div class="map-placeholder" role="img" aria-label="Harita henüz etkin değil">
+        ${icon('map')}
+        <p><strong>${escapeHtml(content.contact.mapPlaceholderTitle || 'Harita yakında burada olacak.')}</strong><br>${escapeHtml(content.contact.mapPlaceholderText || '')}</p>
+      </div>`;
 
   const watermarkHtml = content.site.logoPath 
-    ? `<div class="watermark-logo" style="background-image: url('${escapeAttr(content.site.logoPath)}');"></div>` 
+    ? `<div class="watermark-logo-overlay" style="background-image: url('${escapeAttr(content.site.logoPath)}');"></div>` 
     : '';
 
   return `<section class="page-header" aria-labelledby="page-title">
@@ -797,43 +821,82 @@ function renderContactContent(content) {
     </div>
   </section>
 
-  <section class="section contact-section-grid" style="position: relative; overflow: hidden; background: var(--color-bg);">
+  <section class="section contact-main-section" style="position: relative; overflow: hidden;">
     ${watermarkHtml}
     <div class="container" style="position: relative; z-index: 2;">
-      <div class="contact-cards-grid">
-        ${cardsHtml}
+      <div class="contact-grid-classic" style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: start;">
+        <div class="contact-info-col">
+          <div class="section-accent"></div>
+          <h2 style="font-size: var(--text-3xl); margin-bottom: var(--space-8);">İletişim Bilgilerimiz</h2>
+          
+          <div style="display:flex; flex-direction:column; gap:var(--space-6); margin-bottom:var(--space-10);">
+            <article class="contact-item-classic">
+              <div class="contact-item-classic__icon">${icon('phone')}</div>
+              <div class="contact-item-classic__content">
+                <span class="contact-item-classic__label">Telefon</span>
+                <a href="${escapeAttr(content.contact.phoneHref)}" class="contact-item-classic__value">${escapeHtml(content.contact.phone)}</a>
+              </div>
+            </article>
+
+            <article class="contact-item-classic">
+              <div class="contact-item-classic__icon">${icon('mail')}</div>
+              <div class="contact-item-classic__content">
+                <span class="contact-item-classic__label">E-posta</span>
+                <a href="${escapeAttr(content.contact.emailHref)}" class="contact-item-classic__value">${escapeHtml(content.contact.email)}</a>
+              </div>
+            </article>
+
+            <article class="contact-item-classic">
+              <div class="contact-item-classic__icon">${icon('map')}</div>
+              <div class="contact-item-classic__content">
+                <span class="contact-item-classic__label">Adres</span>
+                <p class="contact-item-classic__value">${escapeHtml(content.contact.address.full)}</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="contact-form-card" style="background: white; padding: var(--space-8); border-radius: var(--radius-xl); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+            <h3 style="margin-bottom: var(--space-6); display:flex; align-items:center; gap:0.75rem;">${icon('chat')} Bize Mesaj Gönderin</h3>
+            <form id="contact-form" onsubmit="event.preventDefault(); alert('Mesajınız simüle edildi.');">
+              <div style="display:grid; gap:var(--space-4);">
+                <input type="text" placeholder="Adınız Soyadınız" required style="width:100%; padding:0.75rem; border:1px solid var(--color-border); border-radius:var(--radius-md);" />
+                <input type="email" placeholder="E-Posta Adresiniz" required style="width:100%; padding:0.75rem; border:1px solid var(--color-border); border-radius:var(--radius-md);" />
+                <textarea placeholder="Mesajınız" rows="4" required style="width:100%; padding:0.75rem; border:1px solid var(--color-border); border-radius:var(--radius-md); resize:vertical;"></textarea>
+                <button type="submit" class="btn btn--primary">${icon('mail')} Gönder</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="contact-map-col">
+          ${mapMarkup}
+          ${content.contact.googleMapsUrl ? `
+          <a href="${escapeAttr(content.contact.googleMapsUrl)}" class="btn btn--accent btn--lg" target="_blank" rel="noopener noreferrer" style="margin-top: var(--space-6); width: 100%; justify-content: center;">
+            ${icon('directions')} Google Haritalar'da Aç
+          </a>` : ''}
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="contact-form-section" style="background: var(--color-bg-alt);">
+  <section class="section section--alt">
     <div class="container">
-      <div class="contact-form-wrapper" style="max-width: 800px; margin-inline: auto; background: white; padding: var(--space-8); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
-        <div class="section-accent"></div>
-        <h2 style="font-size: var(--text-3xl); margin-bottom: var(--space-8); font-family: var(--font-heading);">Bize Mesaj Gönderin</h2>
-        <form class="contact-form" id="contact-form" action="#" method="POST" onsubmit="event.preventDefault(); alert('Mesajınız simüle edildi. (Backend entegrasyonu aşama 11\'de eklenecektir)');">
-          <div style="display: grid; gap: var(--space-6);">
-            <div class="form-group">
-              <label for="name" style="display:block; margin-bottom:0.5rem; font-weight:600;">Adınız Soyadınız</label>
-              <input type="text" id="name" name="name" required style="width:100%; padding:0.75rem; border:1px solid var(--color-border); border-radius:var(--radius-md);" />
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-6);">
-              <div class="form-group">
-                <label for="email" style="display:block; margin-bottom:0.5rem; font-weight:600;">E-Posta Adresiniz</label>
-                <input type="email" id="email" name="email" required style="width:100%; padding:0.75rem; border:1px solid var(--color-border); border-radius:var(--radius-md);" />
-              </div>
-              <div class="form-group">
-                <label for="phone" style="display:block; margin-bottom:0.5rem; font-weight:600;">Telefon Numaranız</label>
-                <input type="tel" id="phone" name="phone" style="width:100%; padding:0.75rem; border:1px solid var(--color-border); border-radius:var(--radius-md);" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="message" style="display:block; margin-bottom:0.5rem; font-weight:600;">Mesajınız</label>
-              <textarea id="message" name="message" rows="5" required style="width:100%; padding:0.75rem; border:1px solid var(--color-border); border-radius:var(--radius-md);"></textarea>
-            </div>
-            <button type="submit" class="btn btn--primary btn--lg" style="width: fit-content;">${icon('mail')} Mesajımı Gönder</button>
-          </div>
-        </form>
+      <div class="quick-contact-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-6);">
+        <div class="quick-card" style="background: white; padding: var(--space-6); border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--color-border);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📞</div>
+          <h4 style="margin-bottom: 0.25rem;">7/24 Telefon</h4>
+          <p style="font-size: var(--text-sm); color: var(--color-text-muted);">Acil durumlar için bizlere her zaman ulaşabilirsiniz.</p>
+        </div>
+        <div class="quick-card" style="background: white; padding: var(--space-6); border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--color-border);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📍</div>
+          <h4 style="margin-bottom: 0.25rem;">Kolay Ulaşım</h4>
+          <p style="font-size: var(--text-sm); color: var(--color-text-muted);">Merkezi konumumuzla toplu taşımaya çok yakınız.</p>
+        </div>
+        <div class="quick-card" style="background: white; padding: var(--space-6); border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--color-border);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤝</div>
+          <h4 style="margin-bottom: 0.25rem;">Gönüllü Olun</h4>
+          <p style="font-size: var(--text-sm); color: var(--color-text-muted);">Derneğimize gönüllü olarak destek verebilirsiniz.</p>
+        </div>
       </div>
     </div>
   </section>`;

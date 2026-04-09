@@ -82,7 +82,7 @@
     },
     {
       "label": "DUYURULAR",
-      "href": "/#",
+      "href": "/duyurular",
       "id": "nav-announcements"
     },
     {
@@ -94,6 +94,7 @@
       ]
     }
   ],
+  "announcements": [],
   "hero": {
     "title": "Kırşehir Görme Engelliler Derneği",
     "subtitle": "Işığa Giden Yolda Birlikte",
@@ -219,6 +220,11 @@
       "title": "Dernek Tüzüğü | Kırşehir Görme Engelliler Derneği",
       "description": "Kırşehir Görme Engelliler Derneği tüzüğüne ulaşın. Derneğin resmi kuruluş belgesi ve yönetim esasları.",
       "canonical": "/tuzuk"
+    },
+    "duyurular": {
+      "title": "Duyurular | Kırşehir Görme Engelliler Derneği",
+      "description": "Kırşehir Görme Engelliler Derneği resmi duyuruları, haberleri ve güncel paylaşımları.",
+      "canonical": "/duyurular"
     },
     "iletisim": {
       "title": "İletişim | Kırşehir Görme Engelliler Derneği",

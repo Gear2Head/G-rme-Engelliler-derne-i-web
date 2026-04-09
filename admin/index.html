@@ -1320,6 +1320,16 @@
           </svg>
           Yönetim Kurulu
         </a>
+        <a href="#" class="nav-item" onclick="window.switchTab('announcements', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2z" />
+            <polyline points="14 4 14 8 19 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10 9 9 9 8 9" />
+          </svg>
+          Duyuru Yönetimi
+        </a>
       </aside>
 
       <main class="admin-main">
@@ -1514,6 +1524,17 @@
                   </div>
                 </div>
               </div>
+              <div class="panel-card" style="padding: 1.5rem; cursor: pointer;" onclick="window.switchTab('announcements', document.querySelectorAll('.nav-item')[4])">
+                <div style="display:flex; align-items:center; gap: 1rem;">
+                  <div style="width:50px; height:50px; background:rgba(245,158,11,0.1); color:var(--warning); border-radius:12px; display:flex; align-items:center; justify-content:center;">
+                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10l4 4v12a2 2 0 0 1-2 2z"/><polyline points="14 4 14 8 19 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  </div>
+                  <div>
+                    <h4 style="margin:0; font-size:1.1rem;">Duyuruları Yönet</h4>
+                    <p style="margin:0; font-size:0.85rem; color:var(--text-muted);">Güncel haberler ve duyurular</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         `;
@@ -1533,6 +1554,9 @@
       } else if (type === 'board') {
         root.innerHTML = renderBoardUI();
         window.renderBoardRows();
+      } else if (type === 'announcements') {
+        root.innerHTML = renderAnnouncementsUI();
+        window.renderAnnouncementRows();
       }
     }
 
@@ -1630,6 +1654,21 @@
         `;
     }
 
+    function renderAnnouncementsUI() {
+      return `
+          <div class="panel-card fade-in">
+            <div class="panel-card__header">
+              <div class="panel-card__title">Duyuru Yönetimi</div>
+              <button id="btn-save-announcements" class="btn btn--primary" onclick="window.saveAnnouncements()">Değişiklikleri Kaydet</button>
+            </div>
+            <div class="panel-card__body">
+              <div id="announcements-editor-list" style="display:flex; flex-direction:column; gap:1.5rem; margin-bottom:1.5rem;"></div>
+              <button class="btn btn--dashed" onclick="window.addAnnouncement()">+ Yeni Duyuru Ekle</button>
+            </div>
+          </div>
+        `;
+    }
+
     async function loadSiteContent() {
       try {
         let data = await getSiteConfig();
@@ -1640,10 +1679,11 @@
           data = await res.json();
         }
         siteContent = data;
+        if (!siteContent.announcements) siteContent.announcements = [];
       } catch (e) {
         console.error('[KGED Admin] Veri yükleme hatası:', e);
         showToast('Site verileri yüklenemedi: ' + e.message, 'error');
-        siteContent = { about: {}, contact: {}, board: [], nav: [], hero: {}, mission: { cards: [] } };
+        siteContent = { about: {}, contact: {}, board: [], nav: [], hero: {}, mission: { cards: [] }, announcements: [] };
       }
     }
 
@@ -1967,6 +2007,78 @@
       if (!siteContent.board) siteContent.board = [];
       siteContent.board.push({ name: '', role: '' });
       window.renderBoardRows();
+    };
+
+    // ─── ANNOUNCEMENT MANAGEMENT ──────────────────────────────────
+    window.renderAnnouncementRows = () => {
+      const list = document.getElementById('announcements-editor-list');
+      if (!list) return;
+      if (!siteContent.announcements) siteContent.announcements = [];
+      
+      list.innerHTML = siteContent.announcements.map((ann, idx) => `
+        <div class="panel-card" style="padding:1.25rem; border:1px solid var(--border); box-shadow:none; background:var(--surface);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem;">
+            <div style="font-weight:700; color:var(--brand-600);">Duyuru #${idx + 1}</div>
+            <button class="btn btn--danger btn--sm" style="padding:0.25rem 0.5rem;" onclick="window.removeAnnouncement(${idx})">Sil</button>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+             <div class="field-group">
+                <label class="field-label">Başlık</label>
+                <input class="field-input" type="text" value="${ann.title || ''}" onchange="window.updateAnnouncement(${idx}, 'title', this.value)" />
+             </div>
+             <div class="field-group">
+                <label class="field-label">Tarih</label>
+                <input class="field-input" type="date" value="${ann.date || ''}" onchange="window.updateAnnouncement(${idx}, 'date', this.value)" />
+             </div>
+          </div>
+          <div class="field-group">
+             <label class="field-label">Kategori</label>
+             <input class="field-input" type="text" placeholder="Örn: Genel, Etkinlik, Önemli" value="${ann.category || ''}" onchange="window.updateAnnouncement(${idx}, 'category', this.value)" />
+          </div>
+          <div class="field-group" style="margin-top:1rem;">
+             <label class="field-label">İçerik (HTML Desteklenir)</label>
+             <textarea class="field-textarea" onchange="window.updateAnnouncement(${idx}, 'content', this.value)">${ann.content || ''}</textarea>
+          </div>
+        </div>
+      `).join('');
+    };
+
+    window.updateAnnouncement = (idx, field, val) => {
+      if (!siteContent.announcements[idx]) return;
+      siteContent.announcements[idx][field] = val;
+    };
+
+    window.addAnnouncement = () => {
+      if (!siteContent.announcements) siteContent.announcements = [];
+      siteContent.announcements.unshift({
+        title: 'Yeni Duyuru',
+        date: new Date().toISOString().split('T')[0],
+        category: 'Genel',
+        content: '<p>Duyuru içeriği buraya gelecek...</p>'
+      });
+      window.renderAnnouncementRows();
+    };
+
+    window.removeAnnouncement = (idx) => {
+      if (!confirm('Bu duyuruyu silmek istediğinize emin misiniz?')) return;
+      siteContent.announcements.splice(idx, 1);
+      window.renderAnnouncementRows();
+    };
+
+    window.saveAnnouncements = async () => {
+      const btn = document.getElementById('btn-save-announcements');
+      const oldText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Kaydediliyor...';
+      try {
+        await saveSiteConfig(siteContent);
+        showToast('Duyurular başarıyla kaydedildi.', 'success');
+      } catch (e) {
+        showToast('Hata: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = oldText;
+      }
     };
 
     // ─── IMAGE UPLOAD ─────────────────────────────────────────────

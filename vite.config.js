@@ -11,6 +11,7 @@ function resolvePageKey(context) {
   if (normalized.includes('/hakkimizda')) return 'hakkimizda';
   if (normalized.includes('/galeri')) return 'galeri';
   if (normalized.includes('/tuzuk')) return 'tuzuk';
+  if (normalized.includes('/duyurular')) return 'duyurular';
   if (normalized.includes('/iletisim')) return 'iletisim';
 
   return 'index';
@@ -45,6 +46,7 @@ export default defineConfig({
         hakkimizda: resolve(__dirname, 'hakkimizda/index.html'),
         galeri: resolve(__dirname, 'galeri/index.html'),
         tuzuk: resolve(__dirname, 'tuzuk/index.html'),
+        duyurular: resolve(__dirname, 'duyurular/index.html'),
         iletisim: resolve(__dirname, 'iletisim/index.html'),
         notfound: resolve(__dirname, '404.html'),
         admin: resolve(__dirname, 'admin/index.html'),
