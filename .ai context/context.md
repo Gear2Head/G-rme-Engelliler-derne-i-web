@@ -1,27 +1,30 @@
-FILE: .ai context/context.md [AUTO GENERATED DO NOT EDIT MANUALLY]
-
 ## Project Snapshot
-Stack: HTML, CSS, JavaScript (Vanilla), Vite, Supabase
-Active module: Admin Dashboard (Gallery Management)
-Architecture pattern: Simple MPA with a central site-renderer.js for static generation.
+Stack: HTML, CSS, JavaScript (Vite SSG with custom site-renderer.js)
+Active module: Global Layout & Styles
+Architecture pattern: Static Site generation with tokens.css/layout.css/site-renderer.js
 
 ## Completed in This Session
-[x] Supabase integration for Gallery (Alt Text, Albums)
-[x] Bulk Delete functionality
-[x] PWA Optimization (Service Worker Cache-First)
-[x] Accessibility Audit (ARIA labels)
-[x] Premium 404 Page
-[x] DB Schema Update (alt_text column)
+[x] Plan structure mapped
+[x] Update .ai context/context.md
+[x] Update src/styles/tokens.css (Primary #1a3c6e, Accent #e8b84b, corporate scale)
+[x] Update src/styles/layout.css (Top Bar, Header spacing, Footer layout)
+[x] Update src/build/site-renderer.js renderHeader()
+[x] Update src/build/site-renderer.js renderIndexContent()
+[x] Update src/build/site-renderer.js renderFooter() 
+[x] Split nav links and center logo
+[x] Add missing Social icons rendering
+[x] Clean page-header gradient
+[x] Remove foundingBadge
+[x] Verify build with npm run build
 
 ## Current Task
-[ ] Finalize Admin UI Aesthetics (Glassmorphism, Theme Stability)
-[ ] Resolve remaining upload/RLS issues
+[ ] Awaiting new user instruction / task.
 
-## Key Contracts
-addGalleryItem(item) → data [inserts gallery record with alt_text]
-renderGalleryItem(item) → string [browser-side gallery card generator]
-applyTheme(theme) → void [switches data-theme and icons]
+## Key Contracts (do not break these)
+renderHeader(content, currentPath, options) → Returns HTML
+renderIndexContent(content) → Returns HTML
+renderFooter(content, options) → Returns HTML
+CSS variables in tokens.css dictate global theming
 
 ## Open Decisions / Assumptions
-ASSUME: Supabase RLS is the main blocker for the empty gallery list despite "Success" SQL.
-ASSUME: Hardcoded styles in some browser defaults are causing "invisible" select options.
+ASSUME: Site data comes from data/site-content.json, so HTML must adapt without breaking data structure because content is static.

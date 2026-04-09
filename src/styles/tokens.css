@@ -4,44 +4,44 @@
  */
 
 /* ─── FONT IMPORTS ──────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap');
 
 /* ─── LIGHT THEME (default) ─────────────────────────────────────────── */
 :root {
-  /* Primary palette */
-  --color-primary-50:  #EEF2FF;
-  --color-primary-100: #E0E7FF;
-  --color-primary-200: #C7D2FE;
-  --color-primary-300: #A5B4FC;
-  --color-primary-400: #818CF8;
-  --color-primary-500: #6366F1;
-  --color-primary-600: #4F46E5;
-  --color-primary-700: #4338CA;
-  --color-primary-800: #3730A3;
-  --color-primary-900: #312E81;
-  --color-primary-950: #1E1B4B;
+  /* Primary palette (Corporate Blue) */
+  --color-primary-50:  #f0f3fa;
+  --color-primary-100: #dce3f0;
+  --color-primary-200: #b5c7e1;
+  --color-primary-300: #8aa9d3;
+  --color-primary-400: #628dc4;
+  --color-primary-500: #3c70b5;
+  --color-primary-600: #295796;
+  --color-primary-700: #1a3c6e; /* Target Base */
+  --color-primary-800: #122b51;
+  --color-primary-900: #0a1b35;
+  --color-primary-950: #050e1c;
 
-  /* Accent */
-  --color-accent-400: #FB923C;
-  --color-accent-500: #F97316;
-  --color-accent-600: #EA580C;
+  /* Accent (Gold) */
+  --color-accent-400: #eed07d;
+  --color-accent-500: #e8b84b; /* Target Base */
+  --color-accent-600: #b9933a;
 
   /* Semantic surface */
   --color-bg:           #FFFFFF;
-  --color-bg-alt:       #F8F9FC;
+  --color-bg-alt:       #f5f7fa;
   --color-bg-card:      #FFFFFF;
-  --color-surface:      #F1F3F9;
-  --color-surface-hover:#E8EBFC;
-  --color-border:       #D1D5E0;
-  --color-border-focus: #4F46E5;
+  --color-surface:      #f0f4f8;
+  --color-surface-hover:#e5edf5;
+  --color-border:       #dee2e6;
+  --color-border-focus: #1a3c6e;
 
   /* Text */
-  --color-text:         #111827;
-  --color-text-muted:   #4B5563;  /* WCAG AA: ~6:1 on white (was #6B7280 @4.1:1) */
-  --color-text-faint:   #9CA3AF;  /* Dekoratif kullanım için, bilgi içermeyecek */
+  --color-text:         #1a1a2e;
+  --color-text-muted:   #6c757d;
+  --color-text-faint:   #9CA3AF;
   --color-text-inverse: #FFFFFF;
-  --color-text-link:    #4338CA;
-  --color-text-link-hover: #3730A3;
+  --color-text-link:    #1a3c6e;
+  --color-text-link-hover: #0a1b35;
 
   /* Semantic states */
   --color-success-bg:   #F0FDF4;
@@ -58,12 +58,12 @@
   --color-info-border:  #BFDBFE;
 
   /* Focus */
-  --color-focus:        #F97316;
-  --color-focus-shadow: rgba(249, 115, 22, 0.4);
+  --color-focus:        #e8b84b;
+  --color-focus-shadow: rgba(232, 184, 75, 0.4);
 
   /* Typography */
-  --font-heading: 'Outfit', system-ui, sans-serif;
-  --font-body:    'Inter', system-ui, sans-serif;
+  --font-heading: 'Montserrat', system-ui, sans-serif;
+  --font-body:    'Open Sans', system-ui, sans-serif;
   --font-mono:    'Courier New', monospace;
 
   /* Type scale */

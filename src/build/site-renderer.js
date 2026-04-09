@@ -116,6 +116,11 @@ function icon(name) {
     chevronUp: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>',
     external: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:0.85em;height:0.85em;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
     directions: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>',
+    facebook: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.312h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg>',
+    twitter: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>',
+    instagram: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>',
+    linkedin: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.5-1.119-2.5-2.5c0-1.38 1.11-2.5 2.5-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/></svg>',
+    youtube: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>'
   };
   return icons[name] ?? '';
 }
@@ -134,37 +139,62 @@ function renderNavLinks(items, currentPath, className) {
 }
 
 function renderHeader(content, currentPath, options = {}) {
-  const showCta = options.showCta !== false;
   const logoMarkup = content.site.status.hasLogo && content.site.logoPath
-    ? `<img src="${escapeAttr(content.site.logoPath)}" alt="${escapeAttr(content.site.logoAlt || `${content.site.name} logosu`)}" class="header__logo-image" style="width: 56px; height: auto; object-fit: contain;" aria-hidden="true" />`
+    ? `<img src="${escapeAttr(content.site.logoPath)}" alt="${escapeAttr(content.site.logoAlt || `${content.site.name} logosu`)}" class="header__logo-image" aria-hidden="true" />`
     : `<div class="header__logo-icon" aria-hidden="true">${icon('eye')}</div>`;
 
-  const ctaMarkup = showCta
-    ? `<a href="${escapeAttr(content.hero.cta.primary.href)}" class="btn btn--primary btn--sm" id="header-cta">${icon('phone')}${escapeHtml(content.hero.cta.primary.label)}</a>`
+  const socialLinks = Object.entries(content.contact.social || {}).filter(([k, v]) => Boolean(v));
+  const socialMarkup = socialLinks.length > 0
+    ? socialLinks.map(([platform, href]) => `<a href="${escapeAttr(href)}" class="top-bar__social-link" target="_blank" rel="noopener noreferrer" aria-label="${escapeAttr(platform)} profilimiz">${icon(platform)}</a>`).join('')
     : '';
 
-  return `<header class="header" role="banner">
-    <div class="container header__inner">
-      <a href="/" class="header__logo" aria-label="${escapeAttr(`${content.site.name} — Ana Sayfa`)}">
-        ${logoMarkup}
-        <div class="header__logo-text">
-          <span class="header__logo-name">${escapeHtml(content.site.name)}</span>
-          <span class="header__logo-tagline">${escapeHtml(content.site.slogan)}</span>
-        </div>
-      </a>
-      <nav class="nav--desktop" aria-label="Hızlı menü">
-        ${renderNavLinks(content.nav, currentPath, 'nav__link')}
-      </nav>
-      <div class="header__actions">
-        ${ctaMarkup}
-        <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menüyü genişlet/daralt" title="Menü">
-          <span class="sr-only">Menü</span>
-          ${icon('menuOpen')}
-          ${icon('menuClose')}
-        </button>
+  const topBarHtml = `<div class="top-bar">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+      <div class="top-bar__left">
+        <div class="top-bar__item">${icon('phone')} <a href="${escapeAttr(content.contact.phoneHref)}">${escapeHtml(content.contact.phone)}</a></div>
+        <div class="top-bar__item">${icon('mail')} <a href="${escapeAttr(content.contact.emailHref)}">${escapeHtml(content.contact.email)}</a></div>
+      </div>
+      <div class="top-bar__right">
+        
+        <a href="/iletisim" class="top-bar__item">İletişim</a>
+        ${socialMarkup ? `<div class="top-bar__socials">${socialMarkup}</div>` : ''}
       </div>
     </div>
-  </header>`;
+  </div>`;
+
+  const mid = Math.ceil(content.nav.length / 2);
+  const leftNav = content.nav.slice(0, mid);
+  const rightNav = content.nav.slice(mid);
+
+  return `<div class="header-wrapper">
+    ${topBarHtml}
+    <header class="header" role="banner">
+      <div class="container header__inner">
+        
+        <nav class="nav--desktop header__nav-left" aria-label="Ana menü sol">
+          ${renderNavLinks(leftNav, currentPath, 'nav__link')}
+        </nav>
+
+        <a href="/" class="header__logo header__logo-center" aria-label="${escapeAttr(`${content.site.name} — Ana Sayfa`)}">
+          <div class="header__logo-bg">
+            ${logoMarkup}
+          </div>
+        </a>
+
+        <nav class="nav--desktop header__nav-right" aria-label="Ana menü sağ">
+          ${renderNavLinks(rightNav, currentPath, 'nav__link')}
+        </nav>
+
+        <div class="header__actions mobile-only">
+          <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menüyü genişlet/daralt" title="Menü">
+            <span class="sr-only">Menü</span>
+            ${icon('menuOpen')}
+            ${icon('menuClose')}
+          </button>
+        </div>
+      </div>
+    </header>
+  </div>`;
 }
 
 function renderMobileNav(content, currentPath, options = {}) {
@@ -192,55 +222,63 @@ function renderFooter(content, options = {}) {
   const isMinimal = options.minimal === true;
   const navMarkup = renderNavLinks(content.nav, '', 'footer__link');
   const addressMarkup = content.site.status.hasAddress && content.contact.address?.short
-    ? `<p class="footer__contact-row">${icon('map')}<a href="${escapeAttr(content.contact.googleMapsUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Haritada görüntüle: ${escapeAttr(content.contact.address.short)}">${escapeHtml(content.contact.address.short)}</a></p>`
+    ? `<p class="footer__contact-row">${icon('map')}<a href="${escapeAttr(content.contact.googleMapsUrl)}" target="_blank" rel="noopener noreferrer" style="color:var(--color-primary-200);">${escapeHtml(content.contact.address.short)}</a></p>`
     : '';
 
-  const socialLinks = Object.entries(content.contact.social || {}).filter(([k,v]) => Boolean(v));
+  const socialLinks = Object.entries(content.contact.social || {}).filter(([k, v]) => Boolean(v));
   const sameAsMarkup = socialLinks.length > 0
-    ? socialLinks.map(([platform, href]) => `<a href="${escapeAttr(href)}" class="footer__link" target="_blank" rel="noopener noreferrer" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; background:rgba(255,255,255,0.05); border-radius:50%; margin-right:0.25rem;" aria-label="${escapeAttr(platform)} profilimiz">${icon(platform) || escapeHtml(new URL(href).hostname.replace('www.', ''))}</a>`).join('')
+    ? socialLinks.map(([platform, href]) => `<a href="${escapeAttr(href)}" class="footer__link" target="_blank" rel="noopener noreferrer" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; background:rgba(255,255,255,0.1); border-radius:50%; margin-right:0.25rem;" aria-label="${escapeAttr(platform)} profilimiz">${icon(platform) || escapeHtml(new URL(href).hostname.replace('www.', ''))}</a>`).join('')
     : '';
 
   if (isMinimal) {
-    return `<footer class="footer" role="contentinfo">
+    return `<footer class="footer" role="contentinfo" style="background:var(--color-primary-900); color:white;">
       <div class="container">
         <div class="footer__bottom" style="border-top:none; padding-top: 0;">
-          <p class="footer__copy">© <span id="footer-year"></span> ${escapeHtml(content.site.name)}.</p>
+          <p class="footer__copy" style="color:rgba(255,255,255,0.6);">© <span id="footer-year"></span> ${escapeHtml(content.site.name)}.</p>
           <nav aria-label="404 hızlı navigasyon"><div style="display:flex; gap: 1rem; flex-wrap: wrap;">${navMarkup}</div></nav>
         </div>
       </div>
     </footer>`;
   }
 
-  return `<footer class="footer" role="contentinfo">
+  return `<footer class="footer" role="contentinfo" style="background:var(--color-primary-900); color:white;">
     <div class="container">
       <div class="footer__grid">
         <div class="footer__brand">
-          <p class="footer__brand-name">${escapeHtml(content.site.name)}</p>
-          <p class="footer__brand-desc">${escapeHtml(content.footer.description)}</p>
+          <p class="footer__brand-name" style="color:var(--color-accent-400);">${escapeHtml(content.site.name)}</p>
+          <p class="footer__brand-desc" style="color:var(--color-primary-200);">${escapeHtml(content.footer.description)}</p>
           ${sameAsMarkup ? `<div style="display:flex; gap: 0.75rem; flex-wrap: wrap; margin-top: var(--space-4);">${sameAsMarkup}</div>` : ''}
         </div>
-        <nav aria-label="Alt menü hızlı bağlantılar">
-          <p class="footer__heading">Sayfalar</p>
+        <nav aria-label="Hızlı bağlantılar">
+          <p class="footer__heading" style="color:var(--color-accent-400);">Hızlı Menü</p>
           <ul class="footer__links">
-            ${content.nav.map((item) => `<li><a href="${escapeAttr(ensureLeadingSlash(item.href))}" class="footer__link">${escapeHtml(item.label)}</a></li>`).join('')}
-            <li><a href="/admin/" rel="nofollow" class="footer__link" style="opacity: 0.6;">Yönetici Girişi</a></li>
+            ${content.nav.map((item) => `<li><a href="${escapeAttr(ensureLeadingSlash(item.href))}" class="footer__link" style="color:var(--color-primary-200);">${escapeHtml(item.label)}</a></li>`).join('')}
+          </ul>
+        </nav>
+        <nav aria-label="Kurumsal bağlantılar">
+          <p class="footer__heading" style="color:var(--color-accent-400);">Kurumsal</p>
+          <ul class="footer__links">
+            <li><a href="/hakkimizda" class="footer__link" style="color:var(--color-primary-200);">Derneğimiz Hakkında</a></li>
+            <li><a href="/tuzuk" class="footer__link" style="color:var(--color-primary-200);">Dernek Tüzüğü</a></li>
+            <li><a href="/iletisim" class="footer__link" style="color:var(--color-primary-200);">İletişim & Konum</a></li>
+            <li><a href="/admin/" rel="nofollow" class="footer__link" style="opacity: 0.6; color:var(--color-primary-200);">Yönetici Girişi</a></li>
           </ul>
         </nav>
         <div>
-          <p class="footer__heading">İletişim</p>
+          <p class="footer__heading" style="color:var(--color-accent-400);">İletişim</p>
           <address class="footer__contact-info" style="font-style: normal;">
-            <p class="footer__contact-row">${icon('phone')}<a href="${escapeAttr(content.contact.phoneHref)}">${escapeHtml(content.contact.phone)}</a></p>
-            <p class="footer__contact-row">${icon('mail')}<a href="${escapeAttr(content.contact.emailHref)}" style="font-size:0.8rem; word-break:break-all;">${escapeHtml(content.contact.email)}</a></p>
+            <p class="footer__contact-row">${icon('phone')}<a href="${escapeAttr(content.contact.phoneHref)}" style="color:var(--color-primary-200);">${escapeHtml(content.contact.phone)}</a></p>
+            <p class="footer__contact-row">${icon('mail')}<a href="${escapeAttr(content.contact.emailHref)}" style="font-size:0.8rem; word-break:break-all; color:var(--color-primary-200);">${escapeHtml(content.contact.email)}</a></p>
             ${addressMarkup}
           </address>
         </div>
       </div>
-      <div class="footer__bottom">
-        <p class="footer__copy">
+      <div class="footer__bottom" style="border-top-color:rgba(255,255,255,0.1);">
+        <p class="footer__copy" style="color:rgba(255,255,255,0.6);">
           © <span id="footer-year"></span> ${escapeHtml(content.site.name)}. Tüm hakları saklıdır.
-          <span style="opacity: 0.6; margin-left: 0.5rem; font-size: 0.8rem;">(Son Güncelleme: <span id="last-updated-date">Yükleniyor...</span>)</span>
+          
         </p>
-        <a href="#main-content" id="back-to-top-footer" class="btn btn--ghost btn--sm" style="font-size: 0.8rem;">${icon('chevronUp')}Başa Dön</a>
+        <a href="#main-content" id="back-to-top-footer" class="btn btn--secondary btn--sm" style="font-size: 0.8rem; color:white; border-color:white;">${icon('chevronUp')}Başa Dön</a>
       </div>
     </div>
   </footer>`;
@@ -346,23 +384,16 @@ function renderIndexContent(content) {
       </div>
     </div>`;
 
-  return `<section class="hero" aria-labelledby="hero-heading">
-    <div class="container hero__inner">
-      <div class="hero__content">
-        <div class="hero__badge" aria-hidden="true">${icon('map')}${escapeHtml(locationLabel)}</div>
+  return `<section class="hero" aria-labelledby="hero-heading" style="background: linear-gradient(rgba(10, 27, 53, 0.75), rgba(10, 27, 53, 0.95)), url('https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat; text-align: center; padding-block: 8rem;">
+    <div class="container hero__inner" style="grid-template-columns: 1fr;">
+      <div class="hero__content" style="max-width: 900px; margin-inline: auto;">
+        <div class="hero__badge" aria-hidden="true" style="margin-inline:auto; background:rgba(232, 184, 75, 0.15); border-color:#e8b84b; color:#e8b84b; padding: 0.5rem 1rem;">${icon('map')}${escapeHtml(locationLabel)}</div>
         <h1 class="hero__title" id="live-hero-title">${escapeHtml(content.hero.title)}</h1>
-        <p class="hero__subtitle" id="live-hero-subtitle">${escapeHtml(content.hero.subtitle)}</p>
-        <p class="hero__lead" id="live-hero-lead">${escapeHtml(content.hero.lead)}</p>
-        <div class="hero__actions">
+        <p class="hero__subtitle" id="live-hero-subtitle" style="color:var(--color-accent-400);">${escapeHtml(content.hero.subtitle)}</p>
+        <p class="hero__lead" id="live-hero-lead" style="margin-inline:auto;">${escapeHtml(content.hero.lead)}</p>
+        <div class="hero__actions" style="justify-content:center;">
           <a href="${escapeAttr(content.hero.cta.primary.href)}" class="btn btn--accent btn--lg" id="hero-cta-primary">${icon('phone')}<span id="live-hero-cta-label">${escapeHtml(content.hero.cta.primary.label)}</span></a>
-          <a href="${escapeAttr(content.hero.cta.secondary.href)}" class="btn btn--secondary btn--lg" id="hero-cta-secondary" style="border-color: rgba(165,180,252,0.4); color: #C7D2FE; background: rgba(99,102,241,0.1);">${icon('info')}${escapeHtml(content.hero.cta.secondary.label)}</a>
-        </div>
-      </div>
-      <div class="hero__illustration" aria-hidden="true">
-        <div class="hero__icon-wrap hero__icon-wrap--logo" style="background: transparent; box-shadow: none;">
-          <div class="hero__icon-bg" style="opacity: 0.15; transform: scale(1.4);"></div>
-          <div class="hero__icon-ring" style="opacity: 0.2; transform: scale(1.6);"></div>
-          <div class="hero__icon-center" style="background: transparent; color: inherit;"><img src="${escapeAttr(content.site.logoPath)}" alt="" style="width:140px; height:auto; object-fit:contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));" /></div>
+          <a href="${escapeAttr(content.hero.cta.secondary.href)}" class="btn btn--secondary btn--lg" id="hero-cta-secondary" style="border-color: rgba(255,255,255,0.4); color: #fff; background: rgba(255,255,255,0.05);">${icon('info')}${escapeHtml(content.hero.cta.secondary.label)}</a>
         </div>
       </div>
     </div>
@@ -412,14 +443,7 @@ function renderIndexContent(content) {
 function renderAboutContent(content) {
   const goals = content.about.goals.map((goal) => `<li>${escapeHtml(goal)}</li>`).join('');
 
-  // Founding date badge
-  const foundingBadge = content.about.foundingDate
-    ? `<div style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.5rem 1rem; background:var(--color-primary-50); border:1px solid var(--color-primary-200); border-radius:var(--radius-full); font-size:var(--text-sm); font-weight:var(--weight-semibold); color:var(--color-primary-700); margin-bottom:var(--space-6); width: fit-content; max-width: 100%;">
-        <span style="display:flex; width:20px; height:20px; flex-shrink:0;">${icon('calendar')}</span>
-        <span style="white-space: nowrap;">Kuruluş: <time datetime="${escapeAttr(content.site.foundedDate || '2026-02-05')}">${escapeHtml(content.about.foundingDate)}</time></span>
-      </div>`
-    : '';
-
+  // Removed foundingBadge
   return `<section class="page-header" aria-labelledby="page-title">
     <div class="container page-header__inner">
       <nav class="breadcrumb" aria-label="Sayfa konumu">
@@ -437,7 +461,6 @@ function renderAboutContent(content) {
     <div class="container">
       <div style="max-width: 800px; margin-inline: auto;">
         <div class="section-accent" aria-hidden="true"></div>
-        ${foundingBadge}
         <h2 id="live-about-intro-heading" style="font-size: var(--text-3xl); margin-bottom: var(--space-6);">${escapeHtml(content.about.introHeading || 'Biz Kimiz?')}</h2>
         <p id="live-about-intro" style="font-size: var(--text-lg); line-height: var(--leading-loose); color: var(--color-text-muted); margin-bottom: var(--space-6);">${escapeHtml(content.about.intro)}</p>
         <p id="live-about-description" style="font-size: var(--text-base); line-height: var(--leading-loose); color: var(--color-text-muted); margin-bottom: var(--space-6);">${escapeHtml(content.about.description)}</p>
@@ -467,7 +490,7 @@ function renderAboutContent(content) {
         <h2 id="board-heading" style="font-size: var(--text-3xl); margin-bottom: var(--space-6);">${escapeHtml(content.about.boardHeading || 'Yönetim Kurulu')}</h2>
         <div id="live-board-container">
           ${content.board && content.board.length > 0
-            ? `<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius);padding:var(--space-6);box-shadow:var(--shadow-sm);">
+      ? `<div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius);padding:var(--space-6);box-shadow:var(--shadow-sm);">
                 <ul style="list-style:none;padding:0;margin:0;display:grid;gap:var(--space-4);">
                   ${content.board.map((member, idx) => `
                     <li style="display:flex;align-items:center;gap:var(--space-4);padding-bottom:${idx === content.board.length - 1 ? '0' : 'var(--space-4)'};border-bottom:${idx === content.board.length - 1 ? 'none' : '1px solid var(--color-border)'};">
@@ -479,8 +502,8 @@ function renderAboutContent(content) {
                     </li>`).join('')}
                 </ul>
                </div>`
-            : `<div class="status-banner" role="status" aria-live="polite"><p>${escapeHtml(content.about.boardStatus)}</p></div>`
-          }
+      : `<div class="status-banner" role="status" aria-live="polite"><p>${escapeHtml(content.about.boardStatus)}</p></div>`
+    }
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 /* TEAM */
-Developer: AI Assistant (Görme Engelliler Derneği için özel olarak tasarlandı)
+Developer: Gear_Head
 Contact: gormeengellilerdernegi@hotmail.com
 Location: Kırşehir, Türkiye
 

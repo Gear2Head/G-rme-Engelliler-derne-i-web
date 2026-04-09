@@ -56,29 +56,44 @@
   },
   "nav": [
     {
-      "label": "Ana Sayfa",
+      "label": "ANASAYFA",
       "href": "/",
       "id": "nav-home"
     },
     {
-      "label": "Hakkımızda",
-      "href": "/hakkimizda",
-      "id": "nav-about"
+      "label": "DERNEĞİMİZ",
+      "href": "#",
+      "id": "nav-about",
+      "children": [
+        { "label": "YÖNETİM KURULU", "href": "/hakkimizda#yonetim" },
+        { "label": "DERNEK TÜZÜĞÜ", "href": "/tuzuk" },
+        { "label": "HAKKIMIZDA", "href": "/hakkimizda" },
+        { "label": "ÜYE LİSTESİ", "href": "/hakkimizda#uyeler" }
+      ]
     },
     {
-      "label": "Galeri",
+      "label": "ETKİNLİKLER",
       "href": "/galeri",
-      "id": "nav-gallery"
+      "id": "nav-events"
     },
     {
-      "label": "Tüzük",
-      "href": "/tuzuk",
-      "id": "nav-constitution"
+      "label": "MULTİMEDYA",
+      "href": "/galeri",
+      "id": "nav-multimedia"
     },
     {
-      "label": "İletişim",
-      "href": "/iletisim",
-      "id": "nav-contact"
+      "label": "DUYURULAR",
+      "href": "/#",
+      "id": "nav-announcements"
+    },
+    {
+      "label": "İLETİŞİM",
+      "href": "#",
+      "id": "nav-contact",
+      "children": [
+        { "label": "İLETİŞİM BİLGİLERİ", "href": "/iletisim" },
+        { "label": "HESAP NUMARALARI", "href": "/hesap-numaralari" }
+      ]
     }
   ],
   "hero": {
