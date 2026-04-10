@@ -11,6 +11,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
     rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
   <style>
     *,
     *::before,
@@ -284,12 +285,12 @@
 
     /* ─── ADMIN APP ─── */
     .admin-app {
-      display: none;
+      display: none !important;
       opacity: 0;
     }
 
     .admin-app.visible {
-      display: block;
+      display: block !important;
       animation: fadeIn 0.5s ease-out forwards;
     }
 
@@ -1541,7 +1542,7 @@
 
     // ─── AUTH ─────────────────────────────────────────────────────
     function showLogin() {
-      document.getElementById('login-page').style.display = '';
+      document.getElementById('login-page').style.display = 'flex';
       document.getElementById('admin-app').classList.remove('visible');
     }
 
@@ -1566,8 +1567,9 @@
       } catch (error) {
         lockout.attempts++;
         if (lockout.attempts >= MAX_ATTEMPTS) {
-          lockout.until = Date.now() + LOCKOUT_DURATION_MS;
-          errorText.textContent = `Çok fazla hatalı deneme. ${LOCKOUT_DURATION_MS / 1000}s bekleyin.`;
+          const backoff = Math.min(LOCKOUT_DURATION_MS * Math.pow(2, lockout.attempts - MAX_ATTEMPTS), 3600000);
+          lockout.until = Date.now() + backoff;
+          errorText.textContent = `Çok fazla hatalı deneme. ${backoff / 1000}s bekleyin.`;
         } else {
           errorText.textContent = error.message.includes('Invalid login') ? 'E-posta veya şifre hatalı.' : error.message;
         }
@@ -1831,7 +1833,6 @@
 
     async function showDashboard() {
       document.getElementById('login-page').style.display = 'none';
-      document.getElementById('admin-app').style.display = 'block';
       document.getElementById('admin-app').classList.add('visible');
       await loadSiteContent();
       window.switchTab('dashboard', document.querySelector('.nav-item'));
@@ -1908,7 +1909,7 @@
             <div class="gallery-album-group">
               <div class="gallery-album-header">
                 <h4 class="gallery-album-title">📁 ${albumId} (${albumItems.length} Görsel)</h4>
-                ${isRealAlbum ? `<button class="btn btn--danger" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;" onclick="window.handleDeleteAlbum('${albumId}')">Albümü Komple Sil</button>` : ''}
+                ${isRealAlbum ? `<button class="btn btn--danger" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;" data-action="delete-album" data-album="${albumId}">Albümü Komple Sil</button>` : ''}
               </div>
               <div style="display: flex; flex-direction: column; background: var(--card);">
                 ${albumItems.map(item => `
@@ -1921,7 +1922,7 @@
                         ${item.alt_text ? `<span style="font-style: italic; color: var(--text-faint); margin-left: 0.5rem;">Alt: ${item.alt_text}</span>` : ''}
                       </p>
                     </div>
-                    <button class="btn btn--danger" onclick="window.handleDeleteGallery('${item.id}', '${item.url}')">Sil</button>
+                    <button class="btn btn--danger" data-action="delete-gallery" data-id="${item.id}" data-url="${item.url}">Sil</button>
                   </div>
                 `).join('')}
               </div>
@@ -1947,45 +1948,54 @@
       renderAdminGalleryList(filtered);
     };
 
-    window.handleDeleteGallery = async (id, url) => {
-      if (!confirm('Bu görseli kalıcı olarak silmek istediğinize emin misiniz?\\n\\nBu işlem geri alınamaz.')) return;
-      const btn = event.currentTarget;
-      const oldText = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = 'Siliniyor...';
-      try {
-        let path = null;
+    document.addEventListener('click', async (e) => {
+      if (e.target.matches('[data-action="delete-gallery"]')) {
+        const id = e.target.dataset.id;
+        const url = e.target.dataset.url;
+        if (!confirm('Bu görseli kalıcı olarak silmek istediğinize emin misiniz?\\n\\nBu işlem geri alınamaz.')) return;
+        const btn = e.target;
+        const oldText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = 'Siliniyor...';
         try {
-          const urlObj = new URL(url);
-          const parts = urlObj.pathname.split('/storage/v1/object/public/gallery/');
-          if (parts.length > 1) path = decodeURIComponent(parts[1]);
-        } catch { }
-        await deleteGalleryItem(id, path);
-        showToast('Görsel başarıyla silindi.', 'success');
-        loadGalleryManagement();
-      } catch (e) {
-        showToast('Silme hatası: ' + (e.message || 'Bilinmeyen hata'), 'error');
-        btn.disabled = false;
-        btn.innerHTML = oldText;
+          const session = await getSession();
+          if (!session) throw new Error('Oturum geçersiz');
+          let path = null;
+          try {
+            const urlObj = new URL(url);
+            const parts = urlObj.pathname.split('/storage/v1/object/public/gallery/');
+            if (parts.length > 1) path = decodeURIComponent(parts[1]);
+          } catch { }
+          await deleteGalleryItem(id, path);
+          showToast('Görsel başarıyla silindi.', 'success');
+          loadGalleryManagement();
+        } catch (err) {
+          showToast('Silme hatası: ' + (err.message || 'Bilinmeyen hata'), 'error');
+          btn.disabled = false;
+          btn.innerHTML = oldText;
+        }
       }
-    };
 
-    window.handleDeleteAlbum = async (albumId) => {
-      if (!confirm(`'${albumId}' albümündeki TÜM görselleri silmek istediğinize emin misiniz? Bu işlem geri alınamaz!`)) return;
-      const btn = event.target;
-      const oldText = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = 'Siliniyor...';
-      try {
-        await deleteAlbum(albumId);
-        showToast(`'${albumId}' albümü başarıyla silindi.`, 'success');
-        loadGalleryManagement();
-      } catch (e) {
-        showToast('Albüm silme hatası: ' + e.message, 'error');
-        btn.disabled = false;
-        btn.textContent = oldText;
+      if (e.target.matches('[data-action="delete-album"]')) {
+        const albumId = e.target.dataset.album;
+        if (!confirm(`'${albumId}' albümündeki TÜM görselleri silmek istediğinize emin misiniz? Bu işlem geri alınamaz!`)) return;
+        const btn = e.target;
+        const oldText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Siliniyor...';
+        try {
+          const session = await getSession();
+          if (!session) throw new Error('Oturum geçersiz');
+          await deleteAlbum(albumId);
+          showToast(`'${albumId}' albümü başarıyla silindi.`, 'success');
+          loadGalleryManagement();
+        } catch (err) {
+          showToast('Albüm silme hatası: ' + err.message, 'error');
+          btn.disabled = false;
+          btn.textContent = oldText;
+        }
       }
-    };
+    });
 
     // ─── HANDLERS ────────────────────────────────────────────────
     window.handleSaveConfig = async () => {
@@ -2306,6 +2316,9 @@
 
     window.updateAnnouncement = (idx, field, val) => {
       if (!siteContent.announcements[idx]) return;
+      if (field === 'content' && typeof DOMPurify !== 'undefined') {
+        val = DOMPurify.sanitize(val, { ALLOWED_TAGS: ['p','br','strong','em','ul','ol','li','h2','h3','a'], ALLOWED_ATTR: ['href', 'target', 'rel'] });
+      }
       siteContent.announcements[idx][field] = val;
     };
 
@@ -2409,10 +2422,20 @@
     document.getElementById('login-form').addEventListener('submit', handleLogin);
     document.getElementById('btn-logout').addEventListener('click', handleLogout);
 
-    getSession().then(session => {
-      if (session) showDashboard();
-      else showLogin();
-    });
+    async function initAdmin() {
+      const session = await getSession();
+      if (session) {
+        showDashboard();
+      } else {
+        showLogin();
+      }
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAdmin);
+    } else {
+      initAdmin();
+    }
   </script>
 </body>
 

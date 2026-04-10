@@ -275,6 +275,14 @@
     "ctaPrimaryLabel": "İletişime Geç",
     "ctaSecondaryLabel": null
   },
-  "_last_updated": "2026-04-09T18:22:59.949+00:00",
-  "announcements": []
+  "_last_updated": "2026-04-09T19:43:41.438+00:00",
+  "announcements": [
+    {
+      "date": "2026-04-10",
+      "image": "https://qglwsxrdnfxfdzgnggak.supabase.co/storage/v1/object/public/gallery/1775840525609_ypgf7b.png",
+      "title": "Yeni Duyuru",
+      "content": "<p>Duyuru içeriği buraya gelecek...</p>",
+      "category": "Genel"
+    }
+  ]
 }

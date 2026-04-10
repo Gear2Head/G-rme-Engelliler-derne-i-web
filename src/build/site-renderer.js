@@ -22,6 +22,17 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
+function sanitizeHtml(html) {
+  if (!html) return '';
+  return String(html)
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<iframe[\s\S]*?<\/iframe>/gi, '')
+    .replace(/<object[\s\S]*?<\/object>/gi, '')
+    .replace(/on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+    .replace(/javascript\s*:/gi, '')
+    .replace(/data\s*:/gi, '');
+}
+
 function escapeAttr(value) { return escapeHtml(value); }
 
 function slugify(text) {
@@ -847,7 +858,7 @@ function renderAnnouncementsContent(content) {
             ${ann.category ? `<span class="announcement-card__tag">${escapeHtml(ann.category)}</span>` : ''}
           </div>
           <h2 class="announcement-card__title">${escapeHtml(ann.title)}</h2>
-          <div class="announcement-card__content typography">${ann.content}</div>
+          <div class="announcement-card__content typography">${sanitizeHtml(ann.content)}</div>
           <div style="margin-top: 1.5rem;">
             <a href="/duyurular/${slug}" class="btn btn--secondary btn--sm" style="width:100%; justify-content:center;">Devamını Oku ${icon('chevronRight')}</a>
           </div>
@@ -1059,7 +1070,7 @@ function renderAnnouncementDetailPage(content, slug) {
                <img src="${announcement.image || '/logo.png'}" alt="${escapeAttr(announcement.title)}" style="width:100%; height:100%; object-fit:cover; display:block;" />
              </div>
              <div style="padding: 2.5rem;" class="typography">
-                ${announcement.content}
+                ${sanitizeHtml(announcement.content)}
                 
                 <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem;">
                    <div style="display:flex; align-items:center; gap:1rem;">

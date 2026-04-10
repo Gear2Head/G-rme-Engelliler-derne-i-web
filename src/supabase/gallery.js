@@ -15,10 +15,18 @@ function sanitizePath(str) {
 }
 
 export async function uploadGalleryImage(file, path) {
+  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  if (!allowedMimeTypes.includes(file.type)) {
+    throw new Error('Desteklenmeyen dosya türü. Sadece görsel (JPEG, PNG, WebP, GIF) yüklenebilir.');
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error('Dosya boyutu 5MB sınırını aşıyor.');
+  }
+
   const safePath = sanitizePath(path);
   const { data, error } = await supabase.storage
     .from('gallery')
-    .upload(safePath, file, { cacheControl: '3600', upsert: false });
+    .upload(safePath, file, { cacheControl: '3600', upsert: false, contentType: file.type });
   if (error) throw error;
 
   const { data: publicURLData } = supabase.storage

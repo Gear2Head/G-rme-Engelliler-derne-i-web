@@ -69,7 +69,7 @@ export async function initHydration() {
 function updateText(id, value) {
   if (!value) return;
   const el = document.getElementById(id);
-  if (el) el.textContent = value;
+  if (el) el.textContent = String(value).slice(0, 500);
 }
 
 

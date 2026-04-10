@@ -38,9 +38,10 @@ if (import.meta.env.PROD) {
   }
 }
 
-// Export toast for global use (admin panel, gallery etc.)
-window.__showToast = showToast;
-
+// Export toast via custom event instead of global window object
+document.addEventListener('kged:toast', (e) => {
+  showToast(e.detail.message, e.detail.type, e.detail.duration);
+});
 document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initNav();

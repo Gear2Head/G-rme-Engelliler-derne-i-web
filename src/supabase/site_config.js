@@ -24,6 +24,11 @@ export async function getSiteConfig() {
 }
 
 export async function saveSiteConfig(configData) {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError || !sessionData?.session) {
+    throw new Error('Yetkisiz işlem: Oturum bulunamadı.');
+  }
+
   const { data, error } = await supabase
     .from('site_config')
     .upsert({ id: 'content', data: configData, updated_at: new Date().toISOString() })
