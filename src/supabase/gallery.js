@@ -95,14 +95,14 @@ export async function deleteAlbum(albumId) {
 
 export async function getGalleryItems() {
   if (!supabase) return [];
-  // First try with everything, sort by order then created_at
+
   const { data, error } = await supabase
     .from('gallery_items')
     .select('*')
     .order('order', { ascending: true })
     .order('created_at', { ascending: false });
   
-  // If column missing in DB, fallback to core columns
+
   if (error && isSchemaError(error)) {
     console.warn('[KGED] Fallback to core columns:', error.message);
     const { data: fallbackData, error: fallbackError } = await supabase
@@ -118,19 +118,18 @@ export async function getGalleryItems() {
 }
 
 export async function deleteGalleryItem(id, imagePath) {
-  // 1. Delete from DB
+
   const { error: dbError } = await supabase
     .from('gallery_items')
     .delete()
     .eq('id', id);
   if (dbError) throw dbError;
 
-  // 2. Delete from Storage (optional, based on path)
   if (imagePath) {
     const { error: storageError } = await supabase.storage
       .from('gallery')
       .remove([imagePath]);
-    // Silence storage errors if file already gone, but log it
+
     if (storageError) console.warn("Storage deletion error (non-blocking):", storageError);
   }
 }

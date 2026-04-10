@@ -1,7 +1,4 @@
-/**
- * AMAÇ: Tema yönetimi — sistem tercihi algılama, localStorage kalıcılığı, geçiş animasyonu
- * MANTIK: data-theme attribute ile CSS token'ları tetiklenir; MutationObserver gereksiz
- */
+
 
 const STORAGE_KEY = 'kged-theme';
 const THEMES = ['light', 'high-contrast'];

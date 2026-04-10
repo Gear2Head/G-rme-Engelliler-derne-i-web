@@ -2,7 +2,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createClient } from '@supabase/supabase-js';
 
-// Simple .env.local parser to avoid extra dependency
 function loadEnv() {
   const envPath = path.resolve(process.cwd(), '.env.local');
   if (fs.existsSync(envPath)) {
@@ -44,7 +43,10 @@ async function syncContent() {
       return;
     }
 
-    // Force the "Beautiful" Navigation Structure (Golden Config)
+    if (data.data.site) {
+      data.data.site.url = 'https://kirged.org';
+    }
+
     data.data.nav = [
       { id: 'nav-home', label: 'ANASAYFA', href: '/' },
       {
@@ -74,7 +76,6 @@ async function syncContent() {
     const targetPath = path.resolve(process.cwd(), 'src/data/site-content.json');
     fs.writeFileSync(targetPath, JSON.stringify(data.data, null, 2), 'utf8');
 
-    // Also update public fallback
     const publicPath = path.resolve(process.cwd(), 'public/site-content.json');
     fs.writeFileSync(publicPath, JSON.stringify(data.data, null, 2), 'utf8');
 

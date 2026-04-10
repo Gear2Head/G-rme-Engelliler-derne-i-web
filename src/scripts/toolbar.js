@@ -1,7 +1,4 @@
-/**
- * AMAÇ: Erişilebilirlik araç çubuğu — font büyütme, high-contrast, grayscale, dyslexia font, reset
- * MANTIK: Her tercih localStorage'da ayrı anahtar ile saklanır; sayfa yüklenmede hydrate edilir
- */
+
 
 const STORAGE_KEYS = {
   fontSize:    'kged-font-size',
@@ -111,7 +108,6 @@ function hydrateToolbar() {
 function initToolbar() {
   hydrateToolbar();
 
-  // TODO 28: prefers-contrast OS sync
   const prefersHighContrast = window.matchMedia('(prefers-contrast: more)');
   if (prefersHighContrast.matches && !localStorage.getItem('kged-theme')) {
     document.documentElement.setAttribute('data-theme', 'high-contrast');
@@ -159,7 +155,6 @@ function initToolbar() {
   document.getElementById('toolbar-reset')
     ?.addEventListener('click', resetAll);
 
-  // TODO 51: Alt+A keyboard shortcut
   document.addEventListener('keydown', e => {
     if (e.altKey && (e.key === 'a' || e.key === 'A') && panel && toggle) {
       e.preventDefault();

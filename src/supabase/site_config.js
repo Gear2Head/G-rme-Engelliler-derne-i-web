@@ -1,9 +1,5 @@
 import { supabase } from './config.js';
 
-/**
- * TODO 13: Site içeriğini (Hakkımızda, İletişim, Yönetim Kurulu) Supabase'den yönetme
- */
-
 export async function getSiteConfig() {
   const { data, error } = await supabase
     .from('site_config')

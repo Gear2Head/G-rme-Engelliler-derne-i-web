@@ -1,7 +1,4 @@
-/**
- * AMAÇ: Loader animasyonu — ilk yükleme ekranını yönetir ve erişilebilir kapanış gerçekleştirir
- * MANTIK: prefers-reduced-motion kontrolü, min/max süre sınırı, DOM cleanup, focus yönetimi
- */
+
 
 const LOADER_MIN_MS = 900;
 const LOADER_MAX_MS = 2800;

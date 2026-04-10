@@ -1,10 +1,6 @@
 import { getSiteConfig } from '../supabase/site_config.js';
 import { escapeHtml } from '../utils/html.js';
 
-/**
- * Bu modül, Supabase'deki 'site_config' verilerini okur ve 
- * statik HTML üzerinde canlı güncelleme (hydration) yapar.
- */
 export async function initHydration() {
   try {
     const config = await getSiteConfig();
@@ -13,20 +9,16 @@ export async function initHydration() {
       return;
     }
 
-    // 1. Hero Bölümü
-    updateText('live-hero-title', config.hero?.title);
-    updateText('live-hero-subtitle', config.hero?.subtitle);
-    updateText('live-hero-lead', config.hero?.lead);
+    // Hero is permanently hardcoded for SEO keyword targeting.
+    // updateText('live-hero-title', config.hero?.title);
     updateText('live-hero-cta-label', config.hero?.cta?.primary?.label);
 
-    // 2. Hakkımızda Sayfası
     updateText('live-about-page-title', config.about?.title);
     updateText('live-about-page-lead', config.about?.pageLead);
     updateText('live-about-intro-heading', config.about?.introHeading);
     updateText('live-about-intro', config.about?.intro);
     updateText('live-about-description', config.about?.description);
 
-    // 3. Yönetim Kurulu (Özel Render)
     if (config.board && config.board.length > 0) {
       const container = document.getElementById('live-board-container');
       if (container) {
@@ -46,13 +38,11 @@ export async function initHydration() {
       }
     }
 
-    // 4. Footer Last Updated
     if (config._last_updated) {
       const dateStr = new Date(config._last_updated).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
       updateText('last-updated-date', dateStr);
     }
 
-    // 5. SEO / Meta Tag Hydration
     if (config.about && config.about.intro) {
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) metaDesc.setAttribute('content', config.about.intro);
@@ -71,5 +61,4 @@ function updateText(id, value) {
   const el = document.getElementById(id);
   if (el) el.textContent = String(value).slice(0, 500);
 }
-
 

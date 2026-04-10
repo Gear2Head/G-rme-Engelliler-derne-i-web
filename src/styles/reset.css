@@ -1,7 +1,4 @@
-/**
- * AMAÇ: CSS reset ve base stiller — tüm tarayıcılarda tutarlı başlangıç noktası
- * MANTIK: Modern CSS reset; box-model normalize, pointer olayları, sistem fontları geri alınır
- */
+
 
 *,
 *::before,

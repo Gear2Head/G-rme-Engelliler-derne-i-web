@@ -1,7 +1,4 @@
-/**
- * AMAÇ: JavaScript giriş noktası — tüm modülleri sırayla başlatır
- * MANTIK: Tema ve toolbar önce hydrate edilir (flash önleme); loader ve nav DOM hazır olunca çalışır
- */
+
 
 import '../styles/main.css';
 import { initTheme } from './theme.js';
@@ -11,34 +8,28 @@ import { initNav } from './nav.js';
 import { showToast } from './toast.js';
 import { initHydration } from './hydrate.js';
 
-// TODO 27: prefers-reduced-motion OS sync
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   document.documentElement.classList.add('reduced-motion');
 }
 
-// Smooth scroll polyfill (TODO 53) - Safari <15.4
 if (!('scrollBehavior' in document.documentElement.style)) {
   import('https://cdnjs.cloudflare.com/ajax/libs/smoothscroll/1.4.10/smoothscroll.min.js').catch(() => {});
 }
 
-// FOUC prevention: reveal body after CSS is parsed
 document.body.classList.add('ready');
 
 initTheme();
 initToolbar();
 
-// Vercel Speed Insights + Analytics (TODO 58)
 if (import.meta.env.PROD) {
   import('@vercel/speed-insights').then(({ inject }) => inject()).catch(() => {});
   import('@vercel/analytics').then(({ inject }) => inject()).catch(() => {});
 
-  // TODO 18: PWA Service Worker registration
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   }
 }
 
-// Export toast via custom event instead of global window object
 document.addEventListener('kged:toast', (e) => {
   showToast(e.detail.message, e.detail.type, e.detail.duration);
 });
@@ -50,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // KVKK Cookie consent banner (show once)
   if (!localStorage.getItem('kged-kvkk-accepted')) {
     const banner = document.createElement('div');
     banner.id = 'kvkk-banner';

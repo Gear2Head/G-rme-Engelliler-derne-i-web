@@ -1,4 +1,4 @@
-// src/scripts/gallery-page.js — Vite-bundled gallery runtime
+
 import { getGalleryItems } from '../supabase/gallery.js';
 
 function escapeHtml(str) {
@@ -101,7 +101,6 @@ function renderGalleryPage() {
 
   grid.innerHTML = html;
 
-  // Event delegation for album toggle
   grid.querySelectorAll('[data-album-toggle]').forEach(header => {
     header.addEventListener('click', () => header.parentElement.classList.toggle('expanded'));
   });
@@ -109,7 +108,6 @@ function renderGalleryPage() {
   initIntersectionObserver();
 }
 
-// ─── FILTER ───
 window.filterGallery = function (btn, cat) {
   document.querySelectorAll('.gallery-filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -117,7 +115,6 @@ window.filterGallery = function (btn, cat) {
   renderGalleryPage();
 };
 
-// ─── LIGHTBOX ───
 function updateLightboxState() {
   const items = lbContextItems.length > 0 ? lbContextItems : lbItems;
   if (lbIndex < 0 || lbIndex >= items.length) return;
@@ -183,7 +180,6 @@ window.navLightbox = function (dir) {
   }
 };
 
-// ─── LAZY LOAD ───
 function initIntersectionObserver() {
   if (!('IntersectionObserver' in window)) return;
   const lazyImages = document.querySelectorAll('.gallery-card__img[data-src]');
@@ -203,7 +199,6 @@ function initIntersectionObserver() {
   lazyImages.forEach(img => observer.observe(img));
 }
 
-// ─── INIT ───
 async function initGallery() {
   const grid = document.getElementById('gallery-page-grid');
   if (!grid) return;
@@ -226,12 +221,10 @@ async function initGallery() {
 
   renderGalleryPage();
 
-  // Lightbox: click outside to close
   const lb = document.getElementById('gallery-lightbox');
   if (lb) {
     lb.addEventListener('click', e => { if (e.target === lb) window.closeLightbox(); });
 
-    // Touch swipe
     let tx = 0;
     lb.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
     lb.addEventListener('touchend', e => {
@@ -240,7 +233,6 @@ async function initGallery() {
     }, { passive: true });
   }
 
-  // Keyboard nav
   document.addEventListener('keydown', e => {
     if (!document.getElementById('gallery-lightbox')?.classList.contains('open')) return;
     if (e.key === 'Escape') window.closeLightbox();

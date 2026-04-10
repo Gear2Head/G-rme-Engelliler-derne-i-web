@@ -1,7 +1,4 @@
-/**
- * AMAÇ: Navigasyon davranışları — mobile menü, aktif link, klavye erişimi, back-to-top
- * MANTIK: Escape/dış tıklama/focus yönetimi ile erişilebilir mobil menü; scroll tabanlı görünürlük
- */
+
 
 function initNav() {
   initMobileMenu();
@@ -42,14 +39,12 @@ function initMobileMenu() {
     link.addEventListener('click', closeMenu);
   });
 
-  // TODO 21: Swipe right to close
   let touchStartX = 0;
   mobileNav.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
   mobileNav.addEventListener('touchend', e => {
     if (e.changedTouches[0].clientX - touchStartX > 60) closeMenu();
   }, { passive: true });
 
-  // TODO 43: Focus trap inside mobile menu
   mobileNav.addEventListener('keydown', e => {
     if (e.key !== 'Tab') return;
     const focusable = Array.from(mobileNav.querySelectorAll('a[href], button:not([disabled])'));
@@ -72,7 +67,6 @@ function initMobileMenu() {
     toggle.focus();
   }
 
-  // Footer back-to-top handler
   const footerBtn = document.getElementById('back-to-top-footer');
   if (footerBtn) {
     footerBtn.addEventListener('click', (e) => {

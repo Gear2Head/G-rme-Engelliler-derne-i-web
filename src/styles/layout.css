@@ -1,5 +1,5 @@
 
-/* ─── GLOBAL SVG ICONS ────────────────────────────────────────────────── */
+
 svg {
   width: 1.25em;
   height: 1.25em;
@@ -7,14 +7,12 @@ svg {
   flex-shrink: 0;
 }
 
-/* Specific resets for larger containers */
 .header__logo-image {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
 }
 
-/* ─── LOADER ────────────────────────────────────────────────────────── */
 #loader {
   position: fixed;
   inset: 0;
@@ -130,7 +128,6 @@ svg {
   to   { width: 100%; }
 }
 
-/* ─── TOP BAR ─────────────────────────────────────────────────────────── */
 .top-bar {
   background: var(--color-bg-alt);
   color: var(--color-text-muted);
@@ -220,7 +217,6 @@ svg {
   }
 }
 
-/* ─── HEADER ────────────────────────────────────────────────────────── */
 .header-wrapper {
   position: sticky;
   top: 0;
@@ -245,7 +241,6 @@ svg {
   min-height: var(--header-height);
 }
 
-/* LEFT and RIGHT Navs */
 .header__nav-left, .header__nav-right {
   flex: 1;
   display: flex;
@@ -259,7 +254,6 @@ svg {
   padding-left: 90px;
 }
 
-/* CENTER LOGO */
 .header__logo-center {
   position: absolute;
   left: 50%;
@@ -306,7 +300,6 @@ svg {
   gap: var(--space-4);
 }
 
-/* Mobile only toggle */
 .mobile-only {
   display: none;
 }
@@ -388,7 +381,6 @@ svg {
   background: var(--color-surface);
 }
 
-/* ─── DROPDOWN NAV ───────────────────────────────────────────────────── */
 .nav__item {
   position: relative;
   display: flex;
@@ -462,7 +454,6 @@ svg {
   color: #fff;
 }
 
-/* Desktop Nav Wrapper */
 .nav--desktop {
   display: flex;
   align-items: center;
@@ -512,7 +503,6 @@ svg {
   display: block;
 }
 
-/* Mobile Menu Modal */
 .nav--mobile {
   position: fixed;
   top: 0;
@@ -548,8 +538,6 @@ body.menu-open {
   overflow: hidden;
 }
 
-
-/* ─── FOOTER ────────────────────────────────────────────────────────── */
 .footer {
   background: var(--color-bg-alt);
   border-top: 1px solid var(--color-border);
@@ -683,7 +671,6 @@ body.menu-open {
   color: var(--color-text-faint);
 }
 
-/* ─── ACCESSIBILITY TOOLBAR ──────────────────────────────────────────── */
 .toolbar {
   position: fixed;
   right: 0;
@@ -814,7 +801,6 @@ body.menu-open {
   background: var(--color-error-bg);
 }
 
-/* Font size indicator */
 .font-size-display {
   display: flex;
   align-items: center;
@@ -861,7 +847,6 @@ body.menu-open {
   text-align: center;
 }
 
-/* ─── HERO ──────────────────────────────────────────────────────────── */
 .hero {
   position: relative;
   overflow: hidden;
@@ -1055,12 +1040,10 @@ body.menu-open {
   to { transform: rotate(360deg); }
 }
 
-/* ─── SCROLL PADDING ────────────────────────────────────────────────── */
 html {
   scroll-padding-top: calc(var(--header-height) + var(--space-4));
 }
 
-/* ─── PAGE HEADER (inner pages) ─────────────────────────────────────── */
 .page-header {
   padding-block: var(--space-12) var(--space-8);
   background: linear-gradient(135deg, var(--color-primary-800), var(--color-primary-600));
@@ -1093,8 +1076,6 @@ html {
   max-width: 56ch;
 }
 
-/* ─── CONTACT PAGE ──────────────────────────────────────────────────── */
-/* ─── CONTACT CARDS & WATERMARK ────────────────────────────────────────── */
 .contact-section-grid {
   padding-block: var(--space-20);
 }
@@ -1211,7 +1192,6 @@ html {
   line-height: var(--leading-relaxed);
 }
 
-/* ─── CLASSIC CONTACT LAYOUT ───────────────────────────────────────── */
 .contact-grid-classic {
   align-items: center;
 }
@@ -1255,7 +1235,6 @@ html {
   color: var(--color-primary-600);
 }
 
-/* ─── ANNOUNCEMENTS ─────────────────────────────────────────────────── */
 .announcements-grid-layout {
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -1327,7 +1306,6 @@ html {
   opacity: 0.6;
 }
 
-/* Recent Announcements Widget */
 .recent-announcements-list {
   padding: var(--space-4) var(--space-6);
   display: flex;
@@ -1376,7 +1354,6 @@ html {
   color: var(--color-text-muted);
 }
 
-/* Main Grid & Cards */
 .announcements-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -1471,15 +1448,12 @@ html {
   }
 }
 
-/* ─── GALLERY EMPTY STATE ────────────────────────────────────────── */
 .gallery-empty-state {
   background: var(--color-primary-50);
   border: 2px dashed var(--color-primary-100);
   border-radius: var(--radius-xl);
 }
 
-
-/* ─── 404 PAGE ──────────────────────────────────────────────────────── */
 .error-page {
   min-height: calc(100dvh - var(--header-height));
   display: flex;
@@ -1515,7 +1489,6 @@ html {
   margin-bottom: var(--space-10);
 }
 
-/* ─── REDUCED MOTION ────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .loader__eye-ring,
   .loader__eye-dot,

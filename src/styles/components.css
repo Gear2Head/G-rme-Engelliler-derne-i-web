@@ -1,9 +1,5 @@
-/**
- * AMAÇ: Yeniden kullanılabilir bileşen stilleri — buton, kart, alert, badge, form, toolbar
- * MANTIK: BEM benzeri flat sınıf adları; token'a bağlı, tema değişimine reaktif
- */
 
-/* ─── SR-ONLY (TODO 29) ─────────────────────────────────────────────── */
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -20,7 +16,6 @@
   all: revert;
 }
 
-/* ─── TOUCH HOVER FIX (TODO 20) ────────────────────────────────────── */
 @media (hover: none) and (pointer: coarse) {
   .btn:hover,
   .btn-primary:hover,
@@ -29,7 +24,6 @@
   [class*="-card"]:hover { transform: none; box-shadow: var(--shadow-sm); }
 }
 
-/* ─── SKELETON LOADING (TODO 49) ───────────────────────────────────── */
 .skeleton {
   background: linear-gradient(
     90deg,
@@ -53,7 +47,6 @@
   border-radius: var(--radius-lg);
 }
 
-/* ─── TOAST NOTIFICATION (TODO 50) ─────────────────────────────────── */
 .toast-container {
   position: fixed;
   bottom: 1.5rem;
@@ -84,7 +77,6 @@
 @keyframes toast-in  { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 @keyframes toast-out { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(12px); } }
 
-/* ─── MOBILE CTA BAR (TODO 24) ─────────────────────────────────────── */
 .mobile-cta-bar {
   display: none;
   position: fixed;
@@ -113,14 +105,13 @@
 .mobile-cta-bar svg { width: 20px; height: 20px; flex-shrink: 0; }
 @media (max-width: 767px) {
   .mobile-cta-bar { display: flex; }
-  /* Push content above CTA bar */
+  
   body { padding-bottom: 60px; }
 }
 @media (min-width: 768px) {
   .mobile-cta-bar { display: none !important; }
 }
 
-/* ─── SKIP LINK ─────────────────────────────────────────────────────── */
 .skip-link {
   position: absolute;
   top: -100%;
@@ -142,7 +133,6 @@
   top: var(--space-4);
 }
 
-/* ─── FOCUS STYLES ──────────────────────────────────────────────────── */
 :focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
@@ -154,7 +144,6 @@
   outline: none;
 }
 
-/* ─── LAYOUT UTILITIES ──────────────────────────────────────────────── */
 .container {
   width: 100%;
   max-width: var(--container-max);
@@ -208,7 +197,6 @@
   line-height: var(--leading-relaxed);
 }
 
-/* ─── BUTTONS ───────────────────────────────────────────────────────── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -318,7 +306,6 @@
   flex-shrink: 0;
 }
 
-/* ─── CARDS ─────────────────────────────────────────────────────────── */
 .card {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
@@ -373,7 +360,6 @@
   line-height: var(--leading-relaxed);
 }
 
-/* ─── ALERTS ────────────────────────────────────────────────────────── */
 .alert {
   display: flex;
   align-items: flex-start;
@@ -416,7 +402,6 @@
   border-color: var(--color-error-border);
 }
 
-/* ─── QUICK ACCESS LINKS ─────────────────────────────────────────────── */
 .quick-links {
   display: flex;
   flex-wrap: wrap;
@@ -476,7 +461,6 @@
   height: 22px;
 }
 
-/* ─── BREADCRUMB ────────────────────────────────────────────────────── */
 .breadcrumb {
   padding: var(--space-4) 0;
   border-bottom: 1px solid var(--color-border);
@@ -515,14 +499,12 @@
   font-weight: var(--weight-medium);
 }
 
-/* ─── DIVIDER ───────────────────────────────────────────────────────── */
 .divider {
   height: 1px;
   background: var(--color-border);
   margin-block: var(--space-8);
 }
 
-/* ─── STATUS BADGE ──────────────────────────────────────────────────── */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -540,7 +522,6 @@
   color: var(--color-info-text);
 }
 
-/* ─── CONTACT INFO BLOCK ─────────────────────────────────────────────── */
 .contact-item {
   display: flex;
   align-items: flex-start;
@@ -605,7 +586,6 @@
   text-decoration: underline;
 }
 
-/* ─── GRID LAYOUTS ──────────────────────────────────────────────────── */
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -636,7 +616,6 @@
   }
 }
 
-/* ─── SECTION DIVIDER DECORATION ────────────────────────────────────── */
 .section-accent {
   display: inline-block;
   width: 56px;
@@ -646,7 +625,6 @@
   margin-bottom: var(--space-4);
 }
 
-/* ─── BACK TO TOP ───────────────────────────────────────────────────── */
 #back-to-top {
   position: fixed;
   bottom: var(--space-6);
@@ -680,7 +658,6 @@
   transform: translateY(-2px);
 }
 
-/* ─── WHATSAPP FLOAT ────────────────────────────────────────────────── */
 .whatsapp-float {
   position: fixed;
   bottom: var(--space-6);
@@ -718,7 +695,6 @@
   }
 }
 
-/* ─── STATUS BANNER ─────────────────────────────────────────────────── */
 .status-banner {
   background: var(--color-info-bg);
   border: 1px solid var(--color-info-border);
@@ -733,7 +709,6 @@
   line-height: var(--leading-relaxed);
 }
 
-/* ─── GOAL LIST ─────────────────────────────────────────────────────── */
 .goal-list {
   display: flex;
   flex-direction: column;
@@ -763,7 +738,6 @@
   margin-top: 0.4em;
 }
 
-/* ─── STAGGERED GRID LAYOUT (Logo Background) ───────────────────────── */
 .staggered-layout {
   position: relative;
   padding-block: var(--space-12) var(--space-24);
@@ -827,7 +801,6 @@
   }
 }
 
-/* ─── FEATURE CARD ─────────────────────────────────────────────────── */
 .feature-card {
   display: flex;
   flex-direction: column;
@@ -905,7 +878,6 @@
   transform: translateX(4px);
 }
 
-/* ─── PRINT STYLES ──────────────────────────────────────────────────── */
 @media print {
   .header,
   .footer,

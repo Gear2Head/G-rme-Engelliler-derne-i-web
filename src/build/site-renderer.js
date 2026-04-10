@@ -123,11 +123,11 @@ function getPageMeta(pageKey, content) {
     iletisim: 'İletişim',
   };
 
-  const title = seoEntry.title || pageNames[pageKey] || content.site.name;
-  const description = seoEntry.description || content.site.description || '';
+  const title = pageKey === 'index' ? 'Kırşehir Görme Engelliler Derneği | KİRGED' : (seoEntry.title || pageNames[pageKey] || content.site.name);
+  const description = pageKey === 'index' ? 'Kırşehir Görme Engelliler Derneği (KİRGED) resmi web sitesi. Kırşehir görme engelliler ve az gören bireyler için eğitim, toplumsal destek, istihdam ve sosyal faaliyetler yürütmekteyiz.' : (seoEntry.description || content.site.description || '');
 
   return {
-    title: `${title} | ${content.site.name}`,
+    title: pageKey === 'index' ? title : `${title} | ${content.site.name}`,
     description: description,
     canonical: toAbsoluteUrl(content.site.url, seoEntry.canonical || getPagePath(pageKey)),
     robots: null,
@@ -410,10 +410,6 @@ function renderSectionHeader(title, lead, id) {
   </div>`;
 }
 
-// ──────────────────────────────────────────────────────────
-// PAGE RENDERERS
-// ──────────────────────────────────────────────────────────
-
 function renderIndexContent(content) {
   const locationLabel = content.hero.locationLabel || [content.contact.address?.city, TURKEY_LABEL].filter(Boolean).join(', ');
   const missionCards = content.mission.cards.map((card, index) => `
@@ -457,16 +453,16 @@ function renderIndexContent(content) {
       </div>
     </div>`;
 
-  return `<section class="hero" aria-labelledby="hero-heading" style="background: linear-gradient(rgba(10, 27, 53, 0.75), rgba(10, 27, 53, 0.95)), url('/assets/images/hero-bg.jpg') center/cover no-repeat; text-align: center; padding-block: 8rem;">
+  return `<section class="hero" aria-labelledby="live-hero-title" style="background: linear-gradient(rgba(10, 27, 53, 0.75), rgba(10, 27, 53, 0.95)), url('/assets/images/hero-bg.jpg') center/cover no-repeat; text-align: center; padding-block: 8rem;">
     <div class="container hero__inner" style="grid-template-columns: 1fr;">
       <div class="hero__content" style="max-width: 900px; margin-inline: auto;">
-        <div class="hero__badge" aria-hidden="true" style="margin-inline:auto; background:rgba(232, 184, 75, 0.15); border-color:#e8b84b; color:#e8b84b; padding: 0.5rem 1rem;">${icon('map')}${escapeHtml(locationLabel)}</div>
-        <h1 class="hero__title" id="live-hero-title">${escapeHtml(content.hero.title)}</h1>
-        <p class="hero__subtitle" id="live-hero-subtitle" style="color:var(--color-accent-400);">${escapeHtml(content.hero.subtitle)}</p>
-        <p class="hero__lead" id="live-hero-lead" style="margin-inline:auto;">${escapeHtml(content.hero.lead)}</p>
+        <div class="hero__badge" aria-hidden="true" style="margin-inline:auto; background:rgba(232, 184, 75, 0.15); border-color:#e8b84b; color:#e8b84b; padding: 0.5rem 1rem;">${icon('map')}Kırşehir, Türkiye</div>
+        <h1 class="hero__title" id="live-hero-title">Kırşehir Görme Engelliler Derneği</h1>
+        <p class="hero__subtitle" id="live-hero-subtitle" style="color:var(--color-accent-400);">Kırşehir görme engelliler için eşit, engelsiz ve erişilebilir bir yaşam.</p>
+        <p class="hero__lead" id="live-hero-lead" style="margin-inline:auto;">Derneğimiz (KİRGED), Kırşehir'deki görme engelli vatandaşlarımızın sosyal hayata tam katılımını sağlamak, dayanışmayı güçlendirmek ve farkındalık yaratmak amacıyla çalışmalarını sürdürmektedir.</p>
         <div class="hero__actions" style="justify-content:center;">
-          <a href="${escapeAttr(content.hero.cta.primary.href)}" class="btn btn--accent btn--lg" id="hero-cta-primary">${icon('phone')}<span id="live-hero-cta-label">${escapeHtml(content.hero.cta.primary.label)}</span></a>
-          <a href="${escapeAttr(content.hero.cta.secondary.href)}" class="btn btn--secondary btn--lg" id="hero-cta-secondary" style="border-color: rgba(255,255,255,0.4); color: #fff; background: rgba(255,255,255,0.05);">${icon('info')}${escapeHtml(content.hero.cta.secondary.label)}</a>
+          <a href="${escapeAttr(content.hero.cta.primary.href)}" class="btn btn--accent btn--lg" id="hero-cta-primary">${icon('phone')}<span id="live-hero-cta-label">Bize Ulaşın</span></a>
+          <a href="${escapeAttr(content.hero.cta.secondary.href)}" class="btn btn--secondary btn--lg" id="hero-cta-secondary" style="border-color: rgba(255,255,255,0.4); color: #fff; background: rgba(255,255,255,0.05);">${icon('info')}Hakkımızda</a>
         </div>
       </div>
     </div>
@@ -516,7 +512,6 @@ function renderIndexContent(content) {
 function renderAboutContent(content) {
   const goals = content.about.goals.map((goal) => `<li>${escapeHtml(goal)}</li>`).join('');
 
-  // Removed foundingBadge
   return `<section class="page-header" aria-labelledby="page-title">
     <div class="container page-header__inner">
       <nav class="breadcrumb" aria-label="Sayfa konumu">
@@ -600,8 +595,6 @@ function renderGalleryContent(content) {
   const catLabels = { etkinlik: 'Etkinlik', toplanti: 'Toplantı', egitim: 'Eğitim', ziyaret: 'Ziyaret', diger: 'Diğer' };
   const catColors = { etkinlik: 'var(--color-primary-600)', toplanti: '#16A34A', egitim: '#D97706', ziyaret: '#0891B2', diger: '#6B7280' };
 
-  // Gallery items come from admin panel (localStorage) at runtime
-  // We render a shell with filter buttons and empty state; JS fills items
   const categoryFilters = Object.entries(catLabels).map(([key, label]) =>
     `<button class="gallery-filter-btn" data-filter="${key}" onclick="filterGallery(this, '${key}')">${escapeHtml(label)}</button>`
   ).join('');
@@ -633,7 +626,7 @@ function renderGalleryContent(content) {
       .gallery-lightbox-nav.next { right: var(--space-6); }
       .gallery-lightbox-caption { position: absolute; bottom: var(--space-6); left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: var(--space-3) var(--space-6); border-radius: var(--radius-lg); font-size: var(--text-sm); text-align: center; white-space: nowrap; transition: opacity 200ms ease; }
       
-      /* Album Styles */
+      
       .gallery-album-wrap { grid-column: 1 / -1; display: flex; flex-direction: column; gap: var(--space-4); margin-bottom: var(--space-4); }
       .gallery-album-header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); cursor: pointer; user-select: none; transition: background var(--transition-fast); }
       .gallery-album-header:hover { background: var(--color-bg-card); }
@@ -1105,10 +1098,6 @@ function renderPageContent(pageKey, content) {
   }
 }
 
-// ──────────────────────────────────────────────────────────
-// SCHEMA
-// ──────────────────────────────────────────────────────────
-
 function buildOrganizationSchema(content) {
   const org = {
     '@context': 'https://schema.org',
@@ -1135,7 +1124,7 @@ function buildOrganizationSchema(content) {
   if (content.site.status.hasAddress && content.contact.address?.full) {
     org.address = { '@type': 'PostalAddress', streetAddress: content.contact.address.full, addressLocality: content.contact.address.city, postalCode: content.contact.address.postalCode, addressCountry: 'TR' };
   }
-  // TODO 45: Add areaServed and Google Maps sameAs
+
   const mapsUrl = content.contact.googleMapsUrl;
   if (mapsUrl) {
     if (!org.sameAs) org.sameAs = [];
@@ -1161,10 +1150,6 @@ function buildLocalBusinessSchema(content) {
   };
 }
 
-// ──────────────────────────────────────────────────────────
-// HEAD / BODY
-// ──────────────────────────────────────────────────────────
-
 function renderHead(pageKey, content) {
   const pageMeta = getPageMeta(pageKey, content);
   const pageUrl = pageMeta.canonical || toAbsoluteUrl(content.site.url, getPagePath(pageKey));
@@ -1172,11 +1157,30 @@ function renderHead(pageKey, content) {
   const twitterCard = ogImageUrl ? 'summary_large_image' : 'summary';
   const appleTouchIcon = content.site.appleTouchIconPath ? `<link rel="apple-touch-icon" href="${escapeAttr(content.site.appleTouchIconPath)}" />` : '';
 
+  let newsSchema = null;
+  if (pageKey.startsWith('announcement:')) {
+    const slug = pageKey.split(':')[1];
+    const ann = content.announcements.find(a => slugify(a.title) === slug);
+    if (ann) {
+      newsSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'NewsArticle',
+        headline: ann.title,
+        image: ann.image ? [toAbsoluteUrl(content.site.url, ann.image)] : [],
+        datePublished: ann.date || '2026-04-10T00:00:00Z',
+        dateModified: ann.date || '2026-04-10T00:00:00Z',
+        author: { '@type': 'Organization', name: content.site.name, url: toAbsoluteUrl(content.site.url, '/') },
+        publisher: { '@type': 'Organization', name: content.site.name, logo: { '@type': 'ImageObject', url: toAbsoluteUrl(content.site.url, content.site.logoPath || '/favicon.svg') } }
+      };
+    }
+  }
+
   const schemas = [
     renderJsonLd(buildOrganizationSchema(content)),
     buildLocalBusinessSchema(content) ? renderJsonLd(buildLocalBusinessSchema(content)) : '',
     pageMeta.breadcrumbs ? renderJsonLd({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: pageMeta.breadcrumbs.map((item, i) => ({ '@type': 'ListItem', position: i + 1, name: item.name, item: item.item })) }) : '',
     renderJsonLd({ '@context': 'https://schema.org', '@type': 'WebPage', name: pageMeta.webPageName, url: pageUrl, description: pageMeta.webPageDescription, inLanguage: 'tr-TR' }),
+    newsSchema ? renderJsonLd(newsSchema) : ''
   ].filter(Boolean).join('\n');
 
   return `<meta charset="UTF-8" />
@@ -1188,6 +1192,8 @@ function renderHead(pageKey, content) {
   <meta name="description" content="${escapeAttr(pageMeta.description)}" />
   ${pageMeta.robots ? `<meta name="robots" content="${escapeAttr(pageMeta.robots)}" />` : ''}
   ${pageMeta.canonical ? `<link rel="canonical" href="${escapeAttr(pageMeta.canonical)}" />` : ''}
+  <link rel="alternate" hreflang="tr" href="${escapeAttr(pageUrl)}" />
+  <link rel="alternate" hreflang="x-default" href="${escapeAttr(pageUrl)}" />
   <meta property="og:title" content="${escapeAttr(pageMeta.title)}" />
   <meta property="og:description" content="${escapeAttr(pageMeta.description)}" />
   <meta property="og:type" content="website" />
@@ -1249,6 +1255,7 @@ function renderBody(pageKey, content) {
 
 export function renderDocumentFragments(pageKey) {
   const content = readSiteContent();
+  content.site.url = 'https://kirged.org';
   return {
     head: renderHead(pageKey, content),
     body: renderBody(pageKey, content),

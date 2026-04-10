@@ -1,7 +1,4 @@
-/**
- * AMAÇ: CSS giriş noktası — tüm stil katmanlarını doğru sırada import eder
- * MANTIK: Cascade sırası kritik: tokens → reset → components → layout
- */
+
 @import './tokens.css';
 @import './reset.css';
 @import './components.css';

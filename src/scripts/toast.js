@@ -1,7 +1,4 @@
-/**
- * AMAÇ: Hafif toast bildirim sistemi — başarı, hata, bilgi mesajları
- * MANTIK: DOM'a geçici alert div ekler, 3s sonra kaldırır; ARIA live region ile ekran okuyucu uyumlu
- */
+
 
 let _container = null;
 
@@ -16,11 +13,6 @@ function getContainer() {
   return _container;
 }
 
-/**
- * @param {string} message - Bildirim mesajı
- * @param {'success'|'error'|'info'} [type='info'] - Bildirim türü
- * @param {number} [duration=3500] - ms cinsinden gösterim süresi
- */
 export function showToast(message, type = 'info', duration = 3500) {
   const container = getContainer();
   const toast = document.createElement('div');
