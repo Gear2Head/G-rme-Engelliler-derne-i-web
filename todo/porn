@@ -1,0 +1,7 @@
+Ne nerede ne yapıyor
+api/fetch-preview.js → Projenin kök /api/ klasörüne koy. Vercel bunu otomatik serverless function yapar. Tarayıcıdan başka sitelere CORS nedeniyle istek gönderilemiyor — bu endpoint sunucu tarafında fetch edip og:title, og:description, og:image parse ederek JSON döndürüyor. SSRF koruması var (özel IP engeli + 8s timeout + 500KB limit).
+admin-link-preview.js → Admin panelindeki duyuru formuna ekleniyor. renderLinkPreviewBlock(annId) fonksiyonu URL input + Önizle butonu + önizleme kartı HTML'ini üretiyor. initLinkPreview(annId) event listener'ları bağlıyor. getLinkPreviewData(annId) kaydetmede preview datasını veriyor.
+announcement-detail.js → /duyurular/ofis gibi URL'lerde çalışıyor. linkPreview.url varsa → 0.8 saniye "yönlendiriliyorsunuz" ekranı gösterip window.open() ile haber sitesine gönderiyor. Yoksa içeriği sayfada render ediyor.
+vercel.json → İki kritik ekleme: rewrites ile /duyurular/:slug → /duyurular/detay'a yönlendirme (404'ü çözer), CSP'ye cdnjs.cloudflare.com ve *.supabase.co eklendi (console hatalarını çözer).
+Admin'e entegrasyon için tek yapman gereken
+ENTEGRASYON.md dosyasındaki 3a–3d adımlarını takip et — mevcut duyuru kartı render fonksiyonuna renderLinkPreviewBlock() çağrısı ve initLinkPreview() çağrısı eklemek yeterli.

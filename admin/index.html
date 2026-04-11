@@ -1479,6 +1479,11 @@
     import { login, logout, getSession } from '../src/supabase/auth.js';
     import { uploadGalleryImage, addGalleryItem, getGalleryItems, deleteGalleryItem, deleteAlbum } from '../src/supabase/gallery.js';
     import { getSiteConfig, saveSiteConfig } from '../src/supabase/site_config.js';
+    import { 
+      renderLinkPreviewBlock, 
+      initLinkPreview, 
+      getLinkPreviewData 
+    } from '../src/scripts/admin-link-preview.js';
 
     const LOCKOUT_KEY = 'kged_admin_lockout';
     const MAX_ATTEMPTS = 5;
@@ -2293,29 +2298,8 @@
               </div>
            </div>
 
-           <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px dashed var(--border);">
-              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-faint); text-transform:uppercase; margin-bottom:0.5rem;">Haber / Kaynak Linki (Opsiyonel)</label>
-              <div style="display:flex; gap:0.5rem;">
-                <input type="url" value="${ann.link || ''}" 
-                       placeholder="https://kaynak-haber.com/detay"
-                       style="flex:1; padding:0.6rem 0.75rem; border:1.5px solid var(--border); border-radius:var(--radius-md); font-size:0.9rem;" 
-                       onchange="window.updateAnnouncement(${idx}, 'link', this.value)" />
-                <button class="btn btn--primary btn--sm" style="white-space:nowrap;" onclick="window.fetchLinkPreview(${idx})">Önizle</button>
-              </div>
-              
-              <div id="ann-preview-box-${idx}" style="margin-top:1rem;">
-                ${ann.preview ? `
-                  <div style="display:flex; gap:0.75rem; padding:0.75rem; background:var(--surface); border:1px solid var(--border); border-radius:10px; align-items:flex-start;">
-                    ${ann.preview.image ? `<img src="${ann.preview.image}" style="width:80px; height:56px; object-fit:cover; border-radius:6px; flex-shrink:0;" />` : ''}
-                    <div style="flex:1; overflow:hidden;">
-                      <div style="font-weight:700; font-size:0.85rem; margin-bottom:0.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${ann.preview.title}">${ann.preview.title}</div>
-                      <div style="font-size:0.7rem; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em;">${ann.preview.siteName || 'Harici Bağlantı'}</div>
-                    </div>
-                    <button class="btn btn--ghost btn--sm" style="color:var(--danger); border:none;" onclick="window.updateAnnouncement(${idx}, 'preview', null); window.renderAnnouncementRows();">Kaldır</button>
-                  </div>
-                ` : ''}
-              </div>
-           </div>
+           <!-- MODULAR LINK PREVIEW BLOCK -->
+           ${renderLinkPreviewBlock(idx, ann.linkPreview || ann.preview || null)}
            
            <div style="margin-top:1.25rem; padding-top:0.75rem; border-top:1px dashed var(--border); display:flex; justify-content:space-between; align-items:center;">
               <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -2346,6 +2330,11 @@
         });
         row.addEventListener('dragend', () => { row.classList.remove('dragging'); draggedIdx = null; });
       });
+
+      // Initialize Link Previews for each row
+      siteContent.announcements.forEach((ann, idx) => {
+        initLinkPreview(idx, ann.linkPreview || ann.preview || null);
+      });
     };
 
     window.updateAnnouncement = (idx, field, val) => {
@@ -2355,32 +2344,6 @@
         siteContent.announcements[idx][field] = clean;
       } else {
         siteContent.announcements[idx][field] = val;
-      }
-    };
-
-    window.fetchLinkPreview = async (idx) => {
-      const ann = siteContent.announcements[idx];
-      if (!ann.link) { showToast('Lütfen önce bir link girin.', 'info'); return; }
-
-      const btn = event.currentTarget;
-      const oldText = btn.textContent;
-      btn.disabled = true;
-      btn.textContent = '...';
-
-      try {
-        const res = await fetch(`/api/fetch-preview?url=${encodeURIComponent(ann.link)}`);
-        if (!res.ok) throw new Error('Önizleme sunucudan alınamadı.');
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-
-        ann.preview = data;
-        window.renderAnnouncementRows();
-        showToast('Haber önizlemesi başarıyla getirildi.', 'success');
-      } catch (err) {
-        showToast('Hata: ' + err.message, 'error');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = oldText;
       }
     };
 
@@ -2410,6 +2373,12 @@
       btn.disabled = true;
       btn.innerHTML = '<svg class="spin" style="margin-right:0.4rem;" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Kaydediliyor...';
       try {
+        // Collect link preview data for each announcement
+        siteContent.announcements = siteContent.announcements.map((ann, idx) => ({
+          ...ann,
+          linkPreview: getLinkPreviewData(idx)
+        }));
+
         await saveSiteConfig(siteContent);
         btn.style.background = '#059669';
         btn.innerHTML = '✅ Kaydedildi';

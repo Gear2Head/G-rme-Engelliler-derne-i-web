@@ -110,7 +110,7 @@ export default defineConfig({
         galeri: resolve(__dirname, 'galeri/index.html'),
         tuzuk: resolve(__dirname, 'tuzuk/index.html'),
         duyurular: resolve(__dirname, 'duyurular/index.html'),
-        detay: resolve(__dirname, 'duyurular/detay.html'),
+        detay: resolve(__dirname, 'duyurular/detay/index.html'),
         iletisim: resolve(__dirname, 'iletisim/index.html'),
         notfound: resolve(__dirname, '404.html'),
         admin: resolve(__dirname, 'admin/index.html'),

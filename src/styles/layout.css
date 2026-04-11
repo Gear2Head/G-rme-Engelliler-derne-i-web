@@ -223,6 +223,7 @@ svg {
   top: 0;
   z-index: 800;
   box-shadow: var(--shadow-md);
+  overflow: visible; /* Prevent clipping logo circle */
 }
 
 .header {
@@ -232,6 +233,7 @@ svg {
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 3px solid var(--color-primary-700);
   transition: background var(--transition-normal);
+  overflow: visible; /* Allow logo to stick out top/bottom */
 }
 
 .header__inner {
@@ -258,9 +260,9 @@ svg {
 .header__logo-center {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: calc(var(--header-height) / 2); /* Centered in header */
   transform: translate(-50%, -50%);
-  z-index: 1000;
+  z-index: 1001; /* Above sticky header-wrapper and top-bar */
   border-radius: 50%;
   background: #fff;
   padding: 4px;
