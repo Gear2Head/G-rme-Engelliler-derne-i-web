@@ -2317,7 +2317,14 @@
       });
     };
 
-      siteContent.announcements[idx][field] = val;
+    window.updateAnnouncement = (idx, field, val) => {
+      if (!siteContent.announcements[idx]) return;
+      if (field === 'content' && typeof DOMPurify !== 'undefined') {
+        const clean = DOMPurify.sanitize(val, { ALLOWED_TAGS: ['p','br','strong','em','ul','ol','li','h2','h3','a'], ALLOWED_ATTR: ['href', 'target', 'rel'] });
+        siteContent.announcements[idx][field] = clean;
+      } else {
+        siteContent.announcements[idx][field] = val;
+      }
     };
 
     window.fetchLinkPreview = async (idx) => {
