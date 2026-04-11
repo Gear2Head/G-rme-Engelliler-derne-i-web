@@ -1,6 +1,44 @@
 import { getSiteConfig } from '../supabase/site_config.js';
 import { escapeHtml } from '../utils/html.js';
 
+function slugify(text) {
+  if (!text) return '';
+  const trMap = { 'ç': 'c', 'Ç': 'C', 'ğ': 'g', 'Ğ': 'G', 'ş': 's', 'Ş': 'S', 'ü': 'u', 'Ü': 'U', 'ı': 'i', 'İ': 'I', 'ö': 'o', 'Ö': 'O' };
+  return text.toString().toLowerCase()
+    .replace(/[çÇğĞşŞüÜıİöÖ]/g, m => trMap[m])
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+}
+
+function stripHtml(html) {
+  if (!html) return '';
+  return String(html).replace(/<[^>]*>/g, '').slice(0, 200);
+}
+
+function renderLinkPreview(preview) {
+  if (!preview || !preview.url) return '';
+  return `
+    <div class="link-preview-card">
+      <a href="${escapeHtml(preview.url)}" target="_blank" rel="noopener noreferrer" class="link-preview-link">
+        <div class="link-preview-grid">
+          ${preview.image ? `<div class="link-preview-image-wrap"><img src="${escapeHtml(preview.image)}" alt="" class="link-preview-image" loading="lazy" /></div>` : ''}
+          <div class="link-preview-content">
+            <span class="link-preview-site">${escapeHtml(preview.siteName || 'Harici Haber')}</span>
+            <h3 class="link-preview-title">${escapeHtml(preview.title)}</h3>
+            <p class="link-preview-desc">${escapeHtml(preview.description)}</p>
+            <div class="link-preview-footer">
+               <span>Kaynak: ${new URL(preview.url).hostname}</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  `;
+}
+
 export async function initHydration() {
   try {
     const config = await getSiteConfig();
@@ -49,6 +87,35 @@ export async function initHydration() {
 
       const ogDesc = document.querySelector('meta[property="og:description"]');
       if (ogDesc) ogDesc.setAttribute('content', config.about.intro);
+    }
+
+    // BUG-01+BUG-12: Duyuru hydration — Supabase'den gelen duyuruları client-side render et
+    const annGrid = document.querySelector('.announcements-grid');
+    if (annGrid && config.announcements && config.announcements.length > 0) {
+      annGrid.innerHTML = config.announcements.map(ann => {
+        const slug = slugify(ann.title || '');
+        const dateStr = ann.date
+          ? new Date(ann.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+          : 'Tarih Belirtilmedi';
+        const imgSrc = ann.image || '/logo.png';
+        return `<article class="announcement-card" id="${escapeHtml(slug)}">
+          <div class="announcement-card__image-wrap">
+            <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(ann.title)}" class="announcement-card__image" loading="lazy" />
+          </div>
+          <div class="announcement-card__body">
+            <div class="announcement-card__meta">
+              <time datetime="${ann.date || ''}">${escapeHtml(dateStr)}</time>
+              ${ann.category ? `<span class="announcement-card__tag">${escapeHtml(ann.category)}</span>` : ''}
+            </div>
+            <h2 class="announcement-card__title">${escapeHtml(ann.title)}</h2>
+            <div class="announcement-card__content typography">${stripHtml(ann.content || '')}</div>
+            ${renderLinkPreview(ann.preview)}
+            <div style="margin-top: 1.5rem;">
+              <a href="/duyurular/${slug}" class="btn btn--secondary btn--sm" style="width:100%; justify-content:center;">Devamını Oku</a>
+            </div>
+          </div>
+        </article>`;
+      }).join('');
     }
 
   } catch (err) {

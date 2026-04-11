@@ -1777,7 +1777,10 @@
     function renderBoardUI() {
       return `
           <div class="panel-card fade-in">
-            <div class="panel-card__header"><div class="panel-card__title">Yönetim Kurulu</div></div>
+            <div class="panel-card__header">
+              <div class="panel-card__title">Yönetim Kurulu</div>
+              <button class="btn btn--primary" onclick="window.handleSaveBoard()">Kaydet</button>
+            </div>
             <div class="panel-card__body">
               <div class="board-rows-list" id="board-editor-list"></div>
               <button class="btn btn--dashed" onclick="window.addBoardMember()">Yeni Üye Ekle</button>
@@ -2262,6 +2265,26 @@
                    <label class="field-label">Duyuru Detayı</label>
                    <textarea class="field-textarea" style="height:100px; resize:vertical; font-size:0.9rem;" placeholder="İçerik..." onchange="window.updateAnnouncement(${idx}, 'content', this.value)">${ann.content || ''}</textarea>
                 </div>
+
+                <div class="field-group" style="margin-top:1rem;">
+                   <label class="field-label">Dış Haber Bağlantısı (URL)</label>
+                   <div style="display:flex; gap:0.5rem;">
+                      <input class="field-input" type="url" placeholder="https://..." value="${ann.link || ''}" 
+                             onchange="window.updateAnnouncement(${idx}, 'link', this.value)" 
+                             style="flex:1;" />
+                      <button class="btn btn--secondary btn--sm" onclick="window.fetchLinkPreview(${idx})">Önizleme Getir</button>
+                   </div>
+                   ${ann.preview ? `
+                     <div class="admin-preview-box" style="margin-top:0.75rem; padding:0.75rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); display:flex; gap:1rem; align-items:center;">
+                        ${ann.preview.image ? `<img src="${ann.preview.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);" />` : ''}
+                        <div style="flex:1; overflow:hidden;">
+                           <div style="font-weight:700; font-size:0.85rem; margin-bottom:0.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${ann.preview.title}">${ann.preview.title}</div>
+                           <div style="font-size:0.7rem; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em;">${ann.preview.siteName || 'Harici Bağlantı'}</div>
+                        </div>
+                        <button class="btn btn--ghost btn--sm" style="color:var(--danger); border:none;" onclick="window.updateAnnouncement(${idx}, 'preview', null); window.renderAnnouncementRows();">Kaldır</button>
+                     </div>
+                   ` : ''}
+                </div>
              </div>
           </div>
           
@@ -2294,12 +2317,33 @@
       });
     };
 
-    window.updateAnnouncement = (idx, field, val) => {
-      if (!siteContent.announcements[idx]) return;
-      if (field === 'content' && typeof DOMPurify !== 'undefined') {
-        val = DOMPurify.sanitize(val, { ALLOWED_TAGS: ['p','br','strong','em','ul','ol','li','h2','h3','a'], ALLOWED_ATTR: ['href', 'target', 'rel'] });
-      }
       siteContent.announcements[idx][field] = val;
+    };
+
+    window.fetchLinkPreview = async (idx) => {
+      const ann = siteContent.announcements[idx];
+      if (!ann.link) { showToast('Lütfen önce bir link girin.', 'info'); return; }
+
+      const btn = event.currentTarget;
+      const oldText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      try {
+        const res = await fetch(`/api/fetch-preview?url=${encodeURIComponent(ann.link)}`);
+        if (!res.ok) throw new Error('Önizleme sunucudan alınamadı.');
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        ann.preview = data;
+        window.renderAnnouncementRows();
+        showToast('Haber önizlemesi başarıyla getirildi.', 'success');
+      } catch (err) {
+        showToast('Hata: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = oldText;
+      }
     };
 
     window.addAnnouncement = () => {

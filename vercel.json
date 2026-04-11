@@ -25,7 +25,8 @@
     }
   ],
   "redirects": [
-    { "source": "/anasayfa", "destination": "/", "permanent": true }
+    { "source": "/anasayfa", "destination": "/", "permanent": true },
+    { "source": "/:path*", "has": [{ "type": "host", "value": "www.kirged.org" }], "destination": "https://kirged.org/:path*", "permanent": true }
   ],
   "rewrites": [
     { "source": "/duyurular/:slug", "destination": "/duyurular/detay.html" }

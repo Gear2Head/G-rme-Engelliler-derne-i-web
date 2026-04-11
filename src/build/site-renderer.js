@@ -46,6 +46,15 @@ function slugify(text) {
     .replace(/-+$/, '');
 }
 
+function stripHtml(html) {
+  if (!html) return '';
+  return String(html)
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 160) + '...';
+}
+
 function ensureLeadingSlash(value) {
   if (!value) return '/';
   return value.startsWith('/') ? value : `/${value}`;
@@ -58,8 +67,33 @@ function stripTrailingSlash(value) {
 
 function toAbsoluteUrl(siteUrl, target) {
   if (!target) return null;
-  if (/^https?:\/\//i.test(target)) return target;
+  if (/^(https?:\/\/|tel:|mailto:|#)/i.test(target)) return target;
   return new URL(ensureLeadingSlash(target), `${siteUrl.replace(/\/$/, '')}/`).toString();
+}
+
+function renderLinkPreview(preview) {
+  if (!preview || !preview.url) return '';
+  return `
+    <div class="link-preview-card">
+      <a href="${escapeAttr(preview.url)}" target="_blank" rel="noopener noreferrer" class="link-preview-link" title="${escapeAttr(preview.title)}">
+        <div class="link-preview-grid">
+          ${preview.image ? `
+          <div class="link-preview-image-wrap">
+            <img src="${escapeAttr(preview.image)}" alt="" class="link-preview-image" loading="lazy" />
+          </div>` : ''}
+          <div class="link-preview-content">
+            <span class="link-preview-site">${escapeHtml(preview.siteName || 'Harici Haber')}</span>
+            <h3 class="link-preview-title">${escapeHtml(preview.title)}</h3>
+            <p class="link-preview-desc">${escapeHtml(preview.description)}</p>
+            <div class="link-preview-footer">
+               <span>Kaynak: ${new URL(preview.url).hostname}</span>
+               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  `;
 }
 
 function renderJsonLd(data) {
@@ -182,22 +216,22 @@ function renderThemeBootstrap() {
   return `<script>(function(){var theme=localStorage.getItem('kged-theme');var system=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',theme||system);var fontSize=parseInt(localStorage.getItem('kged-font-size'),10);if(!isNaN(fontSize)&&fontSize!==100)document.documentElement.style.fontSize=fontSize+'%';})();<\/script>`;
 }
 
-function renderNavLinks(items, currentPath, className) {
+function renderNavLinks(items, currentPath, className, content) {
   return items.map((item) => {
-    const href = ensureLeadingSlash(item.href);
-    const isCurrent = (stripTrailingSlash(href) === stripTrailingSlash(currentPath)) ||
+    const href = toAbsoluteUrl(content.site.url, item.href);
+    const isCurrent = (stripTrailingSlash(ensureLeadingSlash(item.href)) === stripTrailingSlash(currentPath)) ||
       (item.children && item.children.some(c => stripTrailingSlash(ensureLeadingSlash(c.href)) === stripTrailingSlash(currentPath)));
     const currentAttr = isCurrent ? ' aria-current="page"' : '';
 
     if (item.children && item.children.length > 0) {
       const dropdownHtml = item.children.map(child => {
-        const childHref = ensureLeadingSlash(child.href);
-        const isChildCurrent = stripTrailingSlash(childHref) === stripTrailingSlash(currentPath);
-        return `<a href="${escapeAttr(childHref)}" class="nav__dropdown-link"${isChildCurrent ? ' aria-current="page"' : ''}>${escapeHtml(child.label)}</a>`;
+        const childHref = toAbsoluteUrl(content.site.url, child.href);
+        const isChildCurrent = stripTrailingSlash(ensureLeadingSlash(child.href)) === stripTrailingSlash(currentPath);
+        return `<a href="${escapeAttr(childHref)}" title="${escapeAttr(child.label)}" class="nav__dropdown-link"${isChildCurrent ? ' aria-current="page"' : ''}>${escapeHtml(child.label)}</a>`;
       }).join('');
 
       return `<div class="nav__item nav__item--has-dropdown">
-        <a href="${escapeAttr(href)}" class="${className}"${currentAttr} role="button" aria-haspopup="true" aria-expanded="false">
+        <a href="${escapeAttr(href)}" title="${escapeAttr(item.label)}" class="${className}"${currentAttr} role="button" aria-haspopup="true" aria-expanded="false">
           ${escapeHtml(item.label)}
           <span class="nav__dropdown-icon" aria-hidden="true">${icon('chevronDown') || '▾'}</span>
         </a>
@@ -209,7 +243,7 @@ function renderNavLinks(items, currentPath, className) {
       </div>`;
     }
 
-    return `<a href="${escapeAttr(href)}" class="${className}"${currentAttr}>${escapeHtml(item.label)}</a>`;
+    return `<a href="${escapeAttr(href)}" title="${escapeAttr(item.label)}" class="${className}"${currentAttr}>${escapeHtml(item.label)}</a>`;
   }).join('\n');
 }
 
@@ -220,14 +254,14 @@ function renderHeader(content, currentPath, options = {}) {
 
   const socialLinks = Object.entries(content.contact.social || {}).filter(([k, v]) => Boolean(v));
   const socialMarkup = socialLinks.length > 0
-    ? socialLinks.map(([platform, href]) => `<a href="${escapeAttr(href)}" class="top-bar__social-link" target="_blank" rel="noopener noreferrer" aria-label="${escapeAttr(platform)} profilimiz">${icon(platform)}</a>`).join('')
+    ? socialLinks.map(([platform, href]) => `<a href="${escapeAttr(href)}" title="${escapeAttr(platform)}" class="top-bar__social-link" target="_blank" rel="nofollow noopener noreferrer" aria-label="${escapeAttr(platform)} profilimiz">${icon(platform)}</a>`).join('')
     : '';
 
   const topBarHtml = `<div class="top-bar">
     <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
       <div class="top-bar__left">
-        <div class="top-bar__item">${icon('phone')} <a href="${escapeAttr(content.contact.phoneHref)}">${escapeHtml(content.contact.phone)}</a></div>
-        <div class="top-bar__item">${icon('mail')} <a href="${escapeAttr(content.contact.emailHref)}">${escapeHtml(content.contact.email)}</a></div>
+        <div class="top-bar__item">${icon('phone')} <a href="${escapeAttr(content.contact.phoneHref)}" title="${escapeAttr(content.contact.phone)}">${escapeHtml(content.contact.phone)}</a></div>
+        <div class="top-bar__item">${icon('mail')} <a href="${escapeAttr(content.contact.emailHref)}" title="${escapeAttr(content.contact.email)}">${escapeHtml(content.contact.email)}</a></div>
       </div>
       <div class="top-bar__right">
         ${socialMarkup ? `<div class="top-bar__socials">${socialMarkup}</div>` : ''}
@@ -245,17 +279,17 @@ function renderHeader(content, currentPath, options = {}) {
       <div class="container header__inner">
         
         <nav class="nav--desktop header__nav-left" aria-label="Ana menü sol">
-          ${renderNavLinks(leftNav, currentPath, 'nav__link')}
+          ${renderNavLinks(leftNav, currentPath, 'nav__link', content)}
         </nav>
 
-        <a href="/" class="header__logo header__logo-center" aria-label="${escapeAttr(`${content.site.name} — Ana Sayfa`)}">
+        <a href="${toAbsoluteUrl(content.site.url, '/')}" class="header__logo header__logo-center" aria-label="${escapeAttr(`${content.site.name} — Ana Sayfa`)}" title="${escapeAttr(`${content.site.name} Ana Sayfa`)}">
           <div class="header__logo-bg">
             ${logoMarkup}
           </div>
         </a>
 
         <nav class="nav--desktop header__nav-right" aria-label="Ana menü sağ">
-          ${renderNavLinks(rightNav, currentPath, 'nav__link')}
+          ${renderNavLinks(rightNav, currentPath, 'nav__link', content)}
         </nav>
 
         <div class="header__actions mobile-only">
@@ -274,40 +308,40 @@ function renderMobileNav(content, currentPath, options = {}) {
   const showCta = options.showCta !== false;
   const ctaMarkup = showCta
     ? `<div style="margin-top: 1rem;">
-      <a href="${escapeAttr(content.hero.cta.primary.href)}" class="btn btn--primary" style="width:100%;justify-content:center;">
+      <a href="${toAbsoluteUrl(content.site.url, content.hero.cta.primary.href)}" class="btn btn--primary" style="width:100%;justify-content:center;" title="${escapeAttr(content.hero.cta.primary.label)}">
         ${icon('phone')} ${escapeHtml(content.hero.cta.primary.label)}
       </a>
     </div>` : '';
   return `<nav class="nav--mobile" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Mobil menü">
-    ${renderNavLinks(content.nav, currentPath, 'nav__link')}
+    ${renderNavLinks(content.nav, currentPath, 'nav__link', content)}
     ${ctaMarkup}
   </nav>`;
 }
 
 function renderWhatsAppFloat(content) {
   if (!content.contact.whatsappHref) return '';
-  return `<a href="${escapeAttr(content.contact.whatsappHref)}" class="whatsapp-float" aria-label="WhatsApp'tan bize ulaşın" target="_blank" rel="noopener noreferrer">
+  return `<a href="${escapeAttr(content.contact.whatsappHref)}" class="whatsapp-float" aria-label="WhatsApp'tan bize ulaşın" target="_blank" rel="nofollow noopener noreferrer" title="WhatsApp İletişim">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
   </a>`;
 }
 
 function renderFooter(content, options = {}) {
   const isMinimal = options.minimal === true;
-  const navMarkup = renderNavLinks(content.nav, '', 'footer__link');
+  const navMarkup = renderNavLinks(content.nav, '', 'footer__link', content);
   const addressMarkup = content.site.status.hasAddress && content.contact.address?.short
-    ? `<p class="footer__contact-row">${icon('map')}<a href="${escapeAttr(content.contact.googleMapsUrl)}" target="_blank" rel="noopener noreferrer" style="color:var(--color-primary-200);">${escapeHtml(content.contact.address.short)}</a></p>`
+    ? `<p class="footer__contact-row">${icon('map')}<a href="${toAbsoluteUrl(content.site.url, content.contact.googleMapsUrl)}" target="_blank" rel="nofollow noopener noreferrer" style="color:var(--color-primary-200);" title="Haritada Görüntüle">${escapeHtml(content.contact.address.short)}</a></p>`
     : '';
 
   const socialLinks = Object.entries(content.contact.social || {}).filter(([k, v]) => Boolean(v));
   const sameAsMarkup = socialLinks.length > 0
-    ? socialLinks.map(([platform, href]) => `<a href="${escapeAttr(href)}" class="footer__link" target="_blank" rel="noopener noreferrer" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; background:rgba(255,255,255,0.1); border-radius:50%; margin-right:0.25rem;" aria-label="${escapeAttr(platform)} profilimiz">${icon(platform) || escapeHtml(new URL(href).hostname.replace('www.', ''))}</a>`).join('')
+    ? socialLinks.map(([platform, href]) => `<a href="${escapeAttr(href)}" class="footer__link" target="_blank" rel="nofollow noopener noreferrer" style="display:flex; align-items:center; justify-content:center; width:36px; height:36px; background:rgba(255,255,255,0.1); border-radius:50%; margin-right:0.25rem;" aria-label="${escapeAttr(platform)} profilimiz" title="${escapeAttr(platform)}">${icon(platform) || escapeHtml(new URL(href).hostname.replace('www.', ''))}</a>`).join('')
     : '';
 
   if (isMinimal) {
     return `<footer class="footer" role="contentinfo" style="background:var(--color-primary-900); color:white;">
       <div class="container">
         <div class="footer__bottom" style="border-top:none; padding-top: 0;">
-          <p class="footer__copy" style="color:rgba(255,255,255,0.6);">© <span id="footer-year"></span> ${escapeHtml(content.site.name)}.</p>
+          <p class="footer__copy" style="color:rgba(255,255,255,0.6);">© <span class="footer-year-display"></span> ${escapeHtml(content.site.name)}.</p>
           <nav aria-label="404 hızlı navigasyon"><div style="display:flex; gap: 1rem; flex-wrap: wrap;">${navMarkup}</div></nav>
         </div>
       </div>
@@ -325,16 +359,16 @@ function renderFooter(content, options = {}) {
         <nav aria-label="Hızlı bağlantılar">
           <p class="footer__heading" style="color:var(--color-accent-400);">Hızlı Menü</p>
           <ul class="footer__links">
-            ${content.nav.map((item) => `<li><a href="${escapeAttr(ensureLeadingSlash(item.href))}" class="footer__link" style="color:var(--color-primary-200);">${escapeHtml(item.label)}</a></li>`).join('')}
+            ${content.nav.map((item) => `<li><a href="${toAbsoluteUrl(content.site.url, item.href)}" title="${escapeAttr(item.label)}" class="footer__link" style="color:var(--color-primary-200);">${escapeHtml(item.label)}</a></li>`).join('')}
           </ul>
         </nav>
         <nav aria-label="Kurumsal bağlantılar">
           <p class="footer__heading" style="color:var(--color-accent-400);">Kurumsal</p>
           <ul class="footer__links">
-            <li><a href="/hakkimizda" class="footer__link" style="color:var(--color-primary-200);">Derneğimiz Hakkında</a></li>
-            <li><a href="/tuzuk" class="footer__link" style="color:var(--color-primary-200);">Dernek Tüzüğü</a></li>
-            <li><a href="/iletisim" class="footer__link" style="color:var(--color-primary-200);">İletişim & Konum</a></li>
-            <li><a href="/admin/" rel="nofollow" class="footer__link" style="opacity: 0.6; color:var(--color-primary-200);">Yönetici Girişi</a></li>
+            <li><a href="${toAbsoluteUrl(content.site.url, '/hakkimizda')}" title="Derneğimiz Hakkında" class="footer__link" style="color:var(--color-primary-200);">Derneğimiz Hakkında</a></li>
+            <li><a href="${toAbsoluteUrl(content.site.url, '/tuzuk')}" title="Dernek Tüzüğü" class="footer__link" style="color:var(--color-primary-200);">Dernek Tüzüğü</a></li>
+            <li><a href="${toAbsoluteUrl(content.site.url, '/iletisim')}" title="İletişim & Konum" class="footer__link" style="color:var(--color-primary-200);">İletişim & Konum</a></li>
+            <li><a href="${toAbsoluteUrl(content.site.url, '/admin/')}" title="Yönetici Girişi" rel="nofollow" class="footer__link" style="opacity: 0.6; color:var(--color-primary-200);">Yönetici Girişi</a></li>
           </ul>
         </nav>
         <div>
@@ -348,10 +382,10 @@ function renderFooter(content, options = {}) {
       </div>
       <div class="footer__bottom" style="border-top-color:rgba(255,255,255,0.1);">
         <p class="footer__copy" style="color:rgba(255,255,255,0.6);">
-          © <span id="footer-year"></span> ${escapeHtml(content.site.name)}. Tüm hakları saklıdır.
+          © <span id="footer-year" class="footer-year-display"></span> ${escapeHtml(content.site.name)}. Tüm hakları saklıdır.
           
         </p>
-        <a href="#main-content" id="back-to-top-footer" class="btn btn--secondary btn--sm" style="font-size: 0.8rem; color:white; border-color:white;">${icon('chevronUp')}Başa Dön</a>
+        <a href="#main-content" id="back-to-top-footer" class="btn btn--secondary btn--sm" style="font-size: 0.8rem; color:white; border-color:white;" title="Başa Dön">${icon('chevronUp')}Başa Dön</a>
       </div>
     </div>
   </footer>`;
@@ -400,7 +434,7 @@ function renderLoader(content) {
   </div>`;
 }
 
-function renderSkipLink() { return '<a class="skip-link" href="#main-content">İçeriğe atla</a>'; }
+function renderSkipLink() { return '<a class="skip-link" href="#main-content" title="İçeriğe atla">İçeriğe atla</a>'; }
 
 function renderSectionHeader(title, lead, id) {
   return `<div class="section__header">
@@ -425,26 +459,26 @@ function renderIndexContent(content) {
     <div class="staggered-layout">
       <div class="staggered-layout__bg" aria-hidden="true"></div>
       <div class="staggered-grid" role="list">
-        <a href="${escapeAttr(content.contact.phoneHref)}" class="feature-card" role="listitem" aria-label="Telefon et: ${escapeAttr(content.contact.phone)}">
+        <a href="${toAbsoluteUrl(content.site.url, content.contact.phoneHref)}" class="feature-card" role="listitem" aria-label="Telefon et: ${escapeAttr(content.contact.phone)}" title="Telefon Görüşmesi">
           <div class="feature-card__icon" aria-hidden="true">${icon('phone')}</div>
           <h3 class="feature-card__title">Telefon Görüşmesi</h3>
           <p class="feature-card__text">Mesai saatleri içerisinde bizimle doğrudan telefon aracılığıyla iletişime geçebilirsiniz.</p>
           <div class="feature-card__link">Hemen Ara ${arrowRightIcon}</div>
         </a>
         ${content.contact.googleMapsUrl ? `
-        <a href="${escapeAttr(content.contact.googleMapsUrl)}" class="feature-card" role="listitem" aria-label="Haritada göster, yeni sekmede açılır" target="_blank" rel="noopener noreferrer">
+        <a href="${toAbsoluteUrl(content.site.url, content.contact.googleMapsUrl)}" class="feature-card" role="listitem" aria-label="Haritada göster, yeni sekmede açılır" target="_blank" rel="nofollow noopener noreferrer" title="Yerinde Ziyaret">
           <div class="feature-card__icon" aria-hidden="true">${icon('map')}</div>
           <h3 class="feature-card__title">Yerinde Ziyaret</h3>
           <p class="feature-card__text">Kırşehir merkezdeki dernek ofisimize uğrayarak çalışmalarımızla ilgili birebir bilgi alabilirsiniz.</p>
           <div class="feature-card__link">Konumu Bul ${arrowRightIcon}</div>
         </a>` : ''}
-        <a href="${escapeAttr(content.hero.cta.primary.href)}" class="feature-card" role="listitem" aria-label="İletişim sayfasına git">
+        <a href="${toAbsoluteUrl(content.site.url, content.hero.cta.primary.href)}" class="feature-card" role="listitem" aria-label="İletişim sayfasına git" title="İletişim Formu">
           <div class="feature-card__icon" aria-hidden="true">${icon('chat')}</div>
           <h3 class="feature-card__title">İletişim Formu</h3>
           <p class="feature-card__text">Kapsamlı sorularınız, bağış konuları veya kurumsal iş birlikleri için iletişim sayfamızı kullanabilirsiniz.</p>
           <div class="feature-card__link">Sayfaya Git ${arrowRightIcon}</div>
         </a>
-        <a href="${escapeAttr(content.contact.emailHref)}" class="feature-card" role="listitem" aria-label="E-posta gönder">
+        <a href="${toAbsoluteUrl(content.site.url, content.contact.emailHref)}" class="feature-card" role="listitem" aria-label="E-posta gönder" title="E-posta Gönderimi">
           <div class="feature-card__icon" aria-hidden="true">${icon('mail')}</div>
           <h3 class="feature-card__title">E-posta Gönderimi</h3>
           <p class="feature-card__text">Resmi yazışmalar veya belge aktarımı için kurumsal e-posta adresimiz üzerinden bize ulaşabilirsiniz.</p>
@@ -461,8 +495,8 @@ function renderIndexContent(content) {
         <p class="hero__subtitle" id="live-hero-subtitle" style="color:var(--color-accent-400);">Kırşehir görme engelliler için eşit, engelsiz ve erişilebilir bir yaşam.</p>
         <p class="hero__lead" id="live-hero-lead" style="margin-inline:auto;">Derneğimiz (KİRGED), Kırşehir'deki görme engelli vatandaşlarımızın sosyal hayata tam katılımını sağlamak, dayanışmayı güçlendirmek ve farkındalık yaratmak amacıyla çalışmalarını sürdürmektedir.</p>
         <div class="hero__actions" style="justify-content:center;">
-          <a href="${escapeAttr(content.hero.cta.primary.href)}" class="btn btn--accent btn--lg" id="hero-cta-primary">${icon('phone')}<span id="live-hero-cta-label">Bize Ulaşın</span></a>
-          <a href="${escapeAttr(content.hero.cta.secondary.href)}" class="btn btn--secondary btn--lg" id="hero-cta-secondary" style="border-color: rgba(255,255,255,0.4); color: #fff; background: rgba(255,255,255,0.05);">${icon('info')}Hakkımızda</a>
+          <a href="${toAbsoluteUrl(content.site.url, content.hero.cta.primary.href)}" class="btn btn--accent btn--lg" id="hero-cta-primary" title="Bize Ulaşın">${icon('phone')}<span id="live-hero-cta-label">Bize Ulaşın</span></a>
+          <a href="${toAbsoluteUrl(content.site.url, content.hero.cta.secondary.href)}" class="btn btn--secondary btn--lg" id="hero-cta-secondary" style="border-color: rgba(255,255,255,0.4); color: #fff; background: rgba(255,255,255,0.05);" title="Hakkımızda">${icon('info')}Hakkımızda</a>
         </div>
       </div>
     </div>
@@ -494,14 +528,14 @@ function renderIndexContent(content) {
           <div class="contact-item__icon" aria-hidden="true">${icon('phone')}</div>
           <div>
             <p class="contact-item__label">Telefon</p>
-            <p class="contact-item__value"><a href="${escapeAttr(content.contact.phoneHref)}">${escapeHtml(content.contact.phone)}</a></p>
+            <p class="contact-item__value"><a href="${toAbsoluteUrl(content.site.url, content.contact.phoneHref)}" title="${escapeAttr(content.contact.phone)}">${escapeHtml(content.contact.phone)}</a></p>
           </div>
         </article>
         <article class="contact-item" aria-label="E-posta iletişim bilgisi">
           <div class="contact-item__icon" aria-hidden="true">${icon('mail')}</div>
           <div>
             <p class="contact-item__label">E-posta</p>
-            <p class="contact-item__value" style="font-size:0.8rem;"><a href="${escapeAttr(content.contact.emailHref)}">${escapeHtml(content.contact.email)}</a></p>
+            <p class="contact-item__value" style="font-size:0.8rem;"><a href="${toAbsoluteUrl(content.site.url, content.contact.emailHref)}" title="${escapeAttr(content.contact.email)}">${escapeHtml(content.contact.email)}</a></p>
           </div>
         </article>
       </div>
@@ -516,7 +550,7 @@ function renderAboutContent(content) {
     <div class="container page-header__inner">
       <nav class="breadcrumb" aria-label="Sayfa konumu">
         <ol class="breadcrumb__list">
-          <li class="breadcrumb__item"><a href="/" class="breadcrumb__link">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
+          <li class="breadcrumb__item"><a href="${toAbsoluteUrl(content.site.url, '/')}" class="breadcrumb__link" title="Ana Sayfa">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
           <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">${escapeHtml(content.about.title)}</span></li>
         </ol>
       </nav>
@@ -583,7 +617,7 @@ function renderAboutContent(content) {
       <h2 id="cta-heading" class="section__title">${escapeHtml(content.about.ctaTitle || 'Bizimle İletişime Geçin')}</h2>
       <p class="section__lead" style="margin-bottom: var(--space-8);">${escapeHtml(content.about.ctaLead || 'Sorularınız, önerileriniz veya iş birliği teklifleriniz için bize ulaşın.')}</p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="/iletisim" class="btn btn--primary btn--lg" id="about-cta">${icon('phone')}${escapeHtml(content.about.ctaPrimaryLabel || 'İletişim Sayfası')}</a>
+        <a href="${toAbsoluteUrl(content.site.url, '/iletisim')}" class="btn btn--primary btn--lg" id="about-cta" title="${escapeAttr(content.about.ctaPrimaryLabel || 'İletişim Sayfası')}">${icon('phone')}${escapeHtml(content.about.ctaPrimaryLabel || 'İletişim Sayfası')}</a>
         <a href="${escapeAttr(content.contact.phoneHref)}" class="btn btn--secondary btn--lg" id="about-phone">${escapeHtml(content.about.ctaSecondaryLabel || `Hemen Ara: ${content.contact.phone}`)}</a>
       </div>
     </div>
@@ -648,7 +682,7 @@ function renderGalleryContent(content) {
     <div class="container page-header__inner">
       <nav class="breadcrumb" aria-label="Sayfa konumu">
         <ol class="breadcrumb__list">
-          <li class="breadcrumb__item"><a href="/" class="breadcrumb__link">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
+          <li class="breadcrumb__item"><a href="${toAbsoluteUrl(content.site.url, '/')}" class="breadcrumb__link" title="Ana Sayfa">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
           <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">Galeri</span></li>
         </ol>
       </nav>
@@ -744,7 +778,7 @@ function renderConstitutionContent(content) {
     <div class="container page-header__inner">
       <nav class="breadcrumb" aria-label="Sayfa konumu">
         <ol class="breadcrumb__list">
-          <li class="breadcrumb__item"><a href="/" class="breadcrumb__link">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
+          <li class="breadcrumb__item"><a href="${toAbsoluteUrl(content.site.url, '/')}" class="breadcrumb__link" title="Ana Sayfa">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
           <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">${escapeHtml(content.constitution.title)}</span></li>
         </ol>
       </nav>
@@ -783,7 +817,7 @@ function renderConstitutionContent(content) {
       <h2 id="constitution-cta-heading" class="section__title">${escapeHtml(content.constitution.ctaTitle || 'Tüzük Hakkında Bilgi Alın')}</h2>
       <p class="section__lead" style="margin-bottom: var(--space-8);">${escapeHtml(content.constitution.ctaLead || 'Sorularınız için bize ulaşın.')}</p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="/iletisim" class="btn btn--primary btn--lg" id="constitution-cta">${escapeHtml(content.constitution.ctaPrimaryLabel || 'İletişime Geç')}</a>
+        <a href="${toAbsoluteUrl(content.site.url, '/iletisim')}" class="btn btn--primary btn--lg" id="constitution-cta" title="${escapeAttr(content.constitution.ctaPrimaryLabel || 'İletişime Geç')}">${escapeHtml(content.constitution.ctaPrimaryLabel || 'İletişime Geç')}</a>
         <a href="${escapeAttr(content.contact.phoneHref)}" class="btn btn--secondary btn--lg" id="constitution-phone">${escapeHtml(content.constitution.ctaSecondaryLabel || content.contact.phone)}</a>
       </div>
     </div>
@@ -851,9 +885,10 @@ function renderAnnouncementsContent(content) {
             ${ann.category ? `<span class="announcement-card__tag">${escapeHtml(ann.category)}</span>` : ''}
           </div>
           <h2 class="announcement-card__title">${escapeHtml(ann.title)}</h2>
-          <div class="announcement-card__content typography">${sanitizeHtml(ann.content)}</div>
+          <div class="announcement-card__content typography">${stripHtml(ann.content)}</div>
+          ${renderLinkPreview(ann.preview)}
           <div style="margin-top: 1.5rem;">
-            <a href="/duyurular/${slug}" class="btn btn--secondary btn--sm" style="width:100%; justify-content:center;">Devamını Oku ${icon('chevronRight')}</a>
+            <a href="${toAbsoluteUrl(content.site.url, `/duyurular/${slug}`)}" class="btn btn--secondary btn--sm" style="width:100%; justify-content:center;" title="Devamını Oku">Devamını Oku ${icon('chevronRight')}</a>
           </div>
         </div>
       </article>`;
@@ -870,7 +905,7 @@ function renderAnnouncementsContent(content) {
     <div class="container page-header__inner">
       <nav class="breadcrumb" aria-label="Sayfa konumu">
         <ol class="breadcrumb__list">
-          <li class="breadcrumb__item"><a href="/" class="breadcrumb__link">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
+          <li class="breadcrumb__item"><a href="${toAbsoluteUrl(content.site.url, '/')}" class="breadcrumb__link" title="Ana Sayfa">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
           <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">Duyurular</span></li>
         </ol>
       </nav>
@@ -915,7 +950,7 @@ function renderContactContent(content) {
     <div class="container page-header__inner">
       <nav class="breadcrumb" aria-label="Sayfa konumu">
         <ol class="breadcrumb__list">
-          <li class="breadcrumb__item"><a href="/" class="breadcrumb__link">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
+          <li class="breadcrumb__item"><a href="${toAbsoluteUrl(content.site.url, '/')}" class="breadcrumb__link" title="Ana Sayfa">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
           <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">İletişim</span></li>
         </ol>
       </nav>
@@ -1011,8 +1046,8 @@ function renderNotFoundContent(content) {
       <h1 class="section__title" style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1.5rem; color: var(--brand-900);">Sayfa Bulunamadı</h1>
       <p class="section__lead" style="margin-bottom: 3rem; max-width: 600px; margin-inline: auto;">Aradığınız sayfa silinmiş, taşınmış veya henüz oluşturulmamış olabilir. Aşağıdaki bağlantıları kullanarak yolunuzu bulabilirsiniz.</p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="/" class="btn btn--primary">${icon('home')} Ana Sayfaya Dön</a>
-        <a href="/iletisim" class="btn btn--outline">${icon('mail')} Bize Bildirin</a>
+        <a href="${toAbsoluteUrl(content.site.url, '/')}" class="btn btn--primary" title="Ana Sayfaya Dön">${icon('home')} Ana Sayfaya Dön</a>
+        <a href="${toAbsoluteUrl(content.site.url, '/iletisim')}" class="btn btn--outline" title="Bize Bildirin">${icon('mail')} Bize Bildirin</a>
       </div>
     </div>
   </section>`;
@@ -1030,8 +1065,8 @@ function renderAnnouncementDetailPage(content, slug) {
     <div class="container page-header__inner">
       <nav class="breadcrumb" aria-label="Sayfa konumu">
         <ol class="breadcrumb__list">
-          <li class="breadcrumb__item"><a href="/" class="breadcrumb__link">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
-          <li class="breadcrumb__item"><a href="/duyurular" class="breadcrumb__link">Duyurular</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
+          <li class="breadcrumb__item"><a href="${toAbsoluteUrl(content.site.url, '/')}" class="breadcrumb__link" title="Ana Sayfa">Ana Sayfa</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
+          <li class="breadcrumb__item"><a href="${toAbsoluteUrl(content.site.url, '/duyurular')}" class="breadcrumb__link" title="Duyurular">Duyurular</a><span class="breadcrumb__separator" aria-hidden="true">›</span></li>
           <li class="breadcrumb__item"><span class="breadcrumb__current" aria-current="page">Haber Detayı</span></li>
         </ol>
       </nav>
@@ -1040,7 +1075,7 @@ function renderAnnouncementDetailPage(content, slug) {
             <button onclick="window.print()" class="btn btn--ghost btn--sm" style="color:inherit; border-color:rgba(255,255,255,0.2);">
               ${icon('download')} Yazdır
             </button>
-            <a href="/duyurular" class="btn btn--ghost btn--sm" style="color:inherit; border-color:rgba(255,255,255,0.2);">
+            <a href="${toAbsoluteUrl(content.site.url, '/duyurular')}" class="btn btn--ghost btn--sm" style="color:inherit; border-color:rgba(255,255,255,0.2);" title="Duyurulara Dön">
               ${icon('chevronRight')} Geri Dön
             </a>
          </div>
@@ -1065,13 +1100,15 @@ function renderAnnouncementDetailPage(content, slug) {
              <div style="padding: 2.5rem;" class="typography">
                 ${sanitizeHtml(announcement.content)}
                 
+                ${renderLinkPreview(announcement.preview)}
+                
                 <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem;">
                    <div style="display:flex; align-items:center; gap:1rem;">
                       <span style="font-weight:700; color:var(--color-text-muted);">Paylaş:</span>
                       <a href="https://wa.me/?text=${encodeURIComponent(announcement.title + ' ' + content.site.url + '/duyurular/' + slugify(announcement.title))}" target="_blank" class="btn btn--sm" style="background:#25D366; color:white; border:none; text-decoration:none; padding: 0.5rem 1rem; border-radius: 6px;">WhatsApp</a>
                       <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(content.site.url + '/duyurular/' + slugify(announcement.title))}" target="_blank" class="btn btn--sm" style="background:#1877F2; color:white; border:none; text-decoration:none; padding: 0.5rem 1rem; border-radius: 6px;">Facebook</a>
                    </div>
-                   <a href="/duyurular" class="btn btn--secondary">Tüm Duyurulara Dön</a>
+                   <a href="${toAbsoluteUrl(content.site.url, '/duyurular')}" class="btn btn--secondary" title="Tüm Duyurulara Dön">Tüm Duyurulara Dön</a>
                 </div>
              </div>
           </article>
@@ -1155,7 +1192,7 @@ function renderHead(pageKey, content) {
   const pageUrl = pageMeta.canonical || toAbsoluteUrl(content.site.url, getPagePath(pageKey));
   const ogImageUrl = content.site.ogImagePath ? toAbsoluteUrl(content.site.url, content.site.ogImagePath) : null;
   const twitterCard = ogImageUrl ? 'summary_large_image' : 'summary';
-  const appleTouchIcon = content.site.appleTouchIconPath ? `<link rel="apple-touch-icon" href="${escapeAttr(content.site.appleTouchIconPath)}" />` : '';
+  const appleTouchIcon = `<link rel="apple-touch-icon" href="${toAbsoluteUrl(content.site.url, content.site.appleTouchIconPath || '/logo.png')}" />`;
 
   let newsSchema = null;
   if (pageKey.startsWith('announcement:')) {
@@ -1190,6 +1227,8 @@ function renderHead(pageKey, content) {
   <style>:root{--color-bg:#fff;--color-primary-600:#4F46E5;--font-heading:'Outfit',system-ui,sans-serif;--header-height:72px}body{margin:0;opacity:0;font-family:'Inter',system-ui,sans-serif;background:var(--color-bg)}body.ready{opacity:1;transition:opacity .15s ease}#main-content{animation: fade-in-page 0.3s ease-out forwards;}@keyframes fade-in-page{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}#loader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e1b4b,#1a0a3d)}</style>
   <title>${escapeHtml(pageMeta.title)}</title>
   <meta name="description" content="${escapeAttr(pageMeta.description)}" />
+  <meta name="author" content="${escapeAttr(content.site.name)}" />
+  <meta name="publisher" content="${escapeAttr(content.site.name)}" />
   ${pageMeta.robots ? `<meta name="robots" content="${escapeAttr(pageMeta.robots)}" />` : ''}
   ${pageMeta.canonical ? `<link rel="canonical" href="${escapeAttr(pageMeta.canonical)}" />` : ''}
   <link rel="alternate" hreflang="tr" href="${escapeAttr(pageUrl)}" />
@@ -1205,9 +1244,10 @@ function renderHead(pageKey, content) {
   <meta name="twitter:title" content="${escapeAttr(pageMeta.title)}" />
   <meta name="twitter:description" content="${escapeAttr(pageMeta.description)}" />
   ${ogImageUrl ? `<meta name="twitter:image" content="${escapeAttr(ogImageUrl)}" />` : ''}
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="${toAbsoluteUrl(content.site.url, '/favicon.svg')}" />
+  <link rel="icon" type="image/png" href="${toAbsoluteUrl(content.site.url, '/logo.png')}" />
   ${appleTouchIcon}
-  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="manifest" href="${toAbsoluteUrl(content.site.url, '/site.webmanifest')}" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1236,7 +1276,7 @@ function renderBody(pageKey, content) {
   ${includeGlobalChrome ? renderWhatsAppFloat(content) : ''}
   ${includeGlobalChrome ? renderToolbar() : ''}
   ${includeGlobalChrome && content.contact.phone ? `<div class="mobile-cta-bar" role="complementary" aria-label="Hızlı arama">
-    <a href="${escapeAttr(content.contact.phoneHref || 'tel:' + content.contact.phone)}" class="mobile-cta-bar__link">
+    <a href="${toAbsoluteUrl(content.site.url, content.contact.phoneHref || 'tel:' + content.contact.phone)}" class="mobile-cta-bar__link" title="Hızlı Arama">
       <div class="mobile-cta-bar__icon">${icon('phone')}</div>
       <div class="mobile-cta-bar__text">Bize Ulaşın: <strong>${escapeHtml(content.contact.phone)}</strong></div>
     </a>

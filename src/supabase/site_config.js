@@ -1,12 +1,16 @@
 import { supabase } from './config.js';
 
 export async function getSiteConfig() {
+  if (!supabase) {
+    console.warn('[KGED] Supabase bağlantısı yok, null döndürülüyor.');
+    return null;
+  }
   const { data, error } = await supabase
     .from('site_config')
     .select('data, updated_at')
     .eq('id', 'content')
     .maybeSingle();
-    
+
   if (error) {
     throw error;
   }

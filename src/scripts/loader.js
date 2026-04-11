@@ -33,18 +33,17 @@ function initLoader() {
 
 function dismissLoader(loader) {
   loader.classList.add('hidden');
+  let removed = false;
 
-  loader.addEventListener('transitionend', () => {
+  function cleanup() {
+    if (removed) return;
+    removed = true;
     loader.remove();
     moveFocusToMain();
-  }, { once: true });
+  }
 
-  setTimeout(() => {
-    if (loader.isConnected) {
-      loader.remove();
-      moveFocusToMain();
-    }
-  }, 700);
+  loader.addEventListener('transitionend', cleanup, { once: true });
+  setTimeout(cleanup, 700);
 }
 
 function moveFocusToMain() {

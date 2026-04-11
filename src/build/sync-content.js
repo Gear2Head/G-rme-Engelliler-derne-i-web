@@ -9,7 +9,11 @@ function loadEnv() {
     content.split('\n').forEach(line => {
       const [key, ...valueParts] = line.split('=');
       if (key && valueParts.length > 0) {
-        process.env[key.trim()] = valueParts.join('=').trim();
+        const trimmedKey = key.trim();
+        // ASSUME: Vercel env vars take priority over .env.local
+        if (!process.env[trimmedKey]) {
+          process.env[trimmedKey] = valueParts.join('=').trim();
+        }
       }
     });
   }

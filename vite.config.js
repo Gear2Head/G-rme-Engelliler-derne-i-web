@@ -3,6 +3,10 @@ import { defineConfig } from 'vite';
 import { renderDocumentFragments } from './src/build/site-renderer.js';
 import { generateSitemapPlugin } from './src/build/generate-sitemap.js';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 function resolvePageKey(context) {
   const original = context?.originalUrl || context?.url || '/';

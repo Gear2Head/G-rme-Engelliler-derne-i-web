@@ -38,8 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initHydration();
 
-  const yearEl = document.getElementById('footer-year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+  document.querySelectorAll('.footer-year-display').forEach(el => {
+    el.textContent = new Date().getFullYear();
+  });
 
   if (!localStorage.getItem('kged-kvkk-accepted')) {
     const banner = document.createElement('div');

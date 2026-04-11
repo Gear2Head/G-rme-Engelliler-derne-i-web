@@ -80,12 +80,14 @@ function setActiveNavLink() {
   const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
 
   document.querySelectorAll('.nav__link').forEach(link => {
-    const href = link.getAttribute('href')?.replace(/\/$/, '') || '';
-    const isActive = href === '/' 
-      ? currentPath === '/' 
-      : currentPath === href || currentPath.startsWith(href + '/');
-    link.setAttribute('aria-current', isActive ? 'page' : 'false');
-    if (!isActive) link.removeAttribute('aria-current');
+    const href = (link.getAttribute('href') || '').replace(/\/$/, '') || '/';
+    const isActive = href === currentPath ||
+      (href !== '/' && href.length > 1 && currentPath.startsWith(href + '/'));
+    if (isActive) {
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
+    }
   });
 }
 

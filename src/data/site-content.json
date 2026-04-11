@@ -276,5 +276,12 @@
     "ctaSecondaryLabel": null
   },
   "_last_updated": "2026-04-10T17:02:28.454+00:00",
-  "announcements": []
+  "announcements": [
+    {
+      "title": "Derneğimiz Faaliyete Başladı",
+      "date": "2026-04-10",
+      "content": "<p>Kırşehir Görme Engelliler Derneği (KİRGED) olarak resmi faaliyetlerimize başladık. Kırşehir'deki görme engelli bireylerin toplumsal yaşama tam ve eşit katılımı için projeler üretmeye, dayanışmayı büyütmeye devam edeceğiz. Ülkemiz ve ilimiz için hayırlı olsun.</p>",
+      "image": "/logo.png"
+    }
+  ]
 }
