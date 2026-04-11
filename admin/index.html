@@ -1992,61 +1992,70 @@
     window.handleSaveConfig = async () => {
       if (!siteContent) return;
       const btn = document.getElementById('btn-save-config');
-      const oldText = btn.textContent;
+      const oldHtml = btn.innerHTML;
       btn.disabled = true;
-      btn.textContent = 'Kaydediliyor...';
+      btn.innerHTML = '<svg class="spin" style="margin-right:0.4rem;" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Kaydediliyor...';
 
       try {
         siteContent.about.title = document.getElementById('edit-about-title')?.value?.trim() || siteContent.about.title;
         siteContent.about.intro = document.getElementById('edit-about-intro')?.value?.trim() || siteContent.about.intro;
-
         const phone = document.getElementById('edit-contact-phone')?.value?.trim();
         if (phone) {
           siteContent.contact.phone = phone;
-          const digits = phone.replace(/\\D/g, '');
-          siteContent.contact.phoneHref = digits.startsWith('0')
-            ? `tel:+90${digits.slice(1)}`
-            : `tel:+${digits}`;
+          const digits = phone.replace(/\D/g, '');
+          siteContent.contact.phoneHref = digits.startsWith('0') ? `tel:+90${digits.slice(1)}` : `tel:+${digits}`;
         }
-
         const email = document.getElementById('edit-contact-email')?.value?.trim();
         if (email) {
           siteContent.contact.email = email;
           siteContent.contact.emailHref = `mailto:${email}`;
         }
-
         if (!siteContent.hero) siteContent.hero = {};
         siteContent.hero.title = document.getElementById('edit-hero-title')?.value?.trim() || siteContent.hero.title;
         siteContent.hero.subtitle = document.getElementById('edit-hero-subtitle')?.value?.trim() || siteContent.hero.subtitle;
         siteContent.hero.lead = document.getElementById('edit-hero-lead')?.value?.trim() || siteContent.hero.lead;
-
         if (!siteContent.site) siteContent.site = {};
         siteContent.site.description = document.getElementById('edit-site-desc')?.value?.trim() || siteContent.site.description;
 
         await saveSiteConfig(siteContent);
+        btn.style.background = '#059669';
+        btn.innerHTML = '✅ Kaydedildi';
         showToast('Site bilgileri güncellendi.', 'success');
       } catch (e) {
+        btn.style.background = '#EF4444';
+        btn.innerHTML = '❌ Hata';
         showToast('Hata: ' + e.message, 'error');
       } finally {
-        btn.disabled = false;
-        btn.textContent = oldText;
+        setTimeout(() => {
+          btn.style.background = '';
+          btn.innerHTML = oldHtml;
+          btn.disabled = false;
+        }, 2000);
       }
     };
 
     window.handleSaveBoard = async () => {
       if (!siteContent) return;
       const btn = document.getElementById('btn-save-board');
-      const oldText = btn.textContent;
+      if (!btn) return;
+      const oldHtml = btn.innerHTML;
       btn.disabled = true;
-      btn.textContent = 'Kaydediliyor...';
+      btn.innerHTML = '<svg class="spin" style="margin-right:0.4rem;" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Bekleyin...';
       try {
         await saveSiteConfig(siteContent);
+        btn.style.background = '#059669';
+        btn.innerHTML = '✅ Kaydedildi';
         showToast('Yönetim kurulu güncellendi.', 'success');
       } catch (e) {
+        btn.style.background = '#EF4444';
+        btn.innerHTML = '❌ Hata';
         showToast('Hata: ' + e.message, 'error');
       } finally {
-        btn.disabled = false;
-        btn.textContent = oldText;
+        setTimeout(() => {
+          btn.style.background = '';
+          btn.innerHTML = oldHtml;
+          btn.disabled = false;
+        }, 2000);
       }
     };
 
@@ -2099,6 +2108,23 @@
     }
 
     window.removePreview = (idx) => { pendingFiles.splice(idx, 1); renderPreview(); };
+
+    function textToHtml(text) {
+      if (!text) return '';
+      return text.split('\n\n')
+        .filter(p => p.trim())
+        .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+        .join('');
+    }
+
+    function htmlToText(html) {
+      if (!html) return '';
+      return html
+        .replace(/<\/p>\s*<p>/gi, '\n\n')
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<[^>]+>/g, '')
+        .trim();
+    }
 
     let draggedBoardIdx = null;
 
@@ -2261,40 +2287,45 @@
                       <input class="field-input" type="date" value="${ann.date || ''}" onchange="window.updateAnnouncement(${idx}, 'date', this.value)" />
                    </div>
                 </div>
-                <div class="field-group">
-                   <label class="field-label">Duyuru Detayı</label>
-                   <textarea class="field-textarea" style="height:100px; resize:vertical; font-size:0.9rem;" placeholder="İçerik..." onchange="window.updateAnnouncement(${idx}, 'content', this.value)">${ann.content || ''}</textarea>
-                </div>
+                <div style="flex:1;">
+                <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-faint); text-transform:uppercase; margin-bottom:0.5rem;">Duyuru Detayı</label>
+                <textarea style="width:100%; height:120px; padding:0.75rem; border:1px solid var(--border); border-radius:var(--radius-md); font-family:inherit; font-size:0.9rem; resize:vertical;" placeholder="Duyuru metni..." onchange="window.updateAnnouncement(${idx}, 'content', textToHtml(this.value))">${htmlToText(ann.content || '')}</textarea>
+              </div>
+           </div>
 
-                <div class="field-group" style="margin-top:1rem;">
-                   <label class="field-label">Dış Haber Bağlantısı (URL)</label>
-                   <div style="display:flex; gap:0.5rem;">
-                      <input class="field-input" type="url" placeholder="https://..." value="${ann.link || ''}" 
-                             onchange="window.updateAnnouncement(${idx}, 'link', this.value)" 
-                             style="flex:1;" />
-                      <button class="btn btn--secondary btn--sm" onclick="window.fetchLinkPreview(${idx})">Önizleme Getir</button>
-                   </div>
-                   ${ann.preview ? `
-                     <div class="admin-preview-box" style="margin-top:0.75rem; padding:0.75rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); display:flex; gap:1rem; align-items:center;">
-                        ${ann.preview.image ? `<img src="${ann.preview.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px; border:1px solid var(--border);" />` : ''}
-                        <div style="flex:1; overflow:hidden;">
-                           <div style="font-weight:700; font-size:0.85rem; margin-bottom:0.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${ann.preview.title}">${ann.preview.title}</div>
-                           <div style="font-size:0.7rem; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em;">${ann.preview.siteName || 'Harici Bağlantı'}</div>
-                        </div>
-                        <button class="btn btn--ghost btn--sm" style="color:var(--danger); border:none;" onclick="window.updateAnnouncement(${idx}, 'preview', null); window.renderAnnouncementRows();">Kaldır</button>
-                     </div>
-                   ` : ''}
-                </div>
-             </div>
-          </div>
-          
-          <div style="margin-top:1.25rem; padding-top:0.75rem; border-top:1px dashed var(--border); display:flex; justify-content:space-between; align-items:center;">
-             <div style="display:flex; align-items:center; gap:0.5rem;">
-                <span class="status-badge" style="background:#dcfce7; color:#166534; font-size:0.7rem; padding:0.1rem 0.6rem; border-radius:100px; font-weight:700;">YAYINDA</span>
-                <span style="font-size:0.75rem; color:var(--text-faint);">Önizleme: /duyurular/${slugify(ann.title || '')}</span>
-             </div>
-             <a href="/duyurular" target="_blank" style="font-size:0.8rem; color:var(--brand-600); text-decoration:none; font-weight:600;">Siteye Git →</a>
-          </div>
+           <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px dashed var(--border);">
+              <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-faint); text-transform:uppercase; margin-bottom:0.5rem;">Haber / Kaynak Linki (Opsiyonel)</label>
+              <div style="display:flex; gap:0.5rem;">
+                <input type="url" value="${ann.link || ''}" 
+                       placeholder="https://kaynak-haber.com/detay"
+                       style="flex:1; padding:0.6rem 0.75rem; border:1.5px solid var(--border); border-radius:var(--radius-md); font-size:0.9rem;" 
+                       onchange="window.updateAnnouncement(${idx}, 'link', this.value)" />
+                <button class="btn btn--primary btn--sm" style="white-space:nowrap;" onclick="window.fetchLinkPreview(${idx})">Önizle</button>
+              </div>
+              
+              <div id="ann-preview-box-${idx}" style="margin-top:1rem;">
+                ${ann.preview ? `
+                  <div style="display:flex; gap:0.75rem; padding:0.75rem; background:var(--surface); border:1px solid var(--border); border-radius:10px; align-items:flex-start;">
+                    ${ann.preview.image ? `<img src="${ann.preview.image}" style="width:80px; height:56px; object-fit:cover; border-radius:6px; flex-shrink:0;" />` : ''}
+                    <div style="flex:1; overflow:hidden;">
+                      <div style="font-weight:700; font-size:0.85rem; margin-bottom:0.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${ann.preview.title}">${ann.preview.title}</div>
+                      <div style="font-size:0.7rem; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em;">${ann.preview.siteName || 'Harici Bağlantı'}</div>
+                    </div>
+                    <button class="btn btn--ghost btn--sm" style="color:var(--danger); border:none;" onclick="window.updateAnnouncement(${idx}, 'preview', null); window.renderAnnouncementRows();">Kaldır</button>
+                  </div>
+                ` : ''}
+              </div>
+           </div>
+           
+           <div style="margin-top:1.25rem; padding-top:0.75rem; border-top:1px dashed var(--border); display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                 <span class="status-badge" style="background:#dcfce7; color:#166534; font-size:0.7rem; padding:0.1rem 0.6rem; border-radius:100px; font-weight:700;">YAYINDA</span>
+                 <a href="/duyurular/${slugify(ann.title || '')}" target="_blank" rel="noopener" style="font-size:0.75rem; color:var(--brand-600); text-decoration:none; font-weight:600;">
+                    Önizleme: /duyurular/${slugify(ann.title || '')} ↗
+                 </a>
+              </div>
+              <a href="/duyurular" target="_blank" style="font-size:0.8rem; color:var(--brand-600); text-decoration:none; font-weight:600;">Tüm Duyurular →</a>
+           </div>
         </div>
       `).join('');
 
@@ -2374,17 +2405,25 @@
 
     window.saveAnnouncements = async () => {
       const btn = document.getElementById('btn-save-announcements');
-      const oldText = btn.textContent;
+      if (!btn) return;
+      const oldHtml = btn.innerHTML;
       btn.disabled = true;
-      btn.textContent = 'Kaydediliyor...';
+      btn.innerHTML = '<svg class="spin" style="margin-right:0.4rem;" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Kaydediliyor...';
       try {
         await saveSiteConfig(siteContent);
+        btn.style.background = '#059669';
+        btn.innerHTML = '✅ Kaydedildi';
         showToast('Duyurular başarıyla kaydedildi.', 'success');
       } catch (e) {
+        btn.style.background = '#EF4444';
+        btn.innerHTML = '❌ Hata';
         showToast('Hata: ' + e.message, 'error');
       } finally {
-        btn.disabled = false;
-        btn.textContent = oldText;
+        setTimeout(() => {
+          btn.style.background = '';
+          btn.innerHTML = oldHtml;
+          btn.disabled = false;
+        }, 2000);
       }
     };
 

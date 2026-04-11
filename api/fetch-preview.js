@@ -1,59 +1,92 @@
-export default async function handler(req, res) {
-  const { url } = req.query;
+/**
+ * AMAÇ: URL'den OG meta tagları çek — CORS bypass için proxy endpoint
+ * MANTIK: SSRF koruması + timeout + cache header
+ */
 
-  if (!url) {
-    return res.status(400).json({ error: 'URL parameter is required' });
+// Private IP SSRF koruması
+function isPrivateIP(hostname) {
+  return /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.|169\.254\.|::1|fc00:|fe80:)/.test(hostname);
+}
+
+function getMetaContent(html, ...properties) {
+  for (const prop of properties) {
+    const match =
+      html.match(new RegExp(`<meta[^>]+(?:property|name)=["']${prop}["'][^>]+content=["']([^"']{1,500})["']`, 'i')) ||
+      html.match(new RegExp(`<meta[^>]+content=["']([^"']{1,500})["'][^>]+(?:property|name)=["']${prop}["']`, 'i'));
+    if (match?.[1]) return match[1].trim();
+  }
+  return null;
+}
+
+export default async function handler(req, res) {
+  // Sadece GET
+  if (req.method !== 'GET') return res.status(405).end();
+
+  const { url } = req.query;
+  if (!url) return res.status(400).json({ error: 'url parametresi gerekli' });
+
+  // URL validasyon
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return res.status(400).json({ error: 'Geçersiz URL formatı' });
+  }
+
+  if (!['http:', 'https:'].includes(parsed.protocol)) {
+    return res.status(400).json({ error: 'Sadece HTTP/HTTPS URL desteklenir' });
+  }
+
+  // SSRF koruması
+  if (isPrivateIP(parsed.hostname)) {
+    return res.status(400).json({ error: 'Bu IP aralığına erişim yasak' });
   }
 
   try {
-    const targetUrl = new URL(url);
-    
-    // Basic SSRF protection — don't allow local/private IPs
-    // In a real prod environment, more robust validation is needed
-    if (['localhost', '127.0.0.1', '0.0.0.0'].includes(targetUrl.hostname)) {
-      throw new Error('Invalid target URL');
-    }
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-    const response = await fetch(targetUrl.toString(), {
+    const response = await fetch(url, {
+      signal: controller.signal,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; KGED-Preview/1.0; +https://kirged.org)',
-        'Accept': 'text/html'
+        'User-Agent': 'KGED-LinkPreview/1.0 (+https://kirged.org)',
+        'Accept': 'text/html,application/xhtml+xml',
+        'Accept-Language': 'tr,en;q=0.9',
       },
-      signal: AbortSignal.timeout(5000)
     });
+    clearTimeout(timeoutId);
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch metadata: ${response.status} ${response.statusText}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const buffer = await response.arrayBuffer();
+    const html = new TextDecoder().decode(buffer.slice(0, 500000)); // Max 500KB
+
+    const titleMatch = html.match(/<title[^>]*>([^<]{1,200})<\/title>/i);
+    let ogImage = getMetaContent(html, 'og:image', 'twitter:image');
+
+    // Görsel URL'ini absolute yap
+    if (ogImage && !ogImage.startsWith('http')) {
+      try { ogImage = new URL(ogImage, `${parsed.origin}/`).toString(); } catch { ogImage = null; }
     }
 
-    const html = await response.text();
-
-    const getMeta = (property) => {
-      const regex = new RegExp(`<meta[^>]*property=["']${property}["'][^>]*content=["']([^"']*)["']`, 'i');
-      const match = html.match(regex);
-      if (match) return match[1];
-      
-      const nameRegex = new RegExp(`<meta[^>]*name=["']${property}["'][^>]*content=["']([^"']*)["']`, 'i');
-      const nameMatch = html.match(nameRegex);
-      return nameMatch ? nameMatch[1] : null;
+    const preview = {
+      url,
+      title: getMetaContent(html, 'og:title', 'twitter:title') || titleMatch?.[1]?.trim() || parsed.hostname,
+      description: getMetaContent(html, 'og:description', 'description', 'twitter:description') || '',
+      image: ogImage,
+      siteName: getMetaContent(html, 'og:site_name') || parsed.hostname.replace('www.', ''),
+      fetchedAt: Date.now(),
     };
 
-    const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-    const title = titleMatch ? titleMatch[1].trim() : (getMeta('og:title') || getMeta('twitter:title') || targetUrl.hostname);
-    
-    const description = getMeta('og:description') || getMeta('description') || getMeta('twitter:description') || '';
-    const image = getMeta('og:image') || getMeta('twitter:image') || null;
-    const siteName = getMeta('og:site_name') || targetUrl.hostname;
+    // 1 saatlik cache, 24 saat stale-while-revalidate
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Allow any origin to use the API
+    res.json(preview);
 
-    return res.status(200).json({
-      title: title.slice(0, 100),
-      description: description.slice(0, 200),
-      image,
-      siteName,
-      url: targetUrl.toString()
-    });
-  } catch (error) {
-    console.error('[Preview API Error]:', error.message);
-    return res.status(500).json({ error: 'Could not fetch link preview', details: error.message });
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      return res.status(504).json({ error: 'Sayfa zaman aşımına uğradı (8s)' });
+    }
+    res.status(500).json({ error: `Fetch hatası: ${err.message}` });
   }
 }
