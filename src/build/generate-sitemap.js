@@ -60,6 +60,12 @@ ${urls}
 </urlset>`;
 
       const outPath = path.resolve(process.cwd(), 'dist/sitemap.xml');
+      const outDir = path.dirname(outPath);
+      
+      if (!fs.existsSync(outDir)) {
+        fs.mkdirSync(outDir, { recursive: true });
+      }
+      
       fs.writeFileSync(outPath, xml, 'utf8');
       console.log('[KGED] ✓ sitemap.xml oluşturuldu →', outPath);
     }
